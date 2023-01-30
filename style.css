@@ -1,5 +1,9 @@
 /* CSS */
 
+a {
+  color: rgb(99, 66, 103);
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
