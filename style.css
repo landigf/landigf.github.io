@@ -1,52 +1,69 @@
+/* CSS */
+
+a {
+  color: rgb(99, 66, 103);
+
 body {
-    background-color: #228B22; /* Verde scuro */
-    color: #fff; /* Testo bianco */
-    font-family: 'Arial', sans-serif;
-}
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    }
 
-.container {
-    max-width: 600px;
-    margin: auto;
-    text-align: center;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    margin-top: 50px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-input {
-    margin-bottom: 10px;
-    padding: 10px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-label {
-    margin-top: 10px;
-    display: block;
-}
-
-input[type="submit"] {
-    background-color: #cc0000; /* Rosso scuro */
+header {
+    background-color: #333;
     color: #fff;
-    cursor: pointer;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-}
+    padding: 20px;
+    }
 
-input[type="submit"]:hover {
-    background-color: #990000; /* Rosso più scuro */
-}
+header h1 {
+    margin: 0;
+    }
 
-/* Aggiunte per elementi natalizi */
-.tree {
-    font-size: 40px;
-    margin-bottom: 20px;
-}
+header h2 {
+    font-size: 16px;
+    margin: 0;
+    }
+
+nav {
+    background-color: #ccc;
+    padding: 10px;
+    text-align: center;
+    }
+
+nav a {
+    color: #333;
+    text-decoration: none;
+    margin: 0 10px;
+    }
+
+main {
+    margin: 20px;
+    }
+
+section {
+    margin: 20px 0;
+    }
+
+
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    }
+
+@media screen and (max-width: 768px) {
+    nav {
+    display: none;
+    }
+
+    header {
+    position: relative;
+    }
+
+    header button {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    }
+    }
