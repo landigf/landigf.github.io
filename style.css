@@ -1,7 +1,7 @@
-/* CSS */
 
 a {
   color: rgb(99, 66, 103);
+}
 
 body {
     font-family: Arial, sans-serif;
@@ -52,6 +52,21 @@ footer {
     text-align: center;
     }
 
+#new-post {
+    margin-top: 20px;
+}
+
+.post {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.post img {
+    max-width: 100%;
+    height: auto;
+}
+
 @media screen and (max-width: 768px) {
     nav {
     display: none;
@@ -66,4 +81,5 @@ footer {
     right: 20px;
     top: 20px;
     }
-    }
+}
+
