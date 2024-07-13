@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Il Mio Blog</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="blog.html">Blog</a>
+        </nav>
+    </header>
+    <main>
+        <section id="posts">
+            <!-- I post del blog verranno inseriti qui -->
+        </section>
+        <section id="new-post">
+            <h2>Nuovo Post</h2>
+            <form id="post-form">
+                <textarea id="post-content" rows="4" cols="50" placeholder="Scrivi qualcosa..."></textarea>
+                <input type="file" id="post-image">
+                <button type="submit">Pubblica</button>
+            </form>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
