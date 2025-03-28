@@ -3,13 +3,32 @@
 <head>
   <title>Gennaro Francesco Landi - Personal Portfolio</title>
   <link rel="stylesheet" type="text/css" href="style.css">
-  <LINK REL=“ICON" HREF="favicon-32x32.png" TYPE="image/png"/>
+  <link rel="icon" href="favicon-32x32.png" type="image/png">
+  <style>
+    .cert-logo {
+      height: 20px;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    .cert-entry {
+      margin-bottom: 10px;
+    }
+    #linkedin-preview {
+      border: 2px solid #0a66c2;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    #linkedin a {
+      font-weight: bold;
+      color: #0a66c2;
+    }
+  </style>
 </head>
 <body>
   <header>
     <h1>Gennaro Francesco Landi</h1>
     <h2>Computer Engineering</h2>
-   <!-- <img src="profile_pic.jpg" alt="Foto di profilo di Gennaro Francesco Landi" width="104" height="142"> -->
   </header>
   <nav>
     <a href="#about">About Me</a> |
@@ -32,20 +51,22 @@
           <th>Data</th>
         </tr>
         <tr>
-          <td>Ingegneria Informatica | </td>
-          <td>Università Degli Studi di Salerno | </td>
+          <td>Ingegneria Informatica</td>
+          <td>Università Degli Studi di Salerno</td>
           <td>2022-present</td>
         </tr>
         <tr>
-          <td>Statistica per i Big Data | </td>
-          <td>Università Degli Studi di Salerno | </td>
+          <td>Statistica per i Big Data</td>
+          <td>Università Degli Studi di Salerno</td>
           <td>2023-present</td>
         </tr>
       </table>
       <h2>Certifications</h2>
       <ul>
-        <li><b>Harvard</b>: <a href="https://courses.edx.org/certificates/0d0d1e558ed840a1bb8dd299a33593a6">CS50</a></li>
-        <li><b><a href="https://fa24.elicsir.it/">FA'24</a></b>: <a href="https://drive.google.com/file/d/1IRci9RqwZbufAqCSta7mpT5WCWN6QmMI/view?usp=sharing">Attestato</a></li>
+        <li class="cert-entry"><img class="cert-logo" src="https://upload.wikimedia.org/wikipedia/commons/2/27/EdX.svg"> <b>Harvard</b>: <a href="https://courses.edx.org/certificates/0d0d1e558ed840a1bb8dd299a33593a6">CS50</a></li>
+        <li class="cert-entry"><img class="cert-logo" src="https://fa24.elicsir.it/favicon.ico"> <b><a href="https://fa24.elicsir.it/">FA'24</a></b>: <a href="https://drive.google.com/file/d/1IRci9RqwZbufAqCSta7mpT5WCWN6QmMI/view?usp=sharing">Attestato</a></li>
+        <li class="cert-entry"><img class="cert-logo" src="https://avatars.githubusercontent.com/u/67671603?s=200&v=4"> <b>DeepLearning.AI</b>: <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/S29T8D9KM9JA">Deep Learning Specialization</a> - Mar 2025</li>
+        <li class="cert-entry"><img class="cert-logo" src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Stanford_University_seal_2003.svg"> <b>Stanford University & DeepLearning.AI</b>: <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/SMDP1J8IEED1">Machine Learning Specialization</a> - Feb 2025</li>
       </ul>
     </section>
     <section id="projects">
@@ -53,39 +74,28 @@
       <ul>
         <li>
           <h3>Tris vs AI</h3>
-          <p>Il gioco consiste in una griglia 3x3 in cui due giocatori (il primo giocatore è il giocatore umano, il secondo è il computer) si sfidano a turno per riempire le caselle con i loro simboli ("X" o "O").
-
-            Il codice definisce diverse funzioni per gestire le varie fasi del gioco, come la creazione della griglia, la scelta delle caselle da parte dei giocatori, il controllo della vittoria o della sconfitta.
-
-            La partita viene eseguita in un ciclo "do-while", che continua finché uno dei giocatori non vince o la griglia non viene riempita completamente. Alla fine del gioco viene visualizzato un messaggio di vittoria o di parità a seconda del risultato.
-
-            La funzione Scelta_Player() chiede all'utente di inserire la posizione desiderata per la propria mossa utilizzando i numeri del numpad. La funzione Scelta_PC() utilizza una logica per decidere la posizione migliore per la mossa dell'IA. Entrambe le funzioni utilizzano la funzione Board() per stampare la tavola di gioco corrente sullo schermo.
-          </p>
           <ul>
             <li>Tecnologie utilizzate: C</li>
             <li><a href="https://github.com/landigf/TicTacToe">Link al repository GitHub</a></li>
           </ul>
           <h3>BlackJack</h3>
-          <p>
-            Il codice è un programma completo per giocare a BlackJack, con registrazione e login per utenti, con la possibilità di depositare denaro e visualizzare il proprio saldo. Il gioco inizia con un menu che permette all'utente di scegliere tra creare un nuovo account ("sing up"), effettuare il login o utilizzare un account demo  che gli fornisce una determinata quantità di denaro. Il gioco stesso è strutturato in modo da gestire un mazzo di carte, che viene mescolato all'inizio del gioco e successivamente ridotto man mano che vengono estratte carte. Una volta effettuato l'accesso, viene chiesto all'utente di inserire una puntata e vengono utilizzate le funzioni del programma per eseguire una partita di BlackJack. Il gioco include la possibilità di raddoppiare e dividere le carte, così come l'uso dell'Asso come 1 o 11 a seconda del caso. Il codice utilizza una struttura per salvare le informazioni degli utenti e una matrice per rappresentare il mazzo di carte.
-          </p>
           <ul>
             <li>Tecnologie utilizzate: C</li>
             <li><a href="https://github.com/landigf/BlackJack">Link al repository GitHub</a></li>
           </ul>
           <h3>Santa Secret</h3>
-          <p>App per fare i regali di natale segretamente in ogni gruppo di amici.
-          </p>
+          <p>App per fare i regali di natale segretamente in ogni gruppo di amici.</p>
           <ul>
             <li>Tecnologie utilizzate: Python</li>
             <li><a href="https://github.com/landigf/SecretSanta">Link al repository GitHub</a></li>
           </ul>
         </li>
       </ul>
-      <section id="notes">
-        <h2>Notes</h2>
-        <ul>
-          <li>
+    </section>
+    <section id="notes">
+      <h2>Notes</h2>
+      <ul>
+        <li>
             <h3>Reti di Calcolatori</h3>
             <p>
               <a href="https://drive.google.com/file/d/1XfnkkGmMo_rCFoRecTbzKGViRBrKgkiW/view?usp=sharing">PDF degli appunti</a> | Sessione di Lauera A.A. 2023-2024
@@ -131,8 +141,15 @@
               <li>Pasquale Foggia</li>
             </ul>
           </li>
-        </ul>
-      </section>
+      </ul>
+    </section>
+    <section id="linkedin">
+      <h2>LinkedIn Preview</h2>
+      <p>Qui puoi visualizzare direttamente il mio profilo LinkedIn:</p>
+      <div id="linkedin-preview" style="width: 100%; height: 600px;">
+        <iframe src="https://www.linkedin.com/in/landigf" width="100%" height="100%" style="border:0;" allowfullscreen sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+      </div>
+      <p><a href="https://www.linkedin.com/in/landigf" target="_blank">Vai al mio profilo LinkedIn</a></p>
     </section>
   </main>
   <footer>
