@@ -63,10 +63,9 @@
       </table>
       <h2>Certifications</h2>
       <ul>
-        <li class="cert-entry"><img class="cert-logo" src="https://upload.wikimedia.org/wikipedia/commons/2/27/EdX.svg"> <b>Harvard</b>: <a href="https://courses.edx.org/certificates/0d0d1e558ed840a1bb8dd299a33593a6">CS50</a></li>
-        <li class="cert-entry"><img class="cert-logo" src="https://fa24.elicsir.it/favicon.ico"> <b><a href="https://fa24.elicsir.it/">FA'24</a></b>: <a href="https://drive.google.com/file/d/1IRci9RqwZbufAqCSta7mpT5WCWN6QmMI/view?usp=sharing">Attestato</a></li>
-        <li class="cert-entry"><img class="cert-logo" src="https://avatars.githubusercontent.com/u/67671603?s=200&v=4"> <b>DeepLearning.AI</b>: <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/S29T8D9KM9JA">Deep Learning Specialization</a> - Mar 2025</li>
-        <li class="cert-entry"><img class="cert-logo" src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Stanford_University_seal_2003.svg"> <b>Stanford University & DeepLearning.AI</b>: <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/SMDP1J8IEED1">Machine Learning Specialization</a> - Feb 2025</li>
+        <li class="cert-entry"><img class="cert-logo" src="https://media.licdn.com/dms/image/v2/C4E0BAQGYjmmBCvqLmg/company-logo_100_100/company-logo_100_100/0/1631309789389?e=1748476800&v=beta&t=nx8STA72UPqja0g65cBo_ckCn0T4R104s8stA6ugL3o"> <b>Harvard</b>: <a href="https://courses.edx.org/certificates/0d0d1e558ed840a1bb8dd299a33593a6">CS50</a></li>
+        <li class="cert-entry"><img class="cert-logo" src="https://media.licdn.com/dms/image/v2/C560BAQEHKffoI8RwIQ/company-logo_100_100/company-logo_100_100/0/1630672537710/deeplearningai_logo?e=1748476800&v=beta&t=VDbWU3erNr0WWgRkqrZBidX8eoHAtcG6ACIonUbZ-GQ"> <b>DeepLearning.AI</b>: <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/S29T8D9KM9JA">Deep Learning Specialization</a> - Mar 2025</li>
+        <li class="cert-entry"><img class="cert-logo" src="https://media.licdn.com/dms/image/v2/C560BAQHr9suxyJBXMw/company-logo_100_100/company-logo_100_100/0/1635534378870/stanford_university_logo?e=1748476800&v=beta&t=3y2sP8xz8lillFF_Yaygf0e8zWoj2jyrLwk7aKjNFhM"> <b>Stanford University & DeepLearning.AI</b>: <a href="https://www.coursera.org/account/accomplishments/specialization/certificate/SMDP1J8IEED1">Machine Learning Specialization</a> - Feb 2025</li>
       </ul>
     </section>
     <section id="projects">
@@ -144,13 +143,56 @@
       </ul>
     </section>
     <section id="linkedin">
-      <h2>LinkedIn Preview</h2>
-      <p>Qui puoi visualizzare direttamente il mio profilo LinkedIn:</p>
-      <div id="linkedin-preview" style="width: 100%; height: 600px;">
-        <iframe src="https://www.linkedin.com/in/landigf" width="100%" height="100%" style="border:0;" allowfullscreen sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
-      </div>
-      <p><a href="https://www.linkedin.com/in/landigf" target="_blank">Vai al mio profilo LinkedIn</a></p>
-    </section>
+  <h2>LinkedIn</h2>
+  <div style="display: flex; align-items: center; border: 2px solid #0a66c2; border-radius: 12px; padding: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); background-color: #f3f6f9;">
+    <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn Logo" style="height: 64px; margin-right: 20px;">
+    <div>
+      <h3 style="margin: 0;">Gennaro Francesco Landi</h3>
+      <p style="margin: 4px 0;">Computer Engineering Student</p>
+      <a href="https://www.linkedin.com/in/landigf" target="_blank" style="display: inline-block; padding: 8px 16px; background-color: #0a66c2; color: white; border-radius: 6px; text-decoration: none; font-weight: bold;">Visita il mio profilo</a>
+      <span onclick="triggerEasterEgg()" style="cursor: pointer;">.</span>
+    </div>
+  </div>
+  
+  <div id="ethModal" style="display: none; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0,0,0,0.8); z-index: 1000;">
+    <div onclick="this.parentElement.style.display='none'" style="cursor: pointer;">
+      <img src="/mnt/data/Screenshot 2025-03-28 at 13.00.03.png" alt="ETH Zurich Admission Letter" style="max-width: 90vw; max-height: 90vh; border: 4px solid white; border-radius: 8px;">
+    </div>
+  </div>
+  
+  <style>
+    @keyframes sparkle {
+      0% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+      50% { opacity: 1; transform: scale(1.5) rotate(180deg); }
+      100% { opacity: 0; transform: scale(0.5) rotate(360deg); }
+    }
+  
+    .sparkle {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      font-size: 48px;
+      color: gold;
+      transform: translate(-50%, -50%);
+      animation: sparkle 1s ease-out forwards;
+      z-index: 1001;
+      pointer-events: none;
+    }
+  </style>
+  
+  <script>
+    function triggerEasterEgg() {
+      document.getElementById('ethModal').style.display = 'flex';
+  
+      const sparkle = document.createElement('div');
+      sparkle.classList.add('sparkle');
+      sparkle.innerHTML = '✨';
+  
+      document.body.appendChild(sparkle);
+  
+      setTimeout(() => sparkle.remove(), 1000);
+    }
+  </script>
   </main>
   <footer>
     <p>Gennaro Francesco Landi &copy; 2024</p>
