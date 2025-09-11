@@ -560,6 +560,49 @@ a:hover {
   margin: 1rem 0;
 }
 
+/* Study Materials Styles */
+.study-materials {
+  margin: 2rem 0;
+}
+
+.study-materials h3 {
+  color: #333;
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+}
+
+.notes-list {
+  border-left: 3px solid #007bff;
+  padding-left: 1rem;
+}
+
+.note-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.note-item:last-child {
+  border-bottom: none;
+}
+
+.note-title {
+  color: #333;
+  font-weight: 500;
+}
+
+.note-item a {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.note-item a:hover {
+  text-decoration: underline;
+}
+
 /* ========== RESPONSIVE DESIGN ========== */
 
 @media (max-width: 768px) {
