@@ -212,6 +212,68 @@ a:hover {
   color: #333;
 }
 
+/* ========== BLOG FILTER STYLES ========== */
+
+.filter-container {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.filter-btn {
+  background: #f8f9fa;
+  border: 2px solid #e1e8ed;
+  color: #333;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-btn:hover {
+  background: #2980b9;
+  border-color: #2980b9;
+  color: white;
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.filter-btn.active {
+  background: #e74c3c;
+  border-color: #e74c3c;
+  color: white;
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.25);
+}
+
+.filter-btn i {
+  font-size: 0.8rem;
+}
+
+/* Animation for filtered posts */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ========== PAGINATION ========== */
 
 .pagination {
@@ -896,6 +958,16 @@ a:hover {
   
   .content-header h1 {
     font-size: 24px;
+  }
+  
+  /* Filter buttons responsive */
+  .filter-buttons {
+    gap: 0.3rem;
+  }
+  
+  .filter-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
   }
 }
 

@@ -92,11 +92,46 @@
         <div class="blog-disclaimer">
           <p><em>I've always wanted to write a blog but never convinced myself I was capable of it. However, I honestly use LLMs to quickly transform my thoughts into words - at least something remains! So non-technical posts will be co-authored by some model :)</em></p>
         </div>
+        
+        <!-- Tag Filter System -->
+        <div class="tag-filter-container">
+          <h3>Filter by topics:</h3>
+          <div class="tag-filters">
+            <button class="tag-filter active" data-tag="all">
+              <i class="fas fa-globe"></i>
+              All Posts
+            </button>
+            <button class="tag-filter" data-tag="Big Data">
+              <i class="fas fa-database"></i>
+              Big Data
+            </button>
+            <button class="tag-filter" data-tag="Competitive Programming">
+              <i class="fas fa-code"></i>
+              Competitive Programming
+            </button>
+            <button class="tag-filter" data-tag="ETH Zurich">
+              <i class="fas fa-university"></i>
+              ETH Zurich
+            </button>
+            <button class="tag-filter" data-tag="University">
+              <i class="fas fa-graduation-cap"></i>
+              University Life
+            </button>
+            <button class="tag-filter" data-tag="Algorithms">
+              <i class="fas fa-project-diagram"></i>
+              Algorithms
+            </button>
+            <button class="tag-filter" data-tag="Data Management">
+              <i class="fas fa-server"></i>
+              Data Management
+            </button>
+          </div>
+        </div>
       </div>
       
       <!-- Blog Posts Section -->
       <section class="blog-section">
-        <div class="blog-post">
+        <div class="blog-post" data-tags="Big Data,Distributed Systems,ETH Zurich,Data Management">
           <div class="post-meta">
             <span class="post-date">22 September 2025</span>
             <span class="post-category">Data Management</span>
@@ -122,7 +157,7 @@
           </div>
         </div>
 
-        <div class="blog-post">
+        <div class="blog-post" data-tags="Competitive Programming,Algorithms,ETH Zurich,Data Structures">
           <div class="post-meta">
             <span class="post-date">22 September 2025</span>
             <span class="post-category">Computer Science</span>
@@ -148,7 +183,7 @@
           </div>
         </div>
 
-        <div class="blog-post">
+        <div class="blog-post" data-tags="University,Study Tips,Life Lessons,Computer Engineering">
           <div class="post-meta">
             <span class="post-date">11 September 2025</span>
             <span class="post-category">University Life</span>
@@ -175,6 +210,40 @@
         </div>
       </section>
     </main>
+  
+  <script>
+    // Blog filter functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const blogPosts = document.querySelectorAll('.blog-post');
+      
+      filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const filterValue = this.getAttribute('data-filter');
+          
+          // Update active button
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Filter posts
+          blogPosts.forEach(post => {
+            if (filterValue === 'all') {
+              post.style.display = 'block';
+              post.style.animation = 'fadeIn 0.3s ease-in-out';
+            } else {
+              const postTags = post.getAttribute('data-tags');
+              if (postTags && postTags.includes(filterValue)) {
+                post.style.display = 'block';
+                post.style.animation = 'fadeIn 0.3s ease-in-out';
+              } else {
+                post.style.display = 'none';
+              }
+            }
+          });
+        });
+      });
+    });
+  </script>
   </div>
 
 </body>
