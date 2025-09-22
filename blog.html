@@ -214,12 +214,12 @@
   <script>
     // Blog filter functionality
     document.addEventListener('DOMContentLoaded', function() {
-      const filterButtons = document.querySelectorAll('.filter-btn');
+      const filterButtons = document.querySelectorAll('.tag-filter');
       const blogPosts = document.querySelectorAll('.blog-post');
       
       filterButtons.forEach(button => {
         button.addEventListener('click', function() {
-          const filterValue = this.getAttribute('data-filter');
+          const filterValue = this.getAttribute('data-tag');
           
           // Update active button
           filterButtons.forEach(btn => btn.classList.remove('active'));

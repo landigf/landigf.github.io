@@ -214,12 +214,12 @@ a:hover {
 
 /* ========== BLOG FILTER STYLES ========== */
 
-.filter-container {
+.tag-filter-container {
   margin-bottom: 2rem;
   text-align: center;
 }
 
-.filter-buttons {
+.tag-filters {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -227,7 +227,7 @@ a:hover {
   margin-top: 1rem;
 }
 
-.filter-btn {
+.tag-filter {
   background: #f8f9fa;
   border: 2px solid #e1e8ed;
   color: #333;
@@ -243,7 +243,7 @@ a:hover {
   gap: 0.5rem;
 }
 
-.filter-btn:hover {
+.tag-filter:hover {
   background: #2980b9;
   border-color: #2980b9;
   color: white;
@@ -251,14 +251,14 @@ a:hover {
   text-decoration: none;
 }
 
-.filter-btn.active {
+.tag-filter.active {
   background: #e74c3c;
   border-color: #e74c3c;
   color: white;
   box-shadow: 0 4px 12px rgba(231, 76, 60, 0.25);
 }
 
-.filter-btn i {
+.tag-filter i {
   font-size: 0.8rem;
 }
 
@@ -961,11 +961,11 @@ a:hover {
   }
   
   /* Filter buttons responsive */
-  .filter-buttons {
+  .tag-filters {
     gap: 0.3rem;
   }
   
-  .filter-btn {
+  .tag-filter {
     padding: 0.4rem 0.8rem;
     font-size: 0.8rem;
   }
