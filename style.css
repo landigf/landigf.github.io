@@ -710,6 +710,106 @@ a:hover {
   margin: 0 0 1rem 0;
 }
 
+/* Big Data specific styles */
+.course-info {
+  background: #f8f9fa;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.course-info h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+}
+
+.course-info ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.status-badge {
+  background: #007bff;
+  color: white;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.key-definition {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border-left: 4px solid #2196f3;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  border-radius: 0 8px 8px 0;
+  font-size: 1.1rem;
+}
+
+.velocity-factors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.factor {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 3px solid #007bff;
+}
+
+.factor h4 {
+  margin: 0 0 0.5rem 0;
+  color: #007bff;
+}
+
+.factor p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.red-thread {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  border-radius: 12px;
+  border: 2px solid #ff9800;
+}
+
+.thread-item {
+  background: #ff9800;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.arrow {
+  font-size: 1.5rem;
+  color: #ff9800;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .red-thread {
+    flex-direction: column;
+  }
+  
+  .arrow {
+    transform: rotate(90deg);
+  }
+}
+
 /* ========== RESPONSIVE DESIGN ========== */
 
 @media (max-width: 768px) {
