@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <!-- begin SEO -->
+  <title>Competitive Programming Notes: From Self-Doubt to Understanding - Gennaro Francesco Landi</title>
+  <meta property="og:locale" content="en-US">
+  <meta property="og:site_name" content="Gennaro Francesco Landi">
+  <meta property="og:title" content="Competitive Programming Notes: From Self-Doubt to Understanding">
+  <link rel="canonical" href="https://landigf.github.io/competitive-programming-notes.html">
+  <meta property="og:url" content="https://landigf.github.io/competitive-programming-notes.html">
+  <meta property="og:description" content="My journey through competitive programming concepts: graphs, algorithms, and data structures">
+  
+  <script type="application/ld+json">
+  {
+    "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "headline" : "Competitive Programming Notes: From Self-Doubt to Understanding",
+    "author" : {
+      "@type" : "Person",
+      "name" : "Gennaro Francesco Landi"
+    },
+    "datePublished" : "2025-09-22",
+    "url" : "https://landigf.github.io/competitive-programming-notes.html"
+  }
+  </script>
+  <!-- end SEO -->
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script>
+    document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  </script>
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon-32x32.png" type="image/png">
+  <meta http-equiv="cleartype" content="on">
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <!-- Code highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</head>
+<body>
+  <!--[if lt IE 9]>
+  <div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+  <![endif]-->
+  
+  <!-- Top Navigation Bar -->
+  <nav class="top-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">Master's Student</a>
+      <div class="nav-links">
+        <a href="blog.html">Blog Posts</a>
+        <a href="https://drive.google.com/file/d/1ro7xXYHO7LStwX--xrV8lnhf-Y90wttj/view?usp=sharing" target="_blank">CV</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Container -->
+  <div class="main-container">
+    <!-- Left Sidebar with Profile -->
+    <aside class="sidebar">
+      <div class="profile-section">
+        <div class="profile-image">
+          <img src="profile_pic.png" alt="Gennaro Francesco Landi">
+        </div>
+        <div class="profile-info">
+          <h2>Gennaro Francesco</h2>
+          <div class="contact-info">
+            <div class="contact-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Zurich, Switzerland</span>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <a href="mailto:landigf.work@gmail.com">Email</a>
+            </div>
+            <div class="contact-item">
+              <i class="fab fa-linkedin"></i>
+              <a href="https://www.linkedin.com/in/landigf" target="_blank">LinkedIn</a>
+            </div>
+            <div class="contact-item">
+              <i class="fab fa-github"></i>
+              <a href="https://github.com/landigf" target="_blank">Github</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="content">
+      <div class="back-link">
+        <a href="blog.html">← Back to Blog</a>
+      </div>
+      
+      <article class="blog-post-full">
+        <div class="post-header">
+          <div class="post-meta">
+            <span class="post-date">22 September 2025</span>
+            <span class="post-category">Computer Science</span>
+          </div>
+          <h1>Competitive Programming Notes: From Self-Doubt to Understanding</h1>
+        </div>
+        
+        <div class="post-content">
+          <p><em>"Competitive Programming is a Bad Word"</em> - that's how I started these notes. My self-esteem had decreased by 69% after the first AlgoLab lesson, so I decided to (cry and) explain the key concepts behind every ADS or Competitive Programming textbook.</p>
+          
+          <p>This post is basically my journey through the prerequisites for AlgoLab at ETH, covering algorithmic design methods, data structures, and graph algorithms. It's raw, honest, and filled with the kind of notes I wish I had when starting out.</p>
+
+          <h2>The Prerequisites That Scared Me</h2>
+          <p>Here's what AlgoLab expects you to know (spoiler: it's a lot):</p>
+          
+          <h3>Algorithmic Design Methods</h3>
+          <ul>
+            <li><strong>Greedy:</strong> Minimum spanning tree (Kruskal and Prim)</li>
+            <li><strong>Divide and Conquer:</strong> Mergesort, quicksort, convex hull</li>
+            <li><strong>Dynamic Programming:</strong> Longest increasing subsequence, knapsack, matrix multiplication</li>
+            <li><strong>Backtracking and Recursion:</strong> Maximum independent set, 8-Queens problem</li>
+          </ul>
+
+          <h3>Data Structures</h3>
+          <ul>
+            <li><strong>Basic:</strong> Array, list, stack, queue, hash table, binary search tree, bitmask</li>
+            <li><strong>Priority Queues:</strong> Binary heap</li>
+            <li><strong>Union Find:</strong> With path compression heuristic</li>
+          </ul>
+
+          <h2>Data Structures Selection</h2>
+          <p>One of the most valuable things I learned was this decision flowchart for choosing the right data structure. It's been a lifesaver in competitive programming:</p>
+          
+          <div class="image-container">
+            <img src="assets/Data Structures Selection.png" alt="Data Structures Selection Flowchart" style="max-width: 100%; height: auto;">
+          </div>
+
+          <h2>Graphs: The Beast I Had to Tame</h2>
+          <p>I started with graphs because it's the last data structure I didn't know well. Here's what I learned:</p>
+          
+          <blockquote>
+            <p>A graph is simply a way of encoding pairwise relationships among a set of objects: it consists of a collection V of <em>nodes</em> and a collection E of <em>edges</em>, each of which "joins" two of the nodes.</p>
+          </blockquote>
+
+          <h3>Graph Representations</h3>
+          <p>There are three main ways to represent graphs, each with trade-offs. Here are some visual examples:</p>
+          
+          <div class="graph-examples">
+            <div class="graph-representation">
+              <h4>Visual Example: Graph with Different Representations</h4>
+              <div class="image-container">
+                <img src="assets/graph1.png" alt="Graph representation examples" style="max-width: 100%; height: auto;">
+              </div>
+              <p><em>The same graph shown with (a) visual representation, (b) adjacency list, and (c) adjacency matrix</em></p>
+            </div>
+            
+            <div class="graph-types">
+              <h4>Connected vs Disconnected Graphs</h4>
+              <div class="image-container">
+                <img src="assets/graph2.png" alt="Connected graph example" style="max-width: 100%; height: auto;">
+              </div>
+              <p><em>A connected graph where you can reach any node from any other node</em></p>
+            </div>
+            
+            <div class="graph-types">
+              <h4>Directed Graphs</h4>
+              <div class="image-container">
+                <img src="assets/graph3.png" alt="Directed graph example" style="max-width: 100%; height: auto;">
+              </div>
+              <p><em>In directed graphs, edges have direction - you can only traverse them one way</em></p>
+            </div>
+            
+            <div class="graph-types">
+              <h4>Simple vs Non-Simple Graphs</h4>
+              <div class="image-container">
+                <img src="assets/graph4.png" alt="Simple graph example" style="max-width: 100%; height: auto;">
+              </div>
+              <p><em>Simple graphs have no self-loops or multiple edges between the same nodes</em></p>
+            </div>
+          </div>
+          
+          <div class="comparison-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Space</th>
+                  <th>Edge Check</th>
+                  <th>Find Neighbors</th>
+                  <th>Best For</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Adjacency Matrix</td>
+                  <td>O(V²)</td>
+                  <td>O(1)</td>
+                  <td>O(V)</td>
+                  <td>Dense, small graphs</td>
+                </tr>
+                <tr>
+                  <td>Adjacency List</td>
+                  <td>O(V+E)</td>
+                  <td>O(degree)</td>
+                  <td>O(degree)</td>
+                  <td>Sparse graphs</td>
+                </tr>
+                <tr>
+                  <td>Edge List</td>
+                  <td>O(E)</td>
+                  <td>O(E)</td>
+                  <td>O(E)</td>
+                  <td>Edge-focused algorithms</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Adjacency List Implementation</h3>
+          <p>Here's how to implement adjacency lists in C++. The key insight is using a vector of vectors:</p>
+          
+          <div class="implementation-examples">
+            <div class="image-container">
+              <img src="assets/graph5.png" alt="Adjacency list implementation" style="max-width: 100%; height: auto;">
+            </div>
+            <div class="image-container">
+              <img src="assets/graph6.png" alt="Adjacency list code example" style="max-width: 100%; height: auto;">
+            </div>
+          </div>
+
+          <div class="fun-moment">
+            <h4>A Fun Graph Moment 🐐</h4>
+            <div class="image-container">
+              <img src="assets/graph7.png" alt="Fun graph visualization" style="max-width: 100%; height: auto;">
+            </div>
+            <p><em>Sometimes graphs can look pretty cool! This one reminded me of a mountain goat.</em></p>
+          </div>
+
+          <h2>Graph Traversal: DFS vs BFS</h2>
+          
+          <h3>Depth-First Search (DFS)</h3>
+          <p>The key insight with DFS is to explore neighbors before processing the node itself, and always keep track of visited nodes to avoid cycles.</p>
+          
+          <pre><code class="language-cpp">void dfs(const vector&lt;vector&lt;int&gt;&gt;&amp; graph,
+         int v, vector&lt;int&gt;&amp; exp_lst){
+    if (exp_lst[v]) return;
+    cout &lt;&lt; "Explored node: " &lt;&lt; v;
+    exp_lst[v] = 1;
+    for (int node : graph[v])
+        dfs(graph, node, exp_lst);
+}</code></pre>
+
+          <h3>Breadth-First Search (BFS)</h3>
+          <p>BFS is perfect for finding shortest paths in unweighted graphs. It processes nodes level by level using a queue.</p>
+          
+          <pre><code class="language-cpp">void bfs(const vector&lt;vector&lt;int&gt;&gt;&amp; graph,
+         int v, vector&lt;int&gt;&amp; dist){
+    queue&lt;int&gt; q;
+    dist[v] = 0;
+    q.push(v);
+    
+    while(!q.empty()){
+        int current = q.front(); q.pop();
+        for (int neighbor : graph[current])
+            if (dist[neighbor] == -1) {
+                dist[neighbor] = dist[current] + 1;
+                q.push(neighbor);
+            }
+    }
+}</code></pre>
+
+          <h2>Shortest Path Algorithms</h2>
+          
+          <h3>Dijkstra's Algorithm</h3>
+          <p>For weighted graphs with non-negative edges, Dijkstra's is the go-to. It's greedy and efficient:</p>
+          
+          <pre><code class="language-cpp">// Using priority queue for efficiency
+priority_queue&lt;pair&lt;int,int&gt;&gt; pq;
+vector&lt;int&gt; dist(V, INF);
+vector&lt;bool&gt; processed(V, false);
+
+dist[start] = 0;
+pq.push({0, start});
+
+while (!pq.empty()) {
+    int u = pq.top().second; pq.pop();
+    if (processed[u]) continue;
+    processed[u] = true;
+    
+    for (auto edge : graph[u]) {
+        int v = edge.first, weight = edge.second;
+        if (dist[u] + weight &lt; dist[v]) {
+            dist[v] = dist[u] + weight;
+            pq.push({-dist[v], v});
+        }
+    }
+}</code></pre>
+
+          <h3>Bellman-Ford Algorithm</h3>
+          <p>When you have negative edges (but no negative cycles), Bellman-Ford is your friend. It's slower but more versatile:</p>
+          
+          <pre><code class="language-cpp">vector&lt;int&gt; dist(V, INF);
+dist[start] = 0;
+
+// Relax edges V-1 times
+for (int i = 0; i &lt; V-1; ++i) {
+    for (auto [u, v, weight] : edges) {
+        if (dist[u] != INF &amp;&amp; dist[u] + weight &lt; dist[v]) {
+            dist[v] = dist[u] + weight;
+        }
+    }
+}</code></pre>
+
+          <h2>Performance Tips I Learned the Hard Way</h2>
+          <p>After getting countless TLE (Time Limit Exceeded) errors, here's what actually matters:</p>
+          
+          <ul>
+            <li><strong>I/O Optimization:</strong> Always use <code>std::ios_base::sync_with_stdio(false)</code></li>
+            <li><strong>Pass by Reference:</strong> Use <code>const&amp;</code> for large objects in function parameters</li>
+            <li><strong>Choose the Right Data Structure:</strong> That diagram I included in my notes is gold</li>
+            <li><strong>Random Shuffle:</strong> Sometimes the input is adversarial - <code>std::random_shuffle</code> can help</li>
+          </ul>
+
+          <h2>What's Next?</h2>
+          <p>This is just the beginning. I still need to cover:</p>
+          <ul>
+            <li>Minimum Spanning Trees (Kruskal's and Prim's)</li>
+            <li>Maximum Flow algorithms</li>
+            <li>Dynamic Programming patterns</li>
+            <li>More graph theory concepts</li>
+          </ul>
+
+          <h2>Honest Reflection</h2>
+          <p>Writing these notes was therapeutic. It forced me to understand concepts deeply enough to explain them. The imposter syndrome is real in competitive programming, but breaking down complex algorithms into digestible pieces makes them less intimidating.</p>
+          
+          <p>If you're struggling with AlgoLab or competitive programming in general, remember: we're all just trying to figure it out. The "god-tier" competitive programmers weren't born knowing Dijkstra's algorithm - they just practiced and studied systematically.</p>
+          
+          <p>Keep coding, keep learning, and don't let a bad first lesson define your journey. 🚀</p>
+        </div>
+        
+        <div class="post-tags">
+          <span class="tag">Competitive Programming</span>
+          <span class="tag">Algorithms</span>
+          <span class="tag">Data Structures</span>
+          <span class="tag">Graphs</span>
+          <span class="tag">ETH Zurich</span>
+        </div>
+      </article>
+    </main>
+  </div>
+
+</body>
+</html>

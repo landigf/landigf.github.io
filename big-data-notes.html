@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <!-- begin SEO -->
+  <title>Big Data Course Notes: Rebuilding the Tech Stack for Scale - Gennaro Francesco Landi</title>
+  <meta property="og:locale" content="en-US">
+  <meta property="og:site_name" content="Gennaro Francesco Landi">
+  <meta property="og:title" content="Big Data Course Notes: Rebuilding the Tech Stack for Scale">
+  <link rel="canonical" href="https://landigf.github.io/big-data-notes.html">
+  <meta property="og:url" content="https://landigf.github.io/big-data-notes.html">
+  <meta property="og:description" content="My journey through ETH's Big Data course: from the three Vs to distributed systems">
+  
+  <script type="application/ld+json">
+  {
+    "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "headline" : "Big Data Course Notes: Rebuilding the Tech Stack for Scale",
+    "author" : {
+      "@type" : "Person",
+      "name" : "Gennaro Francesco Landi"
+    },
+    "datePublished" : "2025-09-22",
+    "url" : "https://landigf.github.io/big-data-notes.html"
+  }
+  </script>
+  <!-- end SEO -->
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script>
+    document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  </script>
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon-32x32.png" type="image/png">
+  <meta http-equiv="cleartype" content="on">
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <!-- Code highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</head>
+<body>
+  <!--[if lt IE 9]>
+  <div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+  <![endif]-->
+  
+  <!-- Top Navigation Bar -->
+  <nav class="top-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">Master's Student</a>
+      <div class="nav-links">
+        <a href="blog.html">Blog Posts</a>
+        <a href="https://drive.google.com/file/d/1ro7xXYHO7LStwX--xrV8lnhf-Y90wttj/view?usp=sharing" target="_blank">CV</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Container -->
+  <div class="main-container">
+    <!-- Left Sidebar with Profile -->
+    <aside class="sidebar">
+      <div class="profile-section">
+        <div class="profile-image">
+          <img src="profile_pic.png" alt="Gennaro Francesco Landi">
+        </div>
+        <div class="profile-info">
+          <h2>Gennaro Francesco</h2>
+          <div class="contact-info">
+            <div class="contact-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Zurich, Switzerland</span>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <a href="mailto:landigf.work@gmail.com">Email</a>
+            </div>
+            <div class="contact-item">
+              <i class="fab fa-linkedin"></i>
+              <a href="https://www.linkedin.com/in/landigf" target="_blank">LinkedIn</a>
+            </div>
+            <div class="contact-item">
+              <i class="fab fa-github"></i>
+              <a href="https://github.com/landigf" target="_blank">Github</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="content">
+      <div class="back-link">
+        <a href="blog.html">← Back to Blog</a>
+      </div>
+      
+      <article class="blog-post-full">
+        <div class="post-header">
+          <div class="post-meta">
+            <span class="post-date">22 September 2025</span>
+            <span class="post-category">Data Management</span>
+          </div>
+          <h1>Big Data Course Notes: Rebuilding the Tech Stack for Scale</h1>
+        </div>
+        
+        <div class="post-content">
+          <div class="course-info">
+            <h3>📚 Course Information</h3>
+            <ul>
+              <li><strong>Professor:</strong> G. Fourny</li>
+              <li><strong>Credits:</strong> 10 ECTS</li>
+              <li><strong>Semester:</strong> Fall 2025</li>
+              <li><strong>Status:</strong> <span class="status-badge">In Progress</span></li>
+            </ul>
+          </div>
+
+          <blockquote class="key-definition">
+            <strong>Big Data</strong> is a portfolio of technologies that were designed to <strong>store</strong>, <strong>manage</strong> and <strong>analyze data</strong> that is too <strong>large</strong> to fit on a single machine, while accommodating for the issue of growing <strong>discrepancy</strong> between <strong>capacity, throughput</strong> and <strong>latency</strong>.
+          </blockquote>
+
+          <p>Welcome to my journey through ETH's Big Data course! This is where theory meets reality, and where I'm learning that handling petabytes of data requires fundamentally rethinking everything we know about databases and systems.</p>
+
+          <h2>The Big Picture Problem</h2>
+          <p>Here's the core challenge that blew my mind in the first lecture:</p>
+          
+          <blockquote>
+            How do we deal with BIG data? Traditionally, a DBMS fits on a single machine. But Petabytes of data do not fit on a single machine.
+            <br><br>
+            As a consequence, in this course, we will have to <strong>rebuild the entire technology stack</strong>, bottom to top, with those same concepts and insights that we got in the past decades, but on a cluster of machines rather than on a single machine.
+          </blockquote>
+
+          <div class="image-container">
+            <img src="BigData 270eb47debea81cdba9afcc5e72665d1/IMG_0268.jpeg" alt="Big Data Technology Stack" style="max-width: 100%; height: auto;">
+            <p><em>The evolution from single-machine to distributed systems</em></p>
+          </div>
+
+          <h2>The Three Vs of Big Data</h2>
+          <p>Everything in big data revolves around three fundamental challenges:</p>
+
+          <h3>1. Volume 📏</h3>
+          <p>The scale is just insane. We're talking about prefixes that sound like science fiction:</p>
+          <ul>
+            <li>Terabytes (10¹²) - This used to be "big"</li>
+            <li>Petabytes (10¹⁵) - Now we're talking</li>
+            <li>Exabytes (10¹⁸) - Google-scale stuff</li>
+            <li>Zettabytes (10²¹) - Global internet traffic</li>
+            <li>Yottabytes (10²⁴) - Theoretical for now... right?</li>
+          </ul>
+
+          <h3>2. Variety 🌈</h3>
+          <p>Data isn't just tables anymore. Modern systems need to handle 5 different shapes:</p>
+          <ol>
+            <li><strong>Tables</strong> - The classic relational model</li>
+            <li><strong>Trees</strong> - XML, JSON, Parquet, Avro formats</li>
+            <li><strong>Graphs</strong> - Think Neo4j, social networks</li>
+            <li><strong>Cubes</strong> - Business analytics and OLAP</li>
+            <li><strong>Vectors</strong> - Embeddings for unstructured data (text, images, audio)</li>
+          </ol>
+
+          <h3>3. Velocity ⚡</h3>
+          <p>This is where things get really interesting. There's a growing distortion between three factors:</p>
+          
+          <div class="velocity-factors">
+            <div class="factor">
+              <h4>Capacity</h4>
+              <p>How much data we can store per unit of volume</p>
+            </div>
+            <div class="factor">
+              <h4>Throughput</h4>
+              <p>How many bytes we can read per unit of time</p>
+            </div>
+            <div class="factor">
+              <h4>Latency</h4>
+              <p>How long we wait until bytes start arriving</p>
+            </div>
+          </div>
+
+          <h2>The Solutions: Parallel and Batch</h2>
+          <p>The course teaches us two fundamental approaches to tackle these challenges:</p>
+
+          <h3>Parallelization 🔄</h3>
+          <p>To bridge the gap between capacity and throughput, we need to:</p>
+          <ul>
+            <li>Exploit sequential access & parallelism (batch jobs, scans, partitioning)</li>
+            <li>Use distribution to overcome single-node throughput limits</li>
+            <li>Hide latency with caching, replication, and in-memory techniques</li>
+          </ul>
+
+          <h3>Batch Processing 📦</h3>
+          <p>To handle the throughput vs latency gap, we move from real-time to batch processing that runs automatically and efficiently processes large chunks of data.</p>
+
+          <div class="image-container">
+            <img src="BigData 270eb47debea81cdba9afcc5e72665d1/Screenshot_2025-09-22_at_19.56.32.png" alt="Big Data Architecture Overview" style="max-width: 100%; height: auto;">
+            <p><em>Modern big data architecture - from raw data to insights</em></p>
+          </div>
+
+          <h2>Key Technologies and Concepts</h2>
+          
+          <h3>The Foundation: HDFS and MapReduce</h3>
+          <p><strong>Pro tip from my notes:</strong> Pay close attention to HDFS and MapReduce - they're the building blocks everything else rests on.</p>
+
+          <h3>The Evolution: From NoSQL to Modern Systems</h3>
+          <p>The course covers the evolution of data storage beyond traditional RDBMS:</p>
+          <ol>
+            <li><strong>Wide Column Stores</strong> - Like Cassandra</li>
+            <li><strong>Document Stores</strong> - MongoDB and friends</li>
+            <li><strong>Key-Value Stores</strong> - Redis, DynamoDB</li>
+            <li><strong>Graph Stores</strong> - Neo4j, Amazon Neptune</li>
+          </ol>
+
+          <h2>Data Independence: The Guiding Principle</h2>
+          <blockquote>
+            Data independence means that the logical view on the data is cleanly separated, decoupled, from its physical storage.
+          </blockquote>
+
+          <p>This concept, introduced by Edgar Codd in 1970, is still the foundation of everything we do. Even in distributed systems, we want to hide physical complexity and expose simple, clean models.</p>
+
+          <h2>The Red Thread 🧵</h2>
+          <p>Here's the conceptual flow that ties everything together:</p>
+          
+          <div class="red-thread">
+            <span class="thread-item">Raw Data (Objects/Blocks)</span>
+            <span class="arrow">→</span>
+            <span class="thread-item">Data Model</span>
+            <span class="arrow">→</span>
+            <span class="thread-item">Processing</span>
+            <span class="arrow">→</span>
+            <span class="thread-item">Declarative Language</span>
+          </div>
+
+          <p>When the course talks about normalization, models, or declarative queries, I immediately connect it to Spark SQL and JSONiq. This mental framework has been incredibly helpful.</p>
+
+          <h2>Learning Strategy</h2>
+          <p>Some practical advice for anyone taking this course:</p>
+          
+          <ul>
+            <li><strong>Focus intensely on HDFS and MapReduce</strong> - Everything builds on these</li>
+            <li><strong>Connect concepts to Spark SQL/JSONiq</strong> - Especially when discussing normalization and declarative models</li>
+            <li><strong>Follow the red thread</strong> - Always trace from raw data to final query language</li>
+            <li><strong>Study 3-4 hours per week</strong> - The material is dense but manageable</li>
+          </ul>
+
+          <div class="image-container">
+            <img src="BigData 270eb47debea81cdba9afcc5e72665d1/Screenshot_2025-09-18_at_10.04.56.png" alt="Course Study Plan" style="max-width: 100%; height: auto;">
+            <p><em>My study schedule and approach for the course</em></p>
+          </div>
+
+          <h2>What's Coming Next</h2>
+          <p>As the course progresses, I'll be diving deeper into:</p>
+          <ul>
+            <li>Distributed file systems and their trade-offs</li>
+            <li>MapReduce programming paradigms</li>
+            <li>Spark and modern distributed computing</li>
+            <li>Data modeling for different shapes (trees, graphs, cubes)</li>
+            <li>Query optimization in distributed systems</li>
+          </ul>
+
+          <h2>Final Thoughts</h2>
+          <p>This course is fundamentally changing how I think about data systems. The realization that we need to "rebuild the entire technology stack" for distributed systems is both daunting and exciting.</p>
+          
+          <p>It's fascinating to see how the principles from traditional databases (like data independence) still apply, but require completely different implementations when you're dealing with clusters instead of single machines.</p>
+          
+          <p>The 💽 emoji in my course notes isn't just decoration - it represents this massive shift from single disks to distributed storage that's reshaping the entire field of data management.</p>
+
+          <p>More updates to come as I progress through HDFS, MapReduce, and beyond! 🚀</p>
+        </div>
+        
+        <div class="post-tags">
+          <span class="tag">Big Data</span>
+          <span class="tag">Distributed Systems</span>
+          <span class="tag">ETH Zurich</span>
+          <span class="tag">Data Management</span>
+          <span class="tag">HDFS</span>
+          <span class="tag">MapReduce</span>
+        </div>
+      </article>
+    </main>
+  </div>
+
+</body>
+</html>

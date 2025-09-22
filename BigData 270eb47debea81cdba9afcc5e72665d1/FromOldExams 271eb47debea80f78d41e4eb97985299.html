@@ -1,0 +1,689 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>FromOldExams</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.highlight-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.highlight-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 111, 200, 0.09);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(128, 125, 120, 1);
+	fill: rgba(128, 125, 120, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(204, 121, 47, 1);
+	fill: rgba(204, 121, 47, 1);
+}
+.block-color-yellow {
+	color: rgba(195, 148, 67, 1);
+	fill: rgba(195, 148, 67, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(63, 126, 190, 1);
+	fill: rgba(63, 126, 190, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(179, 84, 136, 1);
+	fill: rgba(179, 84, 136, 1);
+}
+.block-color-red {
+	color: rgba(201, 85, 73, 1);
+	fill: rgba(201, 85, 73, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(232, 242, 250, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 99, 174, 0.172); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="271eb47d-ebea-80f7-8d41-e4eb97985299" class="page sans"><header><h1 class="page-title">FromOldExams</h1><p class="page-description"></p></header><div class="page-body"><h3 id="271eb47d-ebea-8096-aa19-cd2e2cec0193" class=""><strong>1. Introduction</strong></h3><p id="271eb47d-ebea-80dc-8af8-f8dd5bd6a9fe" class="">This section covers the fundamental motivations and high-level concepts behind Big Data.</p><ul id="271eb47d-ebea-8083-9182-ddf02d6a44c2" class="bulleted-list"><li style="list-style-type:disc">(HS18) Why did <strong>batch processing</strong> become necessary? (e.g., latency improved at a lower rate than throughput).</li></ul><ul id="271eb47d-ebea-8004-8772-ecc972b55793" class="bulleted-list"><li style="list-style-type:disc">(HS18) Name the <strong>three Vs</strong> of Big Data.</li></ul><ul id="271eb47d-ebea-8067-bdfb-d3fbac8db0c3" class="bulleted-list"><li style="list-style-type:disc">(HS19) What are the typical current values and units for <strong>HDD capacity, bandwidth, and latency</strong>?</li></ul><ul id="271eb47d-ebea-804a-9a50-c02439bf63b9" class="bulleted-list"><li style="list-style-type:disc">(HS18) Map the prefixes of the international system of units (<strong>Peta, Exa, Zetta</strong>, etc.) to the number of zeros.</li></ul><ul id="271eb47d-ebea-809c-8048-d7f2ec3d0a7c" class="bulleted-list"><li style="list-style-type:disc">(HS18, HS19) True/False questions about <strong>scaling up vs. scaling out</strong>.</li></ul><ul id="271eb47d-ebea-8001-9081-ca5def8bdff9" class="bulleted-list"><li style="list-style-type:disc">(HS19) Which four database technologies are commonly referred to as <strong>NoSQL</strong>?</li></ul><ul id="271eb47d-ebea-80d4-b813-ebe55bb4f315" class="bulleted-list"><li style="list-style-type:disc">(HS20, HS21) True/False questions about <strong>capacity, latency, and throughput</strong> over time.</li></ul><hr id="271eb47d-ebea-80e5-87ae-c98fccb56bbe"/><h3 id="271eb47d-ebea-80c5-ae35-f359f19f9549" class=""><strong>2. Lessons learned from the past</strong></h3><p id="271eb47d-ebea-8027-af7c-fde438e1d45e" class="">This section focuses on the foundational principles derived from traditional relational database systems.</p><blockquote id="271eb47d-ebea-800c-b6f9-e1b60bfaecd5" class="">Theory: Data independence means that the logical view on the data is cleanly separated, decoupled, from its physical storage. A RDBMS exposes a table as logical model, together with logical building block for manipulating it.</blockquote><ul id="271eb47d-ebea-80ae-96a3-f048c5e381c3" class="bulleted-list"><li style="list-style-type:disc">(HS18, FS21) Codd&#x27;s 1970 paper introduced which concepts? (<strong>relational algebra, data independence</strong>).</li></ul><ul id="271eb47d-ebea-802d-be8f-cc07b0c3c9bb" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS18) Questions on <strong>Relational Algebra equations</strong> and their validity under set and bag semantics.</li></ul><ul id="271eb47d-ebea-804a-bdf0-fe90419a4fce" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS18) Questions about <strong>normal forms</strong> and their properties.</li></ul><ul id="271eb47d-ebea-80bd-8fd5-f79b5d73d89c" class="bulleted-list"><li style="list-style-type:disc">(HS20) What does each letter in <strong>ACID</strong> stand for?</li></ul><ul id="271eb47d-ebea-807f-b08e-f7c974f1f3af" class="bulleted-list"><li style="list-style-type:disc">(FS21) In &quot;ACID database&quot; terminology, what does the <strong>A</strong> stand for? (Atomicity).</li></ul><ul id="271eb47d-ebea-8017-a8df-cba92fbfe1d7" class="bulleted-list"><li style="list-style-type:disc">(HS20, HS21) Is the <strong>SQL language</strong> declarative, procedural, or functional?</li></ul><hr id="271eb47d-ebea-80f1-87dd-d40884e2921d"/><h3 id="271eb47d-ebea-8096-8492-cbc449c54f97" class=""><strong>3. Cloud storage</strong></h3><p id="271eb47d-ebea-8022-a8bd-fa4bb187824f" class="">This chapter deals with storage paradigms built for the cloud, focusing on object stores and distributed key-value stores.</p><ul id="271eb47d-ebea-8045-86e9-fda6ffc8559d" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS18) True/False questions about <strong>Azure Blob Storage</strong> (e.g., page blobs, append blobs, block blobs).</li></ul><ul id="271eb47d-ebea-8033-879e-da6a19c8dfaa" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS18, HS19, FS21) True/False questions about <strong>Dynamo</strong> (e.g., consistent hashing, vector clocks, virtual nodes, eventual consistency).</li></ul><ul id="271eb47d-ebea-8089-a82d-c24d5a479768" class="bulleted-list"><li style="list-style-type:disc">(HS17) Given a sequence of <strong>vector clocks</strong>, choose the correct DAG representation.</li></ul><ul id="271eb47d-ebea-80fd-b0bc-e2f1998d88dd" class="bulleted-list"><li style="list-style-type:disc">(HS17) True/False questions about <strong>Merkle Trees</strong>.</li></ul><ul id="271eb47d-ebea-800e-84fb-d6fe4a175a22" class="bulleted-list"><li style="list-style-type:disc">(HS18, HS19, FS21) True/False questions about the <strong>CAP theorem</strong> (Consistency, Availability, Partition tolerance).</li></ul><ul id="271eb47d-ebea-8034-803b-ef47f1e48476" class="bulleted-list"><li style="list-style-type:disc">(HS21) Given machines with different memory sizes, compute the virtual node assignment for a <strong>Chord ring</strong>.</li></ul><hr id="271eb47d-ebea-80d2-99b3-ce160bb6c5b2"/><h3 id="271eb47d-ebea-8017-b225-d53c67c74cee" class=""><strong>4. Distributed file systems</strong></h3><p id="271eb47d-ebea-8036-8b41-fa516b22899c" class="">Here we cover file systems designed to run on large clusters of commodity hardware, with a focus on HDFS.</p><ul id="271eb47d-ebea-809b-b0f9-eecd0b77d118" class="bulleted-list"><li style="list-style-type:disc">(HS17) Which statements about <strong>HDFS</strong> are true? (e.g., designed for large files, commodity hardware).</li></ul><ul id="271eb47d-ebea-80b4-a66f-ce324fd5b97c" class="bulleted-list"><li style="list-style-type:disc">(HS17) Which statements about <strong>HDFS fault tolerance</strong> are correct? (e.g., checksums, heartbeats).</li></ul><ul id="271eb47d-ebea-80b1-ae28-e7763eabe716" class="bulleted-list"><li style="list-style-type:disc">(HS17) Which statements about <strong>writes to HDFS</strong> are correct? (e.g., write pipeline).</li></ul><ul id="271eb47d-ebea-803c-80ad-cacaae86acd7" class="bulleted-list"><li style="list-style-type:disc">(HS17) Which statements about <strong>reads from HDFS</strong> are correct? (e.g., NameNode role).</li></ul><ul id="271eb47d-ebea-8054-b903-f334f0b0cb70" class="bulleted-list"><li style="list-style-type:disc">(HS17) For each HDFS component, state if it&#x27;s stored on the <strong>NameNode or DataNode</strong>.</li></ul><ul id="271eb47d-ebea-80ce-b91e-d41a0e142cc4" class="bulleted-list"><li style="list-style-type:disc">(HS17) What are the benefits of storing objects as <strong>blocks</strong> instead of single files?</li></ul><hr id="271eb47d-ebea-80b9-bcda-df15c950804b"/><h3 id="271eb47d-ebea-8098-aa3b-f3d1742f1d5e" class=""><strong>5. Syntax</strong></h3><p id="271eb47d-ebea-8005-95a9-c471f95bf907" class="">This practical section is dedicated to writing queries in standard languages like SQL.</p><ul id="271eb47d-ebea-80e9-bb8b-ec80e50d3a67" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS18, HS19, HS20, FS21) A wide variety of <strong>SQL query writing tasks</strong>, such as:<ul id="271eb47d-ebea-801d-a052-f3db8e1b25b4" class="bulleted-list"><li style="list-style-type:circle">Finding the maximum salary.</li></ul><ul id="271eb47d-ebea-8090-9edf-d6944df72049" class="bulleted-list"><li style="list-style-type:circle">Finding last names that occur at least N times.</li></ul><ul id="271eb47d-ebea-8017-9dfc-c8b80aaa3cf0" class="bulleted-list"><li style="list-style-type:circle">Finding employees who were managers in multiple departments.</li></ul><ul id="271eb47d-ebea-80ed-b621-eccdeef1971b" class="bulleted-list"><li style="list-style-type:circle">Calculating the average salary per title.</li></ul><ul id="271eb47d-ebea-8062-b097-d4865752bd30" class="bulleted-list"><li style="list-style-type:circle">Finding the number of employees whose salary has decreased.</li></ul></li></ul><hr id="271eb47d-ebea-800b-bda0-cd210706099d"/><h3 id="271eb47d-ebea-8057-9269-e29fc48981ee" class=""><strong>6. Wide column stores</strong></h3><p id="271eb47d-ebea-8057-8bb5-eb24232de2d5" class="">This section explores databases that store data in columns rather than rows, like HBase and Cassandra.</p><ul id="271eb47d-ebea-8076-9ab4-f2cebbdc81c7" class="bulleted-list"><li style="list-style-type:disc">(HS17) Complete the sentence: &quot;<strong>HBase</strong> is a...&quot; (wide column store).</li></ul><ul id="271eb47d-ebea-80be-83a9-dff8f5d5f5e5" class="bulleted-list"><li style="list-style-type:disc">(HS17) If HFiles are write-once, how can a cell be <strong>deleted in HBase</strong>? (tombstone marker).</li></ul><ul id="271eb47d-ebea-8068-b471-c912b36a7f30" class="bulleted-list"><li style="list-style-type:disc">(HS17) A <strong>Cassandra column family</strong> is analogous to what in an RDBMS? (a table).</li></ul><ul id="271eb47d-ebea-8012-8fdf-f3a736fd3558" class="bulleted-list"><li style="list-style-type:disc">(HS17) True/False questions about <strong>Cassandra</strong> (e.g., CQL, write-ahead logging).</li></ul><ul id="271eb47d-ebea-80dd-b471-e0e93d69b431" class="bulleted-list"><li style="list-style-type:disc">(HS17) Given a table schema, which <strong>primary key definition</strong> in Cassandra ensures efficient queries?</li></ul><ul id="271eb47d-ebea-809e-8ff9-d62d53c20dde" class="bulleted-list"><li style="list-style-type:disc">(HS17) Which statements about <strong>Cassandra compaction</strong> are correct?</li></ul><hr id="271eb47d-ebea-80fb-80aa-e09b438ddaa9"/><h3 id="271eb47d-ebea-80d3-9a85-c78810a7862c" class=""><strong>7. Data models and validation</strong></h3><p id="271eb47d-ebea-80d9-833e-ee79fbb1e684" class="">This chapter examines different ways data can be structured and the rules governing that structure.</p><ul id="271eb47d-ebea-80d6-8ec6-c9e45e99bd82" class="bulleted-list"><li style="list-style-type:disc">(HS21) What are the <strong>four main data shapes</strong>? (tables, trees, graphs, cubes).</li></ul><ul id="271eb47d-ebea-80a5-955e-f782e01cbb0c" class="bulleted-list"><li style="list-style-type:disc">(HS17) Which <strong>data shape</strong> best suits the HBase model?</li></ul><ul id="271eb47d-ebea-80bc-a2b2-e81376ec3b75" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS19, FS21) What is the difference between a <strong>property graph and an RDF graph</strong>?</li></ul><ul id="271eb47d-ebea-80e1-b138-f4bab749ecf9" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS19) In <strong>MongoDB</strong>, how are documents identified?</li></ul><hr id="271eb47d-ebea-80c9-894e-dcb94e4b51d3"/><h3 id="271eb47d-ebea-80b8-8c9e-c1450c90349f" class=""><strong>8. Massive Parallel Processing</strong></h3><p id="271eb47d-ebea-8019-bf72-d09b83c3257c" class="">This covers the core frameworks for distributed data processing, MapReduce and Spark.</p><ul id="271eb47d-ebea-8022-b67f-fc067877d73c" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS18, HS19, FS21) Given pseudo-code for a <strong>MapReduce job</strong>, what is its output?</li></ul><ul id="271eb47d-ebea-80f8-8463-e0a0519b027e" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS18) Which statements about <strong>MapReduce combiners</strong> are true?</li></ul><ul id="271eb47d-ebea-8028-863b-ff123d26e8b3" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS18, HS19, FS21) What is the difference between <strong>transformations and actions in Spark</strong>?</li></ul><ul id="271eb47d-ebea-8081-bb00-c41ff08c8ae3" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS18, HS19, FS21) Classify Spark operations (map, reduceByKey, collect) as either <strong>transformations or actions</strong>.</li></ul><ul id="271eb47d-ebea-800d-a603-f91948075a5b" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS18, HS19) Which statements about the <strong>Spark execution plan (DAG, lazy evaluation)</strong> are true?</li></ul><ul id="271eb47d-ebea-80e2-a0cd-d5b4f7bc2c44" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS19, FS21) Write a query in <strong>Spark SQL</strong> that is equivalent to a given relational algebra expression.</li></ul><hr id="271eb47d-ebea-80eb-a6ef-f516466c1512"/><h3 id="271eb47d-ebea-80e0-8458-e7368cebb6b4" class=""><strong>9. Resource management</strong></h3><p id="271eb47d-ebea-803e-8d0a-c3aec1a14c87" class=""><em>(No questions on this topic were present in the provided list).</em></p><hr id="271eb47d-ebea-8035-a9ba-f38942fb5dcb"/><h3 id="271eb47d-ebea-80b4-90e5-ca13290bd03d" class=""><strong>10. Generic Dataflow Management</strong></h3><p id="271eb47d-ebea-801b-a070-f5a60963c15c" class=""><em>(No questions on this topic were present in the provided list).</em></p><hr id="271eb47d-ebea-806f-b9f8-e5b7ffd1a16c"/><h3 id="271eb47d-ebea-80f7-8274-e3308f714d43" class=""><strong>11. Document stores</strong></h3><p id="271eb47d-ebea-80c3-82e0-d2872f4060cf" class="">This section is dedicated to databases that store data in document formats like JSON or BSON.</p><ul id="271eb47d-ebea-8035-a867-e30272e0ecec" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS19) Which statements about <strong>MongoDB</strong> are true?</li></ul><ul id="271eb47d-ebea-8065-ae2e-f362bbc70c36" class="bulleted-list"><li style="list-style-type:disc">(HS21) Write queries for a <strong>MongoDB collection</strong> (e.g., find documents in a specific borough, with a certain grade).</li></ul><hr id="271eb47d-ebea-80aa-bdbc-d6821e43eb34"/><h3 id="271eb47d-ebea-80f9-baef-d196eef0144f" class=""><strong>12. Querying denormalized data</strong></h3><p id="271eb47d-ebea-807f-9152-e5975e267080" class="">This focuses on the practical aspects of retrieving data from non-relational, denormalized models.</p><ul id="271eb47d-ebea-805e-af64-d408c87f4976" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS19) Given a <strong>MongoDB query</strong>, what documents are returned?</li></ul><ul id="271eb47d-ebea-80d5-9f1c-d5ceef440909" class="bulleted-list"><li style="list-style-type:disc">(HS18, HS19, HS20, FS21) Write <strong>JSONiq</strong> expressions to:<ul id="271eb47d-ebea-80fc-a70c-da9454e0fab2" class="bulleted-list"><li style="list-style-type:circle">Extract the cantons of Switzerland from a JSON file.</li></ul><ul id="271eb47d-ebea-8068-a942-dad5d5cc9bb2" class="bulleted-list"><li style="list-style-type:circle">Sort the cantons alphabetically.</li></ul><ul id="271eb47d-ebea-807a-b66a-fbe7a2c99e9f" class="bulleted-list"><li style="list-style-type:circle">Extract the countries of a specific continent.</li></ul></li></ul><hr id="271eb47d-ebea-80ac-8ae9-d2cab737facf"/><h3 id="271eb47d-ebea-80d7-ad1b-ded5750738db" class=""><strong>13. Graph databases</strong></h3><p id="271eb47d-ebea-8092-b80a-c7c7d393ae9e" class="">Here we explore databases designed specifically to handle highly connected data.</p><ul id="271eb47d-ebea-8066-9648-db8d9d804fab" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS19, FS21) Which statements about <strong>graph databases</strong> are correct?</li></ul><ul id="271eb47d-ebea-8087-8a38-d6164700a129" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS19, FS21) Which <strong>use cases</strong> are best suited for graph databases?</li></ul><ul id="271eb47d-ebea-80e6-835f-c2313fe15200" class="bulleted-list"><li style="list-style-type:disc">(HS17, HS19, FS21) Given a <strong>Cypher query</strong>, what result does it return?</li></ul><ul id="271eb47d-ebea-80ea-9fa5-c031340018a9" class="bulleted-list"><li style="list-style-type:disc">(HS21) Write <strong>Cypher queries</strong> (e.g., find actors in movies by a specific director).</li></ul><hr id="271eb47d-ebea-804a-aa5c-d72699039a2b"/><h3 id="271eb47d-ebea-80da-bb78-fcb4400c6e9c" class=""><strong>14. OLAP and data cubes</strong></h3><p id="271eb47d-ebea-80c4-a901-ce8d99a9fdc6" class="">The final section covers data warehousing and Online Analytical Processing (OLAP) techniques.</p><ul id="271eb47d-ebea-8085-9c18-c6f6731fa231" class="bulleted-list"><li style="list-style-type:disc">(HS18, HS19, HS20, FS21) What are <strong>data cubes</strong>?</li></ul><ul id="271eb47d-ebea-80f2-8037-e286545a6a72" class="bulleted-list"><li style="list-style-type:disc">(HS18, HS19, HS20, FS21) Given a data cube, provide examples of queries for <strong>slice, dice, roll-up, and drill-down</strong> operations.</li></ul></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
