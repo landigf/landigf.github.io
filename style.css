@@ -1002,6 +1002,31 @@ body.dark-mode {
   color: #e0e0e0;
 }
 
+/* Force all paragraphs, lists, and text to be light in dark mode */
+body.dark-mode p,
+body.dark-mode li,
+body.dark-mode span,
+body.dark-mode div {
+  color: #b0b0b0 !important;
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6 {
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode strong {
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode em {
+  color: #c0c0c0 !important;
+}
+
 /* Navigation dark mode */
 body.dark-mode .top-nav {
   background: #2d2d2d;
@@ -1189,6 +1214,31 @@ body.dark-mode .blog-post-full p {
   color: #b0b0b0 !important;
 }
 
+body.dark-mode .blog-post-full .post-content {
+  color: #b0b0b0;
+}
+
+body.dark-mode .blog-post-full .post-content p {
+  color: #b0b0b0 !important;
+}
+
+body.dark-mode .blog-post-full .post-content li {
+  color: #b0b0b0 !important;
+}
+
+body.dark-mode .blog-post-full .post-content ul,
+body.dark-mode .blog-post-full .post-content ol {
+  color: #b0b0b0;
+}
+
+body.dark-mode .blog-post-full .post-content strong {
+  color: #e0e0e0;
+}
+
+body.dark-mode .blog-post-full .post-content em {
+  color: #c0c0c0;
+}
+
 body.dark-mode .blog-post-full a {
   color: #64b5f6;
 }
@@ -1203,6 +1253,38 @@ body.dark-mode .back-link a {
 
 body.dark-mode .back-link a:hover {
   color: #90caf9;
+}
+
+/* Course info and specific elements dark mode */
+body.dark-mode .course-info {
+  background: #2d2d2d;
+  border-color: #404040;
+}
+
+body.dark-mode .course-info h3 {
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .course-info ul,
+body.dark-mode .course-info li {
+  color: #b0b0b0 !important;
+}
+
+body.dark-mode .status-badge {
+  background: #404040;
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .key-definition {
+  background: #2d2d2d !important;
+  border-left-color: #64b5f6 !important;
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode blockquote {
+  background: #2d2d2d !important;
+  border-left-color: #64b5f6 !important;
+  color: #e0e0e0 !important;
 }
 
 /* Article content dark mode */
