@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  
+  <!-- begin SEO -->
+  <title>PAI Course Notes: Probabilistic AI and Uncertainty</title>
+  <meta property="og:locale" content="en-US">
+  <meta property="og:site_name" content="Gennaro Francesco Landi">
+  <meta property="og:title" content="PAI Course Notes: Probabilistic AI and Uncertainty">
+  <meta property="og:description" content="Deep dive into Probabilistic Artificial Intelligence - exploring Bayesian approaches, uncertainty quantification, and intelligent agents that know what they don't know.">
+  <meta property="og:url" content="https://landigf.github.io/pai-notes.html">
+  <meta property="og:type" content="article">
+  <meta property="article:author" content="Gennaro Francesco Landi">
+  <meta property="article:published_time" content="2025-09-25T00:00:00+00:00">
+  <meta name="description" content="Deep dive into Probabilistic Artificial Intelligence - exploring Bayesian approaches, uncertainty quantification, and intelligent agents that know what they don't know.">
+  
+  <script type="application/ld+json">
+  {
+    "@context" : "http://schema.org",
+    "@type" : "Person",
+    "name" : "Gennaro Francesco Landi",
+    "url" : "https://landigf.github.io",
+    "sameAs" : ["https://www.linkedin.com/in/landigf", "https://github.com/landigf"],
+    "jobTitle" : "Master's Student in Computer Science",
+    "affiliation" : "ETH Zurich"
+  }
+  </script>
+  <!-- end SEO -->
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script>
+    document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  </script>
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon-32x32.png" type="image/png">
+  <meta http-equiv="cleartype" content="on">
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <!--[if lt IE 9]>
+  <div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+  <![endif]-->
+  
+  <!-- Top Navigation Bar -->
+  <nav class="top-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">Master's Student</a>
+      <div class="nav-links">
+        <a href="blog.html">Blog Posts</a>
+        <a href="https://drive.google.com/file/d/1ro7xXYHO7LStwX--xrV8lnhf-Y90wttj/view?usp=sharing" target="_blank">CV</a>
+        <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Container -->
+  <div class="main-container">
+    <!-- Left Sidebar with Profile -->
+    <aside class="sidebar">
+      <div class="profile-section">
+        <div class="profile-image">
+          <img src="profile_pic.png" alt="Gennaro Francesco Landi">
+        </div>
+        <div class="profile-info">
+          <h2>Gennaro Francesco</h2>
+          <div class="contact-info">
+            <div class="contact-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Salerno, Italy</span>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <a href="mailto:gennaro.landi@student.ethz.ch">gennaro.landi@student.ethz.ch</a>
+            </div>
+            <div class="contact-item">
+              <i class="fab fa-linkedin"></i>
+              <a href="https://www.linkedin.com/in/landigf" target="_blank">LinkedIn</a>
+            </div>
+            <div class="contact-item">
+              <i class="fab fa-github"></i>
+              <a href="https://github.com/landigf" target="_blank">GitHub</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="content">
+      <div class="back-link">
+        <a href="blog.html">← Back to Blog</a>
+      </div>
+      
+      <article class="blog-post-full">
+        <div class="post-header">
+          <div class="post-meta">
+            <span class="post-date">25 September 2025</span>
+            <span class="post-category">Artificial Intelligence</span>
+          </div>
+          <h1>PAI Course Notes: Probabilistic AI and Uncertainty</h1>
+        </div>
+        
+        <div class="post-content">
+          <div class="course-info">
+            <h3>🧠 Course Information</h3>
+            <ul>
+              <li><strong>Course:</strong> Probabilistic Artificial Intelligence (PAI)</li>
+              <li><strong>Semester:</strong> Fall 2025</li>
+              <li><strong>University:</strong> ETH Zurich</li>
+              <li><strong>Status:</strong> <span class="status-badge">In Progress</span></li>
+            </ul>
+          </div>
+
+          <blockquote class="key-definition">
+            <strong>PAI Core Principle:</strong> A key aspect of intelligence is not to only make decisions, but reason about the <em>uncertainty</em> of these decisions, and to consider this uncertainty when making decisions. This is what PAI is about.
+          </blockquote>
+
+          <p>Welcome to my deep dive into <strong>Probabilistic Artificial Intelligence</strong>! This course is fundamentally changing how I think about machine learning and AI systems. It's not just about making machines <em>smart</em>, but about making them <em>humble</em>: systems that <strong>know what they don't know</strong>, and act cautiously when uncertainty is high.</p>
+
+          <h2>📚 Part I: Probabilistic Approaches to Machine Learning</h2>
+
+          <p>The first part of the program covers probabilistic approaches to machine learning. We exploit the crucial difference between two types of uncertainty:</p>
+
+          <ul>
+            <li><strong>Epistemic uncertainty</strong> - due to lack of data (reducible)</li>
+            <li><strong>Aleatoric uncertainty</strong> - irreducible noise from observations and outcomes</li>
+          </ul>
+
+          <p>Then we discuss concrete approaches toward probabilistic inference, including some fascinating methods:</p>
+
+          <h3>🔍 1. Bayesian Linear Regression</h3>
+          <p>Think of it as linear regression with a twist: instead of just one line through the data, we put a <strong>probability distribution over all possible lines</strong>, updating our belief as we see more points. The result is not just a prediction, but a quantified uncertainty around that prediction.</p>
+
+          <h3>📈 2. Gaussian Process Models</h3>
+          <p>A Gaussian process is like saying: <em>"I don't know the exact function, but I'll assume smoothness and let the data tell me the shape."</em> It's a powerful non-parametric model that gives both predictions <strong>and confidence intervals</strong> in a mathematically elegant way.</p>
+
+          <h3>🧠 3. Bayesian Neural Networks</h3>
+          <p>Neural networks, but probabilistic: instead of fixed weights, we learn <strong>distributions over weights</strong>. This lets the network say <em>"I'm confident here"</em> or <em>"I'm uncertain there"</em>, which is critical for safe decision-making in the real world.</p>
+
+          <h2>🎯 Part II: Uncertainty in Sequential Tasks</h2>
+
+          <p>The second part is about uncertainty in sequential tasks. We consider active learning and optimization approaches that actively collect data by proposing experiments that are <strong>informative</strong> for reducing epistemic uncertainty.</p>
+
+          <h3>🔬 4. Bayesian Optimization</h3>
+          <p>When experiments are expensive (think: running clinical trials or tuning giant ML models), Bayesian optimization helps choose the <strong>next experiment to run</strong> by balancing exploration and exploitation. It actively seeks the most <em>informative</em> data points to shrink uncertainty fastest.</p>
+
+          <h3>💡 How Do We Know Which Experiments Are Informative?</h3>
+          <p>Great question! We measure informativeness through <strong>epistemic uncertainty</strong> — the uncertainty that comes from not having enough data. By asking <em>"where am I most ignorant?"</em>, the algorithm proposes experiments that are maximally clarifying.</p>
+
+          <p>When we say an algorithm knows which experiments are informative, we're talking about <strong>information-theoretic criteria</strong> that measure how much an experiment would reduce <em>epistemic uncertainty</em>:</p>
+
+          <ul>
+            <li><strong>Posterior variance</strong>: In Gaussian processes, uncertainty at a point is quantified by the posterior variance. The algorithm chooses new inputs where this variance is largest.</li>
+            <li><strong>Expected information gain</strong>: <em>"If I ran this experiment, how much would it shrink my uncertainty about the model?"</em> This is formalized as maximizing the expected reduction in entropy.</li>
+            <li><strong>Acquisition functions</strong>: Functions like <strong>Upper Confidence Bound (UCB)</strong> or <strong>Expected Improvement (EI)</strong> trade off exploration and exploitation:
+              <ul>
+                <li>UCB: <em>"Try points with high predicted value plus high uncertainty."</em></li>
+                <li>EI: <em>"Try points likely to improve upon the best outcome so far."</em></li>
+              </ul>
+            </li>
+          </ul>
+
+          <h2>🤖 Reinforcement Learning & MDPs</h2>
+
+          <p>Then we cover reinforcement learning (RL), a rich formalism for modeling agents that learn to act in uncertain environments.</p>
+
+          <h3>🎲 5. Markov Decision Process (MDP)</h3>
+          <p>The MDP is the mathematical backbone of reinforcement learning. It models the world as states, actions, and rewards, capturing the idea that decisions today affect both what you see tomorrow and what long-term payoff you'll get.</p>
+
+          <h3>🧠 6. RL with Neural Network Approximations</h3>
+          <p>Modern RL uses deep neural networks to approximate value functions or policies in huge state spaces. This gives us "deep RL" — the engine behind agents that can play Go, control robots, or learn strategies in complex, high-dimensional environments.</p>
+
+          <h2>🛡️ Model-Based RL and Safety</h2>
+
+          <p>We close by discussing modern approaches in model-based RL, which use epistemic and aleatoric uncertainty to guide exploration, while also reasoning about safety.</p>
+
+          <blockquote>
+            <p><strong>The Big Picture:</strong> Probabilistic AI is not just about making machines <em>smart</em>, but about making them <em>humble</em>: systems that <strong>know what they don't know</strong>, and act cautiously when uncertainty is high. That's the difference between a reckless model and a trustworthy intelligent agent.</p>
+          </blockquote>
+
+          <h2>🔮 Why This Matters</h2>
+
+          <p>In a world where AI systems are making increasingly important decisions — from medical diagnoses to autonomous vehicle control — the ability to quantify and reason about uncertainty isn't just mathematically elegant, it's <strong>ethically essential</strong>.</p>
+
+          <p>PAI gives us the tools to build AI systems that:</p>
+          <ul>
+            <li>🎯 Make better decisions under uncertainty</li>
+            <li>🔍 Know when to ask for more data</li>
+            <li>🛡️ Fail safely when confidence is low</li>
+            <li>🧠 Learn more efficiently by being strategic about what to explore</li>
+          </ul>
+
+          <p>This course is reshaping how I think about intelligence itself — not just as the ability to be right, but as the wisdom to know when you might be wrong.</p>
+        </div>
+        
+        <div class="post-tags">
+          <span class="tag">Probabilistic AI</span>
+          <span class="tag">Bayesian Methods</span>
+          <span class="tag">Uncertainty Quantification</span>
+          <span class="tag">ETH Zurich</span>
+          <span class="tag">Machine Learning</span>
+          <span class="tag">Reinforcement Learning</span>
+        </div>
+      </article>
+    </main>
+  </div>
+
+  <script>
+    // Dark mode toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = themeToggle.querySelector('i');
+      
+      // Check for saved theme preference
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.body.classList.add(savedTheme);
+        if (savedTheme === 'dark-mode') {
+          themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+      }
+      
+      themeToggle.addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+        
+        if (document.body.classList.contains('dark-mode')) {
+          themeIcon.classList.replace('fa-moon', 'fa-sun');
+          localStorage.setItem('theme', 'dark-mode');
+        } else {
+          themeIcon.classList.replace('fa-sun', 'fa-moon');
+          localStorage.setItem('theme', 'light-mode');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
