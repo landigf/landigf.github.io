@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  
+  <!-- begin SEO -->
+  <title>Fundamentals of Inference: High-Dimensional Distributions and Gaussian Magic</title>
+  <meta property="og:locale" content="en-US">
+  <meta property="og:site_name" content="Gennaro Francesco Landi">
+  <meta property="og:title" content="Fundamentals of Inference: High-Dimensional Distributions and Gaussian Magic">
+  <meta property="og:description" content="Deep dive into the fundamentals of probabilistic inference - exploring challenges with high-dimensional distributions and why Gaussians are our mathematical savior.">
+  <meta property="og:url" content="https://landigf.github.io/fundamentals-inference-notes.html">
+  <meta property="og:type" content="article">
+  <meta property="article:author" content="Gennaro Francesco Landi">
+  <meta property="article:published_time" content="2025-09-25T00:00:00+00:00">
+  <meta name="description" content="Deep dive into the fundamentals of probabilistic inference - exploring challenges with high-dimensional distributions and why Gaussians are our mathematical savior.">
+  
+  <script type="application/ld+json">
+  {
+    "@context" : "http://schema.org",
+    "@type" : "Person",
+    "name" : "Gennaro Francesco Landi",
+    "url" : "https://landigf.github.io",
+    "sameAs" : ["https://www.linkedin.com/in/landigf", "https://github.com/landigf"],
+    "jobTitle" : "Master's Student in Computer Science",
+    "affiliation" : "ETH Zurich"
+  }
+  </script>
+  <!-- end SEO -->
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script>
+    document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  </script>
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon-32x32.png" type="image/png">
+  <meta http-equiv="cleartype" content="on">
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- KaTeX for math rendering -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+</head>
+<body>
+  <!--[if lt IE 9]>
+  <div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+  <![endif]-->
+  
+  <!-- Top Navigation Bar -->
+  <nav class="top-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">Master's Student</a>
+      <div class="nav-links">
+        <a href="blog.html">Blog Posts</a>
+        <a href="https://drive.google.com/file/d/1ro7xXYHO7LStwX--xrV8lnhf-Y90wttj/view?usp=sharing" target="_blank">CV</a>
+        <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Container -->
+  <div class="main-container">
+    <!-- Left Sidebar with Profile -->
+    <aside class="sidebar">
+      <div class="profile-section">
+        <div class="profile-image">
+          <img src="profile_pic.png" alt="Gennaro Francesco Landi">
+        </div>
+        <div class="profile-info">
+          <h2>Gennaro Francesco</h2>
+          <div class="contact-info">
+            <div class="contact-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Salerno, Italy</span>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <a href="mailto:gennaro.landi@student.ethz.ch">gennaro.landi@student.ethz.ch</a>
+            </div>
+            <div class="contact-item">
+              <i class="fab fa-linkedin"></i>
+              <a href="https://www.linkedin.com/in/landigf" target="_blank">LinkedIn</a>
+            </div>
+            <div class="contact-item">
+              <i class="fab fa-github"></i>
+              <a href="https://github.com/landigf" target="_blank">GitHub</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="content">
+      <div class="back-link">
+        <a href="blog.html">← Back to Blog</a>
+      </div>
+      
+      <article class="blog-post-full">
+        <div class="post-header">
+          <div class="post-meta">
+            <span class="post-date">25 September 2025</span>
+            <span class="post-category">Mathematical Foundations</span>
+          </div>
+          <h1>Fundamentals of Inference: High-Dimensional Distributions and Gaussian Magic</h1>
+        </div>
+        
+        <div class="post-content">
+          <div class="course-info">
+            <h3>📊 Course Context</h3>
+            <ul>
+              <li><strong>Part of:</strong> Probabilistic Artificial Intelligence (PAI)</li>
+              <li><strong>Topic:</strong> Mathematical Foundations of Inference</li>
+              <li><strong>Focus:</strong> High-dimensional distributions and Gaussian processes</li>
+              <li><strong>Difficulty:</strong> <span class="status-badge">Advanced</span></li>
+            </ul>
+          </div>
+
+          <blockquote class="key-definition">
+            <strong>The Core Challenge:</strong> As we move into higher dimensions, traditional probability distributions become computationally intractable. We need mathematical tools that can handle the <em>curse of dimensionality</em> while maintaining computational efficiency.
+          </blockquote>
+
+          <p>After exploring <a href="pai-notes.html">the big picture of Probabilistic AI</a>, let's dive deep into the mathematical foundations that make it all possible. This post covers the fundamentals of probabilistic inference - the mathematical backbone that enables machines to reason about uncertainty.</p>
+
+          <h2>🎯 The High-Dimensional Challenge</h2>
+
+          <p>Working with high-dimensional probability distributions presents three fundamental challenges that any practical AI system must overcome:</p>
+
+          <h3>1. 📈 Representation (Parametrization) Problem</h3>
+          <p>Consider a simple example: <strong>n</strong> Bernoulli random variables. How many parameters do we need to fully specify their joint distribution?</p>
+          
+          <div class="math-box">
+            <p><strong>Answer:</strong> We need <span class="math-inline">2^n - 1</span> parameters! 😱</p>
+            <p>This exponential explosion makes representation impossible for large <strong>n</strong>.</p>
+          </div>
+
+          <h3>2. 📚 Learning (Estimation) Problem</h3>
+          <p>With exponentially many parameters, we would need exponentially many data points to learn the distribution. This is clearly impractical - <strong>we need smart assumptions and structures</strong>.</p>
+
+          <h3>3. 🔍 Inference (Prediction) Problem</h3>
+          <p>Even if we could represent and learn high-dimensional distributions, <strong>marginalization becomes computationally prohibitive</strong> in high dimensions. We need closed-form solutions or efficient approximations.</p>
+
+          <h2>🌟 Enter the Gaussian: Our Mathematical Savior</h2>
+
+          <p>Why do we obsess over <strong>multivariate Gaussian distributions</strong> in machine learning? The answer lies in their remarkable mathematical properties:</p>
+
+          <h3>✨ Efficient Representation</h3>
+          <p>A <strong>d-dimensional</strong> Gaussian distribution needs only:</p>
+          <ul>
+            <li>📍 A mean vector μ (d parameters)</li>
+            <li>📊 A covariance matrix Σ (d²/2 + d/2 parameters due to symmetry)</li>
+            <li><strong>Total:</strong> <span class="math-inline">O(d^2)</span> parameters instead of <span class="math-inline">2^d</span>!</li>
+          </ul>
+
+          <h3>🔧 Closed-Form Operations</h3>
+          <p>The real magic happens with inference operations:</p>
+          <ul>
+            <li><strong>Marginalization:</strong> Just drop rows/columns from μ and Σ</li>
+            <li><strong>Conditioning:</strong> Beautiful closed-form formulas</li>
+            <li><strong>Multiplication:</strong> Another Gaussian with computable parameters</li>
+          </ul>
+
+          <h2>🧠 The Intuition Behind Gaussian Conditioning</h2>
+
+          <p>Let me share some intuitive insights (with a touch of Italian passion 😄) about why Gaussian conditioning works so elegantly:</p>
+
+          <h3>🎯 Covariance Matrix as "Influence Weight"</h3>
+          <blockquote class="insight-box">
+            <p><strong>My take:</strong> "Vedi la matrice di covarianza di B, la mettiamo al denominatore così se è tanto alta significa che sta cazzo di B è molto sparsa quindi la facciamo diventare poco influente. Al contrario se è molto piccola è molto importante."</p>
+          </blockquote>
+
+          <p>Translation for the academic audience: <strong>The covariance matrix acts as an influence weight</strong>. When B has high variance (is "spread out"), it becomes less influential in our conditioning. When B has low variance (is "concentrated"), it provides more reliable information.</p>
+
+          <h3>🔗 Independence and Covariance</h3>
+          <blockquote class="insight-box">
+            <p><strong>Key insight:</strong> "Se la matrice di covarianza AB è nulla significa che sono indipendenti e si trova che diventa solo μ_A"</p>
+          </blockquote>
+
+          <p>When the cross-covariance between A and B is zero, <strong>they're independent</strong>! In this case, observing B tells us nothing about A, so the conditional mean of A given B is just μ_A.</p>
+
+          <h3>💡 The Information Content of Observations</h3>
+          <blockquote class="insight-box">
+            <p><strong>Another gem:</strong> "Anche se b = μ_B significa che grazie al cazzo l'ho preso alla media che nuova informazione mi deve mai dare il bro"</p>
+          </blockquote>
+
+          <p>Academic translation: If we observe B at its mean value μ_B, <strong>this observation provides no new information</strong> - it's exactly what we expected! The conditional distribution of A doesn't change.</p>
+
+          <h2>🔬 Mathematical Beauty in Action</h2>
+
+          <p>The elegance of Gaussian inference becomes clear when we see how naturally it handles uncertainty:</p>
+
+          <ul>
+            <li><strong>High covariance = High uncertainty = Low influence</strong></li>
+            <li><strong>Low covariance = High certainty = High influence</strong></li>
+            <li><strong>Zero cross-covariance = Independence = No influence</strong></li>
+            <li><strong>Observation at mean = Expected value = No surprise = No update</strong></li>
+          </ul>
+
+          <h2>🎯 Why This Matters for AI</h2>
+
+          <p>These mathematical foundations directly enable the powerful techniques we explored in <a href="pai-notes.html">our PAI overview</a>:</p>
+
+          <ul>
+            <li>🧠 <strong>Bayesian Neural Networks:</strong> Use Gaussian priors over weights</li>
+            <li>📈 <strong>Gaussian Processes:</strong> Entire functions as Gaussian distributions</li>
+            <li>🎯 <strong>Kalman Filters:</strong> Sequential Bayesian inference with Gaussians</li>
+            <li>🔍 <strong>Variational Inference:</strong> Approximate complex posteriors with Gaussians</li>
+          </ul>
+
+          <h2>🌈 The Big Picture</h2>
+
+          <p>Understanding these fundamentals reveals why <strong>probabilistic thinking is so powerful</strong>:</p>
+
+          <ol>
+            <li><strong>Structure saves us:</strong> Gaussian assumptions make the impossible tractable</li>
+            <li><strong>Math serves intuition:</strong> Covariance matrices encode our beliefs about relationships</li>
+            <li><strong>Closed-form = Real-time:</strong> No approximations needed for basic operations</li>
+            <li><strong>Uncertainty propagates naturally:</strong> From inputs through models to outputs</li>
+          </ol>
+
+          <blockquote>
+            <p><strong>Bottom line:</strong> The beauty of Gaussian distributions isn't just mathematical elegance - it's that they make <em>uncertain reasoning computationally feasible</em> at scale. This is what enables AI systems to be both smart and humble about their limitations.</p>
+          </blockquote>
+
+          <div class="related-posts">
+            <h3>🔗 Related PAI Posts</h3>
+            <ul>
+              <li><a href="pai-notes.html">← PAI Course Introduction: Probabilistic AI and Uncertainty</a></li>
+              <li><em>More PAI posts coming soon...</em></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="post-tags">
+          <span class="tag">Probabilistic AI</span>
+          <span class="tag">Gaussian Distributions</span>
+          <span class="tag">Mathematical Foundations</span>
+          <span class="tag">High-Dimensional Statistics</span>
+          <span class="tag">ETH Zurich</span>
+          <span class="tag">Inference</span>
+        </div>
+      </article>
+    </main>
+  </div>
+
+  <script>
+    // Dark mode toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = themeToggle.querySelector('i');
+      
+      // Check for saved theme preference
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.body.classList.add(savedTheme);
+        if (savedTheme === 'dark-mode') {
+          themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+      }
+      
+      themeToggle.addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+        
+        if (document.body.classList.contains('dark-mode')) {
+          themeIcon.classList.replace('fa-moon', 'fa-sun');
+          localStorage.setItem('theme', 'dark-mode');
+        } else {
+          themeIcon.classList.replace('fa-sun', 'fa-moon');
+          localStorage.setItem('theme', 'light-mode');
+        }
+      });
+
+      // Render math expressions
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: "$$", right: "$$", display: true},
+          {left: "$", right: "$", display: false}
+        ]
+      });
+    });
+  </script>
+</body>
+</html>
