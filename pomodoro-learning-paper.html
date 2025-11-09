@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  
+  <!-- begin SEO -->
+  <title>Should Machines Learn Only from Failures? Exploring Pomodoro Technique</title>
+  <meta property="og:locale" content="en-US">
+  <meta property="og:site_name" content="Gennaro Francesco Landi">
+  <meta property="og:title" content="Should Machines Learn Only from Failures? Exploring Pomodoro Technique">
+  <meta property="og:description" content="A summary of a pseudo-realistic scientific paper exploring how machines can learn from successes, not just failures, inspired by the Pomodoro technique.">
+  <meta property="og:url" content="https://landigf.github.io/pomodoro-learning-paper.html">
+  <meta property="og:type" content="article">
+  <meta property="article:author" content="Gennaro Francesco Landi">
+  <meta property="article:published_time" content="2025-11-09T00:00:00+00:00">
+  <meta name="description" content="A summary of a pseudo-realistic scientific paper exploring how machines can learn from successes, not just failures, inspired by the Pomodoro technique.">
+  
+  <script type="application/ld+json">
+  {
+    "@context" : "http://schema.org",
+    "@type" : "Person",
+    "name" : "Gennaro Francesco Landi",
+    "url" : "https://landigf.github.io",
+    "sameAs" : ["https://www.linkedin.com/in/landigf", "https://github.com/landigf"],
+    "jobTitle" : "Master's Student in Computer Science",
+    "affiliation" : "ETH Zurich"
+  }
+  </script>
+  <!-- end SEO -->
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script>
+    document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  </script>
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon-32x32.png" type="image/png">
+  <meta http-equiv="cleartype" content="on">
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <!--[if lt IE 9]>
+  <div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+  <![endif]-->
+  
+  <!-- Top Navigation Bar -->
+  <nav class="top-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">Master's Student</a>
+      <div class="nav-links">
+        <a href="blog.html">Blog Posts</a>
+        <a href="https://drive.google.com/file/d/1I1sEeulfPVFbF_8xYnmB6Xys3JaatR5r/view?usp=sharing" target="_blank">CV</a>
+        <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Container -->
+  <div class="main-container">
+    <!-- Left Sidebar with Profile -->
+    <aside class="sidebar">
+      <div class="profile-section">
+        <div class="profile-image">
+          <img src="profile_pic.png" alt="Gennaro Francesco Landi">
+        </div>
+        <div class="profile-info">
+          <h2>Gennaro Francesco</h2>
+          <div class="contact-info">
+            <div class="contact-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Zurich, Switzerland</span>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <a href="mailto:landigf.work@gmail.com">Email</a>
+            </div>
+            <div class="contact-item">
+              <i class="fab fa-linkedin"></i>
+              <a href="https://www.linkedin.com/in/landigf" target="_blank">LinkedIn</a>
+            </div>
+            <div class="contact-item">
+              <i class="fab fa-github"></i>
+              <a href="https://github.com/landigf" target="_blank">GitHub</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="content">
+      <article class="post-content">
+        <header class="post-header">
+          <div class="breadcrumb">
+            <a href="index.html">Home</a> / <a href="blog.html">Blog</a> / Pomodoro Learning
+          </div>
+          <h1>Should Machines Learn Only from Failures? Exploring Pomodoro Technique</h1>
+          <div class="post-meta">
+            <span class="post-date">
+              <i class="fas fa-calendar"></i> 9 November 2025
+            </span>
+            <span class="post-category">
+              <i class="fas fa-folder"></i> Machine Learning
+            </span>
+          </div>
+          <div class="post-tags">
+            <span class="tag">Machine Learning</span>
+            <span class="tag">Deep Learning</span>
+            <span class="tag">Bayesian Networks</span>
+            <span class="tag">Academic Exercise</span>
+          </div>
+        </header>
+
+        <div class="post-body">
+          <div class="callout-box" style="margin-bottom: 2rem; padding: 1.5rem; background: var(--bg-secondary); border-left: 4px solid var(--accent-color); border-radius: 4px;">
+            <p><strong>📝 Note:</strong> This is a summary of a pseudo-realistic scientific paper I wrote as a practice exercise. It explores an interesting concept: what if machines could learn from their successes, not just their failures?</p>
+          </div>
+
+          <h2>The Core Problem</h2>
+          
+          <p>In supervised learning tasks, the goal of learning consists in minimising the prediction error. The error itself is calculated with a loss function, which measures the difference between the true and the estimated value. In standard machine learning, learning means choosing the optimal parameters that minimise this loss. But what happens if our model predicts something correctly? Then no update is done.</p>
+          
+          <h2>Learning from Success</h2>
+          
+          <p>The approach of learning from successes and not only from failures has already been explored in different contexts. However, reinforcing the model where it is already performing well can easily lead to one of the biggest problems in machine learning: <strong>overfitting</strong>. We address this issue in the case of a binary supervised classification problem, where classes are often unbalanced. For instance, if the model initially predicts the majority class correctly, it could have simply guessed it. Rewarding such a prediction without checking its reliability would introduce a dangerous bias. The model would be rewarded without actually learning.</p>
+          
+          <h2>Bayesian Neural Networks to the Rescue</h2>
+          
+          <p>Thanks to Bayesian Neural Networks, we can now estimate how confident the model is in each prediction. This allows us to distinguish between <strong>epistemic</strong> (model) and <strong>aleatoric</strong> (data) uncertainty. We can therefore apply learning from success only when the model is truly confident, ensuring that it reinforces meaningful knowledge rather than noise. Adding a secondary learning mechanism inevitably increases computation, so an efficient implementation is essential. In this paper, we address the general problem of how to exploit success cases during training without causing overfitting or excessive computational cost.</p>
+          
+          <h2>Introducing Pomodoro Learning</h2>
+          
+          <p>We propose <strong>Pomodoro Learning</strong>, a two-phase training cycle inspired by the idea of alternating work and reflection. First, the model trains on a quarter of the dataset using standard cross-entropy loss. Then, we apply <strong>Monte Carlo Dropout</strong>, a simple method for estimating uncertainty without converting the model into a full Bayesian network. We select the top-q% of correctly predicted samples per class – those with high confidence and low uncertainty – apply small data augmentations, and perform a short fine-tuning phase. This phase includes two regularisers:</p>
+          
+          <ul>
+            <li><strong>A margin term</strong> – which encourages larger absolute logits for selected samples, pushing their decision boundaries farther from uncertainty</li>
+            <li><strong>A stochastic-consistency term</strong> – which aligns two dropout passes of the same input, making predictions more stable</li>
+          </ul>
+          
+          <h2>Connections and Implications</h2>
+          
+          <p>Pomodoro Learning sits at the intersection of curriculum learning, active learning, and Bayesian uncertainty estimation. It introduces a lightweight and interpretable way to learn from success while maintaining calibration and generalisation. Limitations include sensitivity to selection hyperparameters such as confidence thresholds and the proportion of samples reinforced. Future work should evaluate its performance on larger datasets and deeper architectures, investigate behaviour under distribution shift, and explore adaptive hyperparameters that evolve during training.</p>
+          
+          <h2>The Bigger Picture</h2>
+          
+          <p>In a broader sense, Pomodoro Learning provides a structured framework that connects human-inspired reflection to data-driven optimisation, suggesting that learning can advance not only through correcting mistakes but also by understanding why success occurs.</p>
+          
+          <div class="callout-box" style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-secondary); border-left: 4px solid var(--accent-color); border-radius: 4px;">
+            <p><strong>💭 Personal Reflection:</strong> This exercise was really useful for practicing scientific writing and thinking critically about machine learning concepts. The idea of learning from successes is intriguing – it mirrors how humans often learn by reinforcing what works, not just correcting what doesn't.</p>
+          </div>
+        </div>
+
+        <div class="post-navigation">
+          <a href="blog.html" class="back-to-blog">
+            <i class="fas fa-arrow-left"></i> Back to Blog
+          </a>
+        </div>
+      </article>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>&copy; 2025 Gennaro Francesco Landi. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="https://github.com/landigf" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/landigf" target="_blank"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
