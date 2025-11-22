@@ -368,6 +368,126 @@
         border-bottom: 1px solid #111827;
       }
     }
+
+    /* Tab Navigation Styles */
+    .tab-navigation {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+      border-top: 1px solid #1f2937;
+      padding-top: 16px;
+    }
+
+    .tab-btn {
+      background: var(--card);
+      border: 1px solid #374151;
+      color: var(--text-muted);
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tab-btn:hover {
+      background: #374151;
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: flex;
+    }
+
+    /* Graph View Styles */
+    #graph-view {
+      flex-direction: column;
+      padding: 24px;
+      min-height: calc(100vh - 200px);
+    }
+
+    #graph-container {
+      flex: 1;
+      background: radial-gradient(circle at center, #0a0f1f 0%, #020617 100%);
+      border: 1px solid #1f2937;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      min-height: 600px;
+    }
+
+    #graph-canvas {
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+
+    #graph-canvas:active {
+      cursor: grabbing;
+    }
+
+    .graph-legend {
+      display: flex;
+      gap: 20px;
+      padding: 16px;
+      background: var(--panel);
+      border-radius: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+    }
+
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+    }
+
+    .graph-controls {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .graph-control-btn {
+      background: var(--panel);
+      border: 1px solid #374151;
+      color: var(--text-main);
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .graph-control-btn:hover {
+      background: var(--card);
+      transform: scale(1.05);
+    }
   </style>
 </head>
 <body>
@@ -378,9 +498,20 @@
         Click a technique node to see all problems that use that pattern.
         For each problem you can flip between story name and "model name".
       </p>
+      
+      <!-- Tab Navigation -->
+      <div class="tab-navigation">
+        <button class="tab-btn active" data-tab="list-view">
+          📋 List View
+        </button>
+        <button class="tab-btn" data-tab="graph-view">
+          🗺️ Graph View
+        </button>
+      </div>
     </header>
 
-    <main class="layout">
+    <!-- List View Tab (Current Implementation) -->
+    <main class="layout tab-content active" id="list-view">
       <section class="tree-panel">
         <h2>Technique map</h2>
         <div class="tree-description">
@@ -408,6 +539,32 @@
 
         <div id="problem-list"></div>
       </section>
+    </main>
+
+    <!-- Graph View Tab (New) -->
+    <main class="tab-content" id="graph-view">
+      <div class="graph-legend">
+        <div class="legend-item">
+          <div class="legend-color" style="background: #6366f1;"></div>
+          <span>Technique Categories</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #22d3ee;"></div>
+          <span>Sub-Techniques</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #10b981;"></div>
+          <span>Problems</span>
+        </div>
+      </div>
+      <div id="graph-container">
+        <svg id="graph-canvas"></svg>
+        <div class="graph-controls">
+          <button class="graph-control-btn" id="zoom-in" title="Zoom In">+</button>
+          <button class="graph-control-btn" id="zoom-out" title="Zoom Out">−</button>
+          <button class="graph-control-btn" id="reset-view" title="Reset View">⟲</button>
+        </div>
+      </div>
     </main>
   </div>
 
@@ -475,7 +632,7 @@
         sizeBand: "medium",
         inputHint: "n up to 2·10^5, k small (e.g. ≤ 10)",
         complexity: "O(n log n · k)",
-        link: "",
+        link: "https://expert.ethz.ch/ide2/67fF4wzx4jHAsyArS", // put Code Expert link here
         video: "",
         pdf: ""
       },
@@ -937,9 +1094,363 @@
       });
     }
 
-    // === 7. Init =============================================================
+    // === 7. Tab Switching ====================================================
+
+    function initTabs() {
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetTab = btn.dataset.tab;
+          
+          // Remove active class from all tabs and buttons
+          tabBtns.forEach(b => b.classList.remove('active'));
+          tabContents.forEach(content => content.classList.remove('active'));
+          
+          // Add active class to clicked button and target content
+          btn.classList.add('active');
+          document.getElementById(targetTab).classList.add('active');
+          
+          // If switching to graph view, render the graph
+          if (targetTab === 'graph-view') {
+            renderGraph();
+          }
+        });
+      });
+    }
+
+    // === 8. Graph Visualization ==============================================
+
+    let graphState = {
+      scale: 1,
+      translateX: 0,
+      translateY: 0,
+      isDragging: false,
+      dragStart: { x: 0, y: 0 }
+    };
+
+    function renderGraph() {
+      const svg = document.getElementById('graph-canvas');
+      const container = document.getElementById('graph-container');
+      
+      // Set SVG dimensions
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      svg.setAttribute('width', width);
+      svg.setAttribute('height', height);
+      
+      // Clear existing content
+      svg.innerHTML = '';
+      
+      // Create main group for zoom/pan
+      const mainGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      mainGroup.id = 'main-graph-group';
+      svg.appendChild(mainGroup);
+      
+      // Build graph data structure
+      const graphData = buildGraphData();
+      
+      // Calculate layout
+      const layout = calculateGraphLayout(graphData, width, height);
+      
+      // Draw edges first (so they appear behind nodes)
+      drawEdges(mainGroup, layout.edges);
+      
+      // Draw nodes
+      drawNodes(mainGroup, layout.nodes);
+      
+      // Setup zoom/pan controls
+      setupGraphControls(svg, mainGroup);
+    }
+
+    function buildGraphData() {
+      const nodes = [];
+      const edges = [];
+      const nodeMap = new Map();
+      
+      // Add technique nodes
+      NODES.forEach((node, idx) => {
+        const graphNode = {
+          id: node.id,
+          label: node.label,
+          type: node.parent ? 'sub-technique' : 'technique',
+          parent: node.parent,
+          techniques: node.techniques || [],
+          level: 0
+        };
+        nodes.push(graphNode);
+        nodeMap.set(node.id, graphNode);
+      });
+      
+      // Calculate levels (depth in tree)
+      nodes.forEach(node => {
+        let level = 0;
+        let current = node;
+        while (current.parent) {
+          level++;
+          current = nodeMap.get(current.parent);
+          if (!current) break;
+        }
+        node.level = level;
+      });
+      
+      // Add edges between technique nodes
+      NODES.forEach(node => {
+        if (node.parent && nodeMap.has(node.parent)) {
+          edges.push({
+            source: node.parent,
+            target: node.id,
+            type: 'hierarchy'
+          });
+        }
+      });
+      
+      // Add problem nodes
+      PROBLEMS.forEach((problem, idx) => {
+        const problemNode = {
+          id: 'problem-' + idx,
+          label: problem.storyTitle,
+          modelTitle: problem.modelTitle,
+          type: 'problem',
+          methods: problem.methods,
+          week: problem.week,
+          level: 999 // Problems at bottom
+        };
+        nodes.push(problemNode);
+        nodeMap.set(problemNode.id, problemNode);
+        
+        // Connect to technique nodes
+        problem.methods.forEach(method => {
+          // Find nodes that contain this technique
+          NODES.forEach(techNode => {
+            if (techNode.techniques && techNode.techniques.includes(method)) {
+              edges.push({
+                source: techNode.id,
+                target: problemNode.id,
+                type: 'uses',
+                method: method
+              });
+            }
+          });
+        });
+      });
+      
+      return { nodes, edges, nodeMap };
+    }
+
+    function calculateGraphLayout(graphData, width, height) {
+      const { nodes, edges } = graphData;
+      
+      // Group nodes by level
+      const levels = {};
+      nodes.forEach(node => {
+        if (!levels[node.level]) levels[node.level] = [];
+        levels[node.level].push(node);
+      });
+      
+      const levelKeys = Object.keys(levels).map(Number).sort((a, b) => a - b);
+      const levelHeight = height / (levelKeys.length + 1);
+      
+      // Position nodes
+      const layoutNodes = [];
+      levelKeys.forEach((level, levelIdx) => {
+        const nodesAtLevel = levels[level];
+        const spacing = width / (nodesAtLevel.length + 1);
+        
+        nodesAtLevel.forEach((node, idx) => {
+          layoutNodes.push({
+            ...node,
+            x: spacing * (idx + 1),
+            y: levelHeight * (levelIdx + 1)
+          });
+        });
+      });
+      
+      // Position edges
+      const layoutEdges = edges.map(edge => {
+        const source = layoutNodes.find(n => n.id === edge.source);
+        const target = layoutNodes.find(n => n.id === edge.target);
+        return {
+          ...edge,
+          x1: source.x,
+          y1: source.y,
+          x2: target.x,
+          y2: target.y
+        };
+      });
+      
+      return { nodes: layoutNodes, edges: layoutEdges };
+    }
+
+    function drawEdges(container, edges) {
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+      marker.setAttribute('id', 'arrowhead');
+      marker.setAttribute('markerWidth', '10');
+      marker.setAttribute('markerHeight', '10');
+      marker.setAttribute('refX', '9');
+      marker.setAttribute('refY', '3');
+      marker.setAttribute('orient', 'auto');
+      
+      const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      polygon.setAttribute('points', '0 0, 10 3, 0 6');
+      polygon.setAttribute('fill', '#4b5563');
+      marker.appendChild(polygon);
+      defs.appendChild(marker);
+      container.appendChild(defs);
+      
+      edges.forEach(edge => {
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', edge.x1);
+        line.setAttribute('y1', edge.y1);
+        line.setAttribute('x2', edge.x2);
+        line.setAttribute('y2', edge.y2);
+        line.setAttribute('stroke', edge.type === 'hierarchy' ? '#4b5563' : '#374151');
+        line.setAttribute('stroke-width', edge.type === 'hierarchy' ? '2' : '1');
+        line.setAttribute('marker-end', 'url(#arrowhead)');
+        line.setAttribute('opacity', '0.6');
+        container.appendChild(line);
+      });
+    }
+
+    function drawNodes(container, nodes) {
+      nodes.forEach(node => {
+        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        group.setAttribute('transform', `translate(${node.x}, ${node.y})`);
+        group.style.cursor = 'pointer';
+        
+        // Node circle/rect
+        const shape = document.createElementNS('http://www.w3.org/2000/svg', node.type === 'problem' ? 'rect' : 'circle');
+        
+        if (node.type === 'problem') {
+          const rectSize = 80;
+          shape.setAttribute('x', -rectSize / 2);
+          shape.setAttribute('y', -30);
+          shape.setAttribute('width', rectSize);
+          shape.setAttribute('height', 60);
+          shape.setAttribute('rx', '8');
+          shape.setAttribute('fill', '#10b981');
+        } else if (node.type === 'technique') {
+          shape.setAttribute('r', '35');
+          shape.setAttribute('fill', '#6366f1');
+        } else {
+          shape.setAttribute('r', '30');
+          shape.setAttribute('fill', '#22d3ee');
+        }
+        
+        shape.setAttribute('stroke', '#1f2937');
+        shape.setAttribute('stroke-width', '2');
+        group.appendChild(shape);
+        
+        // Label
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('y', '5');
+        text.setAttribute('fill', '#111827');
+        text.setAttribute('font-size', node.type === 'problem' ? '11' : '12');
+        text.setAttribute('font-weight', 'bold');
+        text.textContent = node.label.length > 15 ? node.label.substring(0, 13) + '...' : node.label;
+        group.appendChild(text);
+        
+        // Hover tooltip
+        const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        title.textContent = node.type === 'problem' ? 
+          `${node.label}\nModel: ${node.modelTitle}\nWeek ${node.week}` : 
+          node.label;
+        group.appendChild(title);
+        
+        // Click interaction
+        group.addEventListener('click', () => {
+          if (node.type === 'problem') {
+            // Switch to list view and highlight this problem
+            document.querySelector('[data-tab="list-view"]').click();
+            setTimeout(() => {
+              const problemCards = document.querySelectorAll('.problem-card');
+              problemCards.forEach(card => {
+                if (card.dataset.story === node.label) {
+                  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  card.style.outline = '3px solid #6366f1';
+                  setTimeout(() => {
+                    card.style.outline = '';
+                  }, 2000);
+                }
+              });
+            }, 300);
+          } else {
+            // Filter by this technique
+            selectNode(node.id);
+            document.querySelector('[data-tab="list-view"]').click();
+          }
+        });
+        
+        container.appendChild(group);
+      });
+    }
+
+    function setupGraphControls(svg, mainGroup) {
+      const zoomIn = document.getElementById('zoom-in');
+      const zoomOut = document.getElementById('zoom-out');
+      const resetView = document.getElementById('reset-view');
+      
+      function updateTransform() {
+        mainGroup.setAttribute('transform', 
+          `translate(${graphState.translateX}, ${graphState.translateY}) scale(${graphState.scale})`
+        );
+      }
+      
+      zoomIn.addEventListener('click', () => {
+        graphState.scale = Math.min(graphState.scale * 1.2, 3);
+        updateTransform();
+      });
+      
+      zoomOut.addEventListener('click', () => {
+        graphState.scale = Math.max(graphState.scale / 1.2, 0.3);
+        updateTransform();
+      });
+      
+      resetView.addEventListener('click', () => {
+        graphState.scale = 1;
+        graphState.translateX = 0;
+        graphState.translateY = 0;
+        updateTransform();
+      });
+      
+      // Pan functionality
+      svg.addEventListener('mousedown', (e) => {
+        graphState.isDragging = true;
+        graphState.dragStart = { x: e.clientX - graphState.translateX, y: e.clientY - graphState.translateY };
+      });
+      
+      svg.addEventListener('mousemove', (e) => {
+        if (graphState.isDragging) {
+          graphState.translateX = e.clientX - graphState.dragStart.x;
+          graphState.translateY = e.clientY - graphState.dragStart.y;
+          updateTransform();
+        }
+      });
+      
+      svg.addEventListener('mouseup', () => {
+        graphState.isDragging = false;
+      });
+      
+      svg.addEventListener('mouseleave', () => {
+        graphState.isDragging = false;
+      });
+      
+      // Zoom with mouse wheel
+      svg.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? 0.9 : 1.1;
+        graphState.scale = Math.min(Math.max(graphState.scale * delta, 0.3), 3);
+        updateTransform();
+      });
+    }
+
+    // === 9. Init =============================================================
 
     function init() {
+      initTabs();
       initFilters();
       renderTree();
       renderProblemList();
