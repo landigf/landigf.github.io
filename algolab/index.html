@@ -1174,11 +1174,16 @@
           
           // Add active class to clicked button and target content
           btn.classList.add('active');
-          document.getElementById(targetTab).classList.add('active');
+          const targetContent = document.getElementById(targetTab);
+          targetContent.classList.add('active');
           
-          // If switching to graph view, render the graph
+          // If switching to graph view, render the graph and scroll to it
           if (targetTab === 'graph-view') {
             renderGraph();
+            // Smooth scroll to graph view
+            setTimeout(() => {
+              targetContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 50);
           }
         });
       });
