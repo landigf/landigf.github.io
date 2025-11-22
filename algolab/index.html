@@ -5,14 +5,16 @@
   <title>Algolab Problem Map</title>
   <style>
     :root {
-      --bg: #050816;
-      --panel: #111827;
-      --card: #1f2937;
-      --accent: #6366f1;
-      --accent-soft: #22d3ee;
-      --text-main: #e5e7eb;
-      --text-muted: #9ca3af;
-      --tag-bg: #374151;
+      --bg: #000000;
+      --panel: #0a0a0a;
+      --card: #1a1a1a;
+      --accent: #ffffff;
+      --accent-soft: #f5f5f7;
+      --text-main: #f5f5f7;
+      --text-secondary: #86868b;
+      --text-muted: #6e6e73;
+      --tag-bg: #1d1d1f;
+      --border: #2c2c2e;
     }
 
     * {
@@ -21,10 +23,12 @@
 
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+        "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: #000000;
       color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     #app {
@@ -34,10 +38,10 @@
     }
 
     header {
-      padding: 16px 24px;
-      border-bottom: 1px solid #111827;
-      background: rgba(15, 23, 42, 0.9);
-      backdrop-filter: blur(8px);
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(20px);
       position: sticky;
       top: 0;
       z-index: 10;
@@ -45,14 +49,17 @@
 
     header h1 {
       margin: 0;
-      font-size: 1.3rem;
+      font-size: 2rem;
       font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
     }
 
     header p {
-      margin: 4px 0 0;
-      font-size: 0.85rem;
-      color: var(--text-muted);
+      margin: 8px 0 0;
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-weight: 400;
     }
 
     main.layout {
@@ -63,80 +70,95 @@
 
     .tree-panel {
       width: 32%;
-      min-width: 260px;
-      max-width: 420px;
-      border-right: 1px solid #111827;
-      background: linear-gradient(to bottom, #020617, #020617);
-      padding: 16px 16px 24px;
+      min-width: 280px;
+      max-width: 440px;
+      border-right: 1px solid var(--border);
+      background: var(--panel);
+      padding: 24px;
       overflow-y: auto;
     }
 
     .list-panel {
       flex: 1;
-      padding: 16px 24px 24px;
+      padding: 24px 32px;
       overflow-y: auto;
+      background: var(--bg);
     }
 
     .tree-panel h2,
     .list-panel h2 {
-      margin: 0 0 6px;
-      font-size: 0.95rem;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      color: #9ca3af;
+      margin: 0 0 16px;
+      font-size: 1.1rem;
+      letter-spacing: -0.01em;
+      font-weight: 600;
+      color: var(--text-main);
     }
 
     .tree-description {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 10px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.5;
     }
 
     /* Tree nodes */
 
     #tree {
-      margin-top: 4px;
+      margin-top: 8px;
     }
 
     .tree-node {
       position: relative;
-      margin: 6px 0;
+      margin: 8px 0;
       cursor: pointer;
-      transition: transform 0.08s ease, box-shadow 0.12s ease,
-        background 0.12s ease;
-      border-radius: 999px;
-      padding: 1px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-soft));
-      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.35);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
     }
 
     .tree-node-inner {
-      border-radius: 999px;
-      padding: 7px 10px;
-      background: rgba(15, 23, 42, 0.96);
+      border-radius: 12px;
+      padding: 12px 16px;
+      background: transparent;
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 4px;
     }
 
     .tree-node .node-title {
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-main);
     }
 
     .tree-node .node-subtitle {
-      font-size: 0.78rem;
-      color: #a5b4fc;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 400;
     }
 
     .tree-node .node-meta {
-      font-size: 0.7rem;
-      color: #e0f2fe;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .tree-node:hover {
+      background: var(--tag-bg);
+      border-color: #3a3a3c;
+      transform: translateX(2px);
     }
 
     .tree-node.selected {
-      box-shadow: 0 0 0 2px #f97316, 0 15px 25px rgba(0, 0, 0, 0.5);
+      background: var(--accent);
+      border-color: var(--accent);
       transform: translateX(2px);
+    }
+
+    .tree-node.selected .node-title,
+    .tree-node.selected .node-subtitle,
+    .tree-node.selected .node-meta {
+      color: #000;
     }
 
     .tree-node::before {
@@ -146,8 +168,8 @@
       top: 50%;
       width: 10px;
       height: 1px;
-      background: #374151;
-      opacity: 0.8;
+      background: var(--border);
+      opacity: 0.5;
     }
 
     .tree-node.depth-0::before {
@@ -159,196 +181,234 @@
     .filters {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
+      gap: 12px;
+      margin-bottom: 24px;
       align-items: center;
     }
 
     .filters input[type="search"] {
       flex: 1 1 220px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: inherit;
-      font-size: 0.85rem;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text-main);
+      font-size: 0.95rem;
       outline: none;
+      transition: all 0.2s;
     }
 
     .filters input[type="search"]:focus {
-      border-color: var(--accent-soft);
-      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.5);
+      border-color: var(--text-secondary);
+      background: var(--panel);
     }
 
     .filters select {
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid #374151;
-      background: #020617;
-      color: inherit;
-      font-size: 0.8rem;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text-main);
+      font-size: 0.9rem;
       outline: none;
+      cursor: pointer;
+      transition: all 0.2s;
     }
 
-    .filters select:focus {
-      border-color: var(--accent-soft);
+    .filters select:hover {
+      border-color: var(--text-secondary);
     }
 
     .tech-filter-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
       width: 100%;
-      margin-top: 4px;
+      margin-top: 8px;
+    }
+
+    .global-flip-btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text-main);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-left: auto;
+    }
+
+    .global-flip-btn:hover {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    .global-flip-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
     }
 
     #tech-filter {
       width: 100%;
-      max-height: 88px;
+      max-height: 100px;
       overflow-y: auto;
-      margin-top: 2px;
+      margin-top: 8px;
       border-radius: 10px;
-      padding: 3px 4px;
-      background: #020617;
-      border: 1px solid #111827;
+      padding: 8px;
+      background: var(--panel);
+      border: 1px solid var(--border);
     }
 
     #tech-filter label {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      font-size: 0.72rem;
-      color: #e5e7eb;
-      margin: 2px 4px 2px 0;
-      padding: 2px 7px;
-      border-radius: 999px;
-      background: #111827;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      margin: 4px 6px 4px 0;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: var(--card);
       cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+    }
+
+    #tech-filter label:hover {
+      background: var(--tag-bg);
     }
 
     #tech-filter input[type="checkbox"] {
       accent-color: var(--accent);
       cursor: pointer;
+      width: 16px;
+      height: 16px;
     }
 
     /* Problem list */
 
     #problem-list {
-      margin-top: 4px;
+      margin-top: 8px;
     }
 
     .problem-card {
       background: var(--card);
-      border-radius: 18px;
-      padding: 12px 14px;
-      margin-bottom: 12px;
-      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.28);
-      border: 1px solid #111827;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .problem-card:hover {
+      border-color: var(--text-secondary);
+      transform: translateY(-2px);
     }
 
     .problem-header {
       display: flex;
       justify-content: space-between;
-      gap: 8px;
+      gap: 12px;
       align-items: flex-start;
     }
 
     .problem-title {
       margin: 0;
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 600;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
     }
 
     .problem-model {
-      margin-top: 2px;
-      font-size: 0.85rem;
-      color: var(--text-muted);
+      margin-top: 4px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 400;
     }
 
     .problem-meta {
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
-      margin-top: 4px;
+      margin-top: 8px;
     }
 
     .tag-row {
-      margin-top: 6px;
+      margin-top: 10px;
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
+      gap: 6px;
     }
 
     .tag {
-      font-size: 0.7rem;
-      padding: 2px 6px;
-      border-radius: 999px;
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 6px;
       background: var(--tag-bg);
-      color: #e5e7eb;
+      color: var(--text-main);
       white-space: nowrap;
+      border: 1px solid var(--border);
     }
 
     .tag-week {
-      background: #047857;
+      background: #1a1a1a;
+      border-color: #2c2c2e;
     }
 
     .tag-size {
-      background: #1d4ed8;
+      background: #1a1a1a;
+      border-color: #2c2c2e;
     }
 
     .tag-complexity {
-      background: #a855f7;
+      background: #1a1a1a;
+      border-color: #2c2c2e;
     }
 
     .problem-links {
-      margin-top: 6px;
-      font-size: 0.75rem;
+      margin-top: 10px;
+      font-size: 0.85rem;
       display: flex;
-      gap: 10px;
+      gap: 12px;
       flex-wrap: wrap;
     }
 
     .problem-links a {
-      color: #e5e7eb;
+      color: var(--text-main);
       text-decoration: none;
-      opacity: 0.85;
+      transition: opacity 0.2s;
     }
 
     .problem-links a:hover {
-      opacity: 1;
-      text-decoration: underline;
-    }
-
-    .flip-btn {
-      margin-top: 2px;
-      font-size: 0.7rem;
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 0;
-      background: #f97316;
-      color: #000;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .flip-btn:hover {
-      filter: brightness(1.05);
+      opacity: 0.7;
     }
 
     .notes {
-      margin-top: 8px;
-      font-size: 0.76rem;
+      margin-top: 12px;
+      font-size: 0.85rem;
     }
 
     .notes textarea {
       width: 100%;
-      min-height: 60px;
-      max-height: 180px;
+      min-height: 70px;
+      max-height: 200px;
       border-radius: 10px;
-      padding: 6px 8px;
-      border: 1px solid #4b5563;
-      background: #020617;
-      color: inherit;
-      font-size: 0.75rem;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text-main);
+      font-size: 0.85rem;
       resize: vertical;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .notes textarea:focus {
+      outline: none;
+      border-color: var(--text-secondary);
     }
 
     .empty-state {
@@ -365,41 +425,42 @@
         width: 100%;
         max-width: none;
         border-right: none;
-        border-bottom: 1px solid #111827;
+        border-bottom: 1px solid var(--border);
       }
     }
 
     /* Tab Navigation Styles */
     .tab-navigation {
       display: flex;
-      gap: 8px;
-      margin-top: 20px;
-      border-top: 1px solid #1f2937;
-      padding-top: 16px;
+      gap: 12px;
+      margin-top: 24px;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
     }
 
     .tab-btn {
-      background: var(--card);
-      border: 1px solid #374151;
-      color: var(--text-muted);
-      padding: 10px 20px;
-      font-size: 0.9rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 12px 24px;
+      font-size: 1rem;
       cursor: pointer;
-      border-radius: 8px;
-      transition: all 0.3s ease;
+      border-radius: 10px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       align-items: center;
       gap: 8px;
+      font-weight: 500;
     }
 
     .tab-btn:hover {
-      background: #374151;
-      color: var(--text-main);
+      background: var(--card);
+      border-color: var(--text-secondary);
     }
 
     .tab-btn.active {
       background: var(--accent);
-      color: white;
+      color: #000;
       border-color: var(--accent);
     }
 
@@ -414,18 +475,19 @@
     /* Graph View Styles */
     #graph-view {
       flex-direction: column;
-      padding: 24px;
+      padding: 32px;
       min-height: calc(100vh - 200px);
+      background: var(--bg);
     }
 
     #graph-container {
       flex: 1;
-      background: radial-gradient(circle at center, #0a0f1f 0%, #020617 100%);
-      border: 1px solid #1f2937;
-      border-radius: 12px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
       position: relative;
       overflow: hidden;
-      min-height: 600px;
+      min-height: 700px;
     }
 
     #graph-canvas {
@@ -440,52 +502,59 @@
 
     .graph-legend {
       display: flex;
-      gap: 20px;
-      padding: 16px;
-      background: var(--panel);
-      border-radius: 8px;
-      margin-bottom: 16px;
+      gap: 24px;
+      padding: 20px;
+      background: var(--card);
+      border-radius: 12px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
+      border: 1px solid var(--border);
     }
 
     .legend-item {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 0.85rem;
+      gap: 10px;
+      font-size: 0.95rem;
+      color: var(--text-main);
     }
 
     .legend-color {
-      width: 16px;
-      height: 16px;
-      border-radius: 4px;
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
     }
 
     .graph-controls {
       position: absolute;
-      top: 16px;
-      right: 16px;
+      top: 20px;
+      right: 20px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     .graph-control-btn {
-      background: var(--panel);
-      border: 1px solid #374151;
+      background: var(--card);
+      border: 1px solid var(--border);
       color: var(--text-main);
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.2s;
+      font-size: 1.2rem;
+      font-weight: 500;
     }
 
     .graph-control-btn:hover {
-      background: var(--card);
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
       transform: scale(1.05);
     }
   </style>
@@ -495,8 +564,7 @@
     <header>
       <h1>Algolab Problem Map</h1>
       <p>
-        Click a technique node to see all problems that use that pattern.
-        For each problem you can flip between story name and "model name".
+        Pattern-match problems to techniques. Use global flip to switch between story names and underlying models.
       </p>
       
       <!-- Tab Navigation -->
@@ -531,6 +599,9 @@
           />
           <select id="week-filter"></select>
           <select id="size-filter"></select>
+          <button class="global-flip-btn" id="global-flip">
+            Show Models
+          </button>
           <div class="tech-filter-label">
             Extra technique filters (ANDed with node):
           </div>
@@ -545,15 +616,15 @@
     <main class="tab-content" id="graph-view">
       <div class="graph-legend">
         <div class="legend-item">
-          <div class="legend-color" style="background: #6366f1;"></div>
+          <div class="legend-color" style="background: #ffffff;"></div>
           <span>Technique Categories</span>
         </div>
         <div class="legend-item">
-          <div class="legend-color" style="background: #22d3ee;"></div>
+          <div class="legend-color" style="background: #86868b;"></div>
           <span>Sub-Techniques</span>
         </div>
         <div class="legend-item">
-          <div class="legend-color" style="background: #10b981;"></div>
+          <div class="legend-color" style="background: #f5f5f7; border: 1px solid #2c2c2e;"></div>
           <span>Problems</span>
         </div>
       </div>
@@ -887,7 +958,7 @@
       problems.forEach((pInfo) => {
         const card = document.createElement("article");
         card.className = "problem-card";
-        card.dataset.mode = "story";
+        card.dataset.mode = globalFlipState ? "model" : "story";
         card.dataset.story = pInfo.storyTitle;
         card.dataset.model = pInfo.modelTitle;
 
@@ -898,25 +969,16 @@
 
         const title = document.createElement("h3");
         title.className = "problem-title";
-        title.textContent = pInfo.storyTitle;
+        title.textContent = globalFlipState ? pInfo.modelTitle : pInfo.storyTitle;
 
         const model = document.createElement("div");
         model.className = "problem-model";
-        model.textContent = pInfo.modelTitle;
+        model.textContent = globalFlipState ? pInfo.storyTitle : pInfo.modelTitle;
 
         titleBox.appendChild(title);
         titleBox.appendChild(model);
 
-        const rightBox = document.createElement("div");
-        const flipBtn = document.createElement("button");
-        flipBtn.className = "flip-btn";
-        flipBtn.textContent = "Flip";
-        flipBtn.title =
-          "Switch which name is primary: story vs. underlying model";
-        rightBox.appendChild(flipBtn);
-
         header.appendChild(titleBox);
-        header.appendChild(rightBox);
         card.appendChild(header);
 
         const meta = document.createElement("div");
@@ -1011,30 +1073,28 @@
         notes.appendChild(textarea);
         card.appendChild(notes);
 
-        flipBtn.addEventListener("click", () => {
-          const mode =
-            card.dataset.mode === "story" ? "model" : "story";
-          card.dataset.mode = mode;
-          if (mode === "story") {
-            title.textContent = card.dataset.story;
-            model.textContent = card.dataset.model;
-          } else {
-            title.textContent = card.dataset.model;
-            model.textContent = card.dataset.story;
-          }
-        });
-
         container.appendChild(card);
       });
     }
 
     // === 6. Filters UI =======================================================
 
+    let globalFlipState = false; // false = show story, true = show model
+
     function initFilters() {
       const searchInput = document.getElementById("search-input");
       const weekSelect = document.getElementById("week-filter");
       const sizeSelect = document.getElementById("size-filter");
       const techContainer = document.getElementById("tech-filter");
+      const globalFlipBtn = document.getElementById("global-flip");
+
+      // Global flip button
+      globalFlipBtn.addEventListener("click", () => {
+        globalFlipState = !globalFlipState;
+        globalFlipBtn.textContent = globalFlipState ? "Show Stories" : "Show Models";
+        globalFlipBtn.classList.toggle("active", globalFlipState);
+        renderProblemList();
+      });
 
       // Week options from existing problems
       const weeks = Array.from(new Set(PROBLEMS.map((p) => p.week))).sort(
@@ -1295,7 +1355,7 @@
       
       const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
       polygon.setAttribute('points', '0 0, 10 3, 0 6');
-      polygon.setAttribute('fill', '#4b5563');
+      polygon.setAttribute('fill', '#86868b');
       marker.appendChild(polygon);
       defs.appendChild(marker);
       container.appendChild(defs);
@@ -1306,10 +1366,10 @@
         line.setAttribute('y1', edge.y1);
         line.setAttribute('x2', edge.x2);
         line.setAttribute('y2', edge.y2);
-        line.setAttribute('stroke', edge.type === 'hierarchy' ? '#4b5563' : '#374151');
+        line.setAttribute('stroke', edge.type === 'hierarchy' ? '#6e6e73' : '#2c2c2e');
         line.setAttribute('stroke-width', edge.type === 'hierarchy' ? '2' : '1');
         line.setAttribute('marker-end', 'url(#arrowhead)');
-        line.setAttribute('opacity', '0.6');
+        line.setAttribute('opacity', '0.5');
         container.appendChild(line);
       });
     }
@@ -1320,38 +1380,74 @@
         group.setAttribute('transform', `translate(${node.x}, ${node.y})`);
         group.style.cursor = 'pointer';
         
-        // Node circle/rect
-        const shape = document.createElementNS('http://www.w3.org/2000/svg', node.type === 'problem' ? 'rect' : 'circle');
+        // All nodes are rectangles for better readability
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        
+        let rectWidth, rectHeight, fillColor;
         
         if (node.type === 'problem') {
-          const rectSize = 80;
-          shape.setAttribute('x', -rectSize / 2);
-          shape.setAttribute('y', -30);
-          shape.setAttribute('width', rectSize);
-          shape.setAttribute('height', 60);
-          shape.setAttribute('rx', '8');
-          shape.setAttribute('fill', '#10b981');
+          rectWidth = 140;
+          rectHeight = 70;
+          fillColor = '#f5f5f7';
         } else if (node.type === 'technique') {
-          shape.setAttribute('r', '35');
-          shape.setAttribute('fill', '#6366f1');
+          rectWidth = 120;
+          rectHeight = 60;
+          fillColor = '#ffffff';
         } else {
-          shape.setAttribute('r', '30');
-          shape.setAttribute('fill', '#22d3ee');
+          rectWidth = 110;
+          rectHeight = 55;
+          fillColor = '#86868b';
         }
         
-        shape.setAttribute('stroke', '#1f2937');
-        shape.setAttribute('stroke-width', '2');
-        group.appendChild(shape);
+        rect.setAttribute('x', -rectWidth / 2);
+        rect.setAttribute('y', -rectHeight / 2);
+        rect.setAttribute('width', rectWidth);
+        rect.setAttribute('height', rectHeight);
+        rect.setAttribute('rx', '10');
+        rect.setAttribute('fill', fillColor);
+        rect.setAttribute('stroke', '#2c2c2e');
+        rect.setAttribute('stroke-width', '2');
+        group.appendChild(rect);
         
-        // Label
+        // Label with better text wrapping
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('y', '5');
-        text.setAttribute('fill', '#111827');
-        text.setAttribute('font-size', node.type === 'problem' ? '11' : '12');
-        text.setAttribute('font-weight', 'bold');
-        text.textContent = node.label.length > 15 ? node.label.substring(0, 13) + '...' : node.label;
-        group.appendChild(text);
+        text.setAttribute('y', '0');
+        text.setAttribute('dominant-baseline', 'middle');
+        text.setAttribute('fill', node.type === 'sub-technique' ? '#ffffff' : '#000000');
+        text.setAttribute('font-size', node.type === 'problem' ? '12' : '13');
+        text.setAttribute('font-weight', '500');
+        
+        // Wrap text if too long
+        const maxChars = node.type === 'problem' ? 18 : 15;
+        const words = node.label.split(' ');
+        let lines = [];
+        let currentLine = '';
+        
+        words.forEach(word => {
+          if ((currentLine + word).length > maxChars && currentLine.length > 0) {
+            lines.push(currentLine.trim());
+            currentLine = word + ' ';
+          } else {
+            currentLine += word + ' ';
+          }
+        });
+        if (currentLine.trim()) lines.push(currentLine.trim());
+        
+        if (lines.length === 1) {
+          text.textContent = lines[0];
+          group.appendChild(text);
+        } else {
+          // Multiple lines
+          lines.slice(0, 2).forEach((line, i) => {
+            const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            tspan.setAttribute('x', '0');
+            tspan.setAttribute('dy', i === 0 ? '-0.4em' : '1.2em');
+            tspan.textContent = line.length > maxChars ? line.substring(0, maxChars - 2) + '...' : line;
+            text.appendChild(tspan);
+          });
+          group.appendChild(text);
+        }
         
         // Hover tooltip
         const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
@@ -1370,7 +1466,7 @@
               problemCards.forEach(card => {
                 if (card.dataset.story === node.label) {
                   card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                  card.style.outline = '3px solid #6366f1';
+                  card.style.outline = '3px solid #ffffff';
                   setTimeout(() => {
                     card.style.outline = '';
                   }, 2000);
