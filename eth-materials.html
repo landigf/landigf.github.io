@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <!-- begin SEO -->
+  <title>ETH Study Materials - Gennaro Francesco Landi</title>
+  <meta property="og:locale" content="en-US">
+  <meta property="og:site_name" content="Gennaro Francesco Landi">
+  <meta property="og:title" content="ETH Study Materials - Hack Your Way Through ETH">
+  <link rel="canonical" href="https://landigf.github.io/eth-materials.html">
+  <meta property="og:url" content="https://landigf.github.io/eth-materials.html">
+  <meta property="og:description" content="Study materials, notes, and resources for ETH Zurich courses - shared to help fellow students">
+  
+  <script type="application/ld+json">
+  {
+    "@context" : "http://schema.org",
+    "@type" : "Person",
+    "name" : "Gennaro Francesco Landi",
+    "url" : "https://landigf.github.io",
+    "sameAs" : ["https://www.linkedin.com/in/landigf", "https://github.com/landigf"]
+  }
+  </script>
+  <!-- end SEO -->
+  
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script>
+    document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  </script>
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon-32x32.png" type="image/png">
+  <meta http-equiv="cleartype" content="on">
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <style>
+    /* ETH Materials Specific Styles */
+    .eth-hero {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      overflow: hidden;
+      margin-bottom: 3rem;
+      border-radius: 12px;
+    }
+    
+    .eth-hero-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.3;
+      transition: opacity 0.6s ease;
+    }
+    
+    .eth-hero:hover .eth-hero-image {
+      opacity: 0.5;
+    }
+    
+    .eth-hero-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      color: white;
+    }
+    
+    .eth-hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+      animation: fadeInUp 0.8s ease;
+    }
+    
+    .eth-hero-subtitle {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      opacity: 0.95;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+      animation: fadeInUp 1s ease;
+    }
+    
+    .eth-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      background: white;
+      color: #667eea;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      animation: fadeInUp 1.2s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .eth-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+      color: #764ba2;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .semester-section {
+      margin-bottom: 4rem;
+    }
+    
+    .semester-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 3px solid var(--accent-color);
+    }
+    
+    .semester-header h2 {
+      margin: 0;
+      color: var(--text-primary);
+    }
+    
+    .semester-badge {
+      padding: 0.4rem 1rem;
+      background: var(--accent-color);
+      color: white;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .course-card {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      opacity: 0;
+      animation: fadeInCard 0.6s ease forwards;
+    }
+    
+    .course-card:nth-child(1) { animation-delay: 0.1s; }
+    .course-card:nth-child(2) { animation-delay: 0.2s; }
+    .course-card:nth-child(3) { animation-delay: 0.3s; }
+    .course-card:nth-child(4) { animation-delay: 0.4s; }
+    
+    @keyframes fadeInCard {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .course-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-color);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    
+    .course-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .course-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      color: white;
+      font-size: 1.5rem;
+    }
+    
+    .course-card h3 {
+      margin: 0;
+      color: var(--text-primary);
+      font-size: 1.4rem;
+    }
+    
+    .course-code {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+    }
+    
+    .course-description {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+    
+    .course-materials {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-top: 1.5rem;
+    }
+    
+    .material-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1rem;
+      background: var(--bg-primary);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+      border: 1px solid var(--border-color, #e0e0e0);
+    }
+    
+    .material-link:hover {
+      background: var(--accent-color);
+      color: white;
+      transform: translateX(5px);
+    }
+    
+    .material-link i {
+      font-size: 1.1rem;
+    }
+    
+    .coming-soon-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      background: #fbbf24;
+      color: #78350f;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-left: 0.5rem;
+    }
+    
+    .info-box {
+      background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+      border-left: 4px solid #667eea;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 3rem;
+    }
+    
+    .info-box p {
+      margin: 0;
+      color: var(--text-secondary);
+    }
+    
+    .info-box strong {
+      color: var(--text-primary);
+    }
+    
+    /* Dark mode adjustments */
+    body.dark-mode .course-card {
+      background: #2d3748;
+    }
+    
+    body.dark-mode .material-link {
+      background: #1a202c;
+      border-color: #4a5568;
+    }
+    
+    body.dark-mode .material-link:hover {
+      background: var(--accent-color);
+    }
+  </style>
+</head>
+<body>
+  <!--[if lt IE 9]>
+  <div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+  <![endif]-->
+  
+  <!-- Top Navigation Bar -->
+  <nav class="top-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">Master's Student</a>
+      <div class="nav-links">
+        <a href="blog.html">Blog Posts</a>
+        <a href="eth-materials.html" class="active">ETH Materials</a>
+        <a href="https://drive.google.com/file/d/1I1sEeulfPVFbF_8xYnmB6Xys3JaatR5r/view?usp=sharing" target="_blank">CV</a>
+        <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Container -->
+  <div class="main-container">
+    <!-- Left Sidebar with Profile -->
+    <aside class="sidebar">
+      <div class="profile-section">
+        <div class="profile-image">
+          <img src="profile_pic.png" alt="Gennaro Francesco Landi">
+        </div>
+        <div class="profile-info">
+          <h2>Gennaro Francesco</h2>
+          <div class="contact-info">
+            <div class="contact-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Zurich, Switzerland</span>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <a href="mailto:landigf.work@gmail.com">Email</a>
+            </div>
+            <div class="contact-item">
+              <i class="fab fa-linkedin"></i>
+              <a href="https://www.linkedin.com/in/landigf" target="_blank">LinkedIn</a>
+            </div>
+            <div class="contact-item">
+              <i class="fab fa-github"></i>
+              <a href="https://github.com/landigf" target="_blank">Github</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="content">
+      <!-- Hero Section -->
+      <div class="eth-hero">
+        <img src="assets/eth-building.jpg" alt="ETH Zurich" class="eth-hero-image">
+        <div class="eth-hero-content">
+          <h1>🎓 Hack Your Way Through ETH</h1>
+          <p class="eth-hero-subtitle">Study materials, notes, and resources to help you ace your courses</p>
+          <a href="#materials" class="eth-cta">
+            <i class="fas fa-rocket"></i>
+            Explore Materials
+          </a>
+        </div>
+      </div>
+
+      <!-- Info Box -->
+      <div class="info-box">
+        <p><strong>📚 About this collection:</strong> These are my personal study materials from ETH Zurich courses. I'm sharing them to help fellow students and create a collaborative learning environment. Feel free to use, adapt, and share (but always credit sources and respect academic integrity!).</p>
+      </div>
+
+      <!-- Materials Section -->
+      <div id="materials">
+        <!-- HS25 Semester -->
+        <section class="semester-section">
+          <div class="semester-header">
+            <h2>Autumn Semester 2025</h2>
+            <span class="semester-badge">HS25</span>
+          </div>
+
+          <div class="courses-grid">
+            <!-- AlgoLab Course -->
+            <div class="course-card">
+              <div class="course-header">
+                <div class="course-icon">
+                  <i class="fas fa-code"></i>
+                </div>
+                <div>
+                  <h3>AlgoLab</h3>
+                  <p class="course-code">252-0008-00L</p>
+                </div>
+              </div>
+              <p class="course-description">
+                Algorithms Laboratory - Advanced problem solving with C++ and competitive programming techniques. Weekly challenges covering graphs, dynamic programming, and optimization.
+              </p>
+              <div class="course-materials">
+                <a href="#" class="material-link">
+                  <i class="fas fa-globe"></i>
+                  <span>Full AlgoLab Website</span>
+                  <span class="coming-soon-badge">Coming Soon</span>
+                </a>
+                <a href="#" class="material-link">
+                  <i class="fab fa-github"></i>
+                  <span>Solution Repository</span>
+                  <span class="coming-soon-badge">Coming Soon</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Big Data Course -->
+            <div class="course-card">
+              <div class="course-header">
+                <div class="course-icon">
+                  <i class="fas fa-database"></i>
+                </div>
+                <div>
+                  <h3>Big Data</h3>
+                  <p class="course-code">263-3010-00L</p>
+                </div>
+              </div>
+              <p class="course-description">
+                Big Data for Engineers - Spark, distributed systems, MapReduce, and large-scale data processing. Practical experience with modern big data frameworks.
+              </p>
+              <div class="course-materials">
+                <a href="big-data-notes.html" class="material-link">
+                  <i class="fas fa-book"></i>
+                  <span>Course Notes</span>
+                </a>
+                <a href="#" class="material-link">
+                  <i class="fas fa-file-pdf"></i>
+                  <span>Cheat Sheet</span>
+                  <span class="coming-soon-badge">Coming Soon</span>
+                </a>
+                <a href="#" class="material-link">
+                  <i class="fab fa-github"></i>
+                  <span>Project Code</span>
+                  <span class="coming-soon-badge">Coming Soon</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- PAI Course -->
+            <div class="course-card">
+              <div class="course-header">
+                <div class="course-icon">
+                  <i class="fas fa-brain"></i>
+                </div>
+                <div>
+                  <h3>Probabilistic AI</h3>
+                  <p class="course-code">263-3906-00L</p>
+                </div>
+              </div>
+              <p class="course-description">
+                Probabilistic Artificial Intelligence - Bayesian inference, Gaussian processes, neural networks, and uncertainty quantification in machine learning.
+              </p>
+              <div class="course-materials">
+                <a href="pai-notes.html" class="material-link">
+                  <i class="fas fa-book"></i>
+                  <span>Course Notes</span>
+                </a>
+                <a href="fundamentals-inference-notes.html" class="material-link">
+                  <i class="fas fa-calculator"></i>
+                  <span>Mathematical Foundations</span>
+                </a>
+                <a href="#" class="material-link">
+                  <i class="fas fa-file-pdf"></i>
+                  <span>Cheat Sheet</span>
+                  <span class="coming-soon-badge">Coming Soon</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Future Semesters Placeholder -->
+        <section class="semester-section" style="opacity: 0.6;">
+          <div class="semester-header">
+            <h2>Spring Semester 2026</h2>
+            <span class="semester-badge" style="background: #9ca3af;">FS26</span>
+          </div>
+          <p style="color: var(--text-secondary); font-style: italic;">Materials will be added as the semester progresses...</p>
+        </section>
+      </div>
+
+      <!-- Footer Note -->
+      <div style="margin-top: 4rem; padding: 2rem; text-align: center; color: var(--text-secondary); border-top: 1px solid var(--border-color, #e0e0e0);">
+        <p><strong>💡 Got suggestions?</strong> If you have materials to share or found these helpful, reach out! Let's build a better learning community together.</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">
+          <a href="mailto:landigf.work@gmail.com" style="color: var(--accent-color);">📧 landigf.work@gmail.com</a>
+        </p>
+      </div>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>&copy; 2025 Gennaro Francesco Landi. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="https://github.com/landigf" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/landigf" target="_blank"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
