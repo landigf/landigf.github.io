@@ -601,38 +601,51 @@
           <p style="color: var(--text-secondary); font-style: italic;">Materials will be added as the semester progresses...</p>
         </section>
       </div>
-
+      
+      <!-- Separation between personal notes and community contributions -->
+      <div style="margin: 4rem 0; padding: 2rem 0; border-top: 3px dashed var(--border-color, #e0e0e0); border-bottom: 3px dashed var(--border-color, #e0e0e0); text-align: center;">
+        <h2 style="color: var(--text-primary); font-size: 1.8rem; margin-bottom: 1rem;">
+          <i class="fas fa-users"></i> Community Contributions
+        </h2>
+        <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 700px; margin: 0 auto;">
+          Beyond my personal notes above, here's a shared space where <strong>ETH students can contribute</strong> materials, past exams, summaries, and resources. Let's learn together!
+        </p>
+      </div>
+      
       <!-- Community Drive Folder Section -->
       <div class="drive-section">
         <div class="drive-header">
           <h2>
             <i class="fas fa-folder-open"></i>
-            Community Drive Folder
+            Shared Google Drive Folder
           </h2>
           <p>
-            <strong>Contribute & Access Materials:</strong> This is a shared Google Drive folder where anyone can upload helpful materials, past exams, summaries, or resources.
+            <strong>🎓 ETH Students Only:</strong> Upload your materials, download what others have shared. Access restricted to @ethz.ch and @student.ethz.ch emails.
           </p>
         </div>
         
-        <div style="text-align: center;">
-          <button class="drive-toggle-btn" onclick="toggleDrivePreview()" id="drive-toggle" aria-expanded="false">
+        <div style="text-align: center; margin-top: 2rem;">
+          <a 
+            href="https://drive.google.com/drive/folders/1mCxPzVJ7bOvveCxe_YL3Oh5FiL2TwZX7?usp=sharing" 
+            target="_blank" 
+            class="drive-toggle-btn"
+            style="text-decoration: none;">
             <i class="fas fa-external-link-alt"></i>
-            <span id="drive-toggle-text">Open Shared Drive Folder</span>
-          </button>
+            <span>Open Drive Folder (ETH Students)</span>
+          </a>
         </div>
         
-        <div id="drive-preview" class="drive-preview-container">
-          <div class="drive-iframe-wrapper">
-            <!-- Google Drive folder: ETH Materials Community Contributions -->
-            <iframe 
-              id="drive-iframe" 
-              data-src="https://drive.google.com/embeddedfolderview?id=1mCxPzVJ7bOvveCxe_YL3Oh5FiL2TwZX7#grid" 
-              src="" 
-              loading="lazy" 
-              title="Shared Drive Preview"
-              allow="fullscreen">
-            </iframe>
-          </div>
+        <div class="drive-info" style="margin-top: 2rem;">
+          <p><strong>📝 How to contribute:</strong></p>
+          <p>• Sign in with your ETH email (@ethz.ch or @student.ethz.ch)</p>
+          <p>• Click the button above to open the shared folder</p>
+          <p>• Upload your notes, summaries, past exams, or helpful resources</p>
+          <p>• Organize files by course (create folders if needed: AlgoLab, BigData, PAI, etc.)</p>
+          <p>• Browse what others have shared and benefit from collective knowledge</p>
+          <p style="margin-top: 1rem;"><strong>💡 Tip:</strong> Add a README or description to your files so others know what they contain!</p>
+          <p style="margin-top: 1rem; padding: 0.8rem; background: #fef3c7; color: #92400e; border-radius: 8px; border-left: 4px solid #f59e0b;">
+            <strong>⚠️ Access Note:</strong> You must be signed in with your ETH email to view and contribute to this folder.
+          </p>
         </div>
       </div>
 
@@ -643,31 +656,6 @@
           <a href="mailto:landig@ethz.ch" style="color: var(--accent-color);">📧 landig@ethz.ch</a>
         </p>
       </div>
-      
-      <script>
-        function toggleDrivePreview() {
-          const btn = document.getElementById('drive-toggle');
-          const container = document.getElementById('drive-preview');
-          const iframe = document.getElementById('drive-iframe');
-          const btnText = document.getElementById('drive-toggle-text');
-          const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-          
-          if (isExpanded) {
-            container.classList.remove('show');
-            btn.setAttribute('aria-expanded', 'false');
-            btnText.textContent = 'Open Shared Drive Folder';
-          } else {
-            container.classList.add('show');
-            btn.setAttribute('aria-expanded', 'true');
-            btnText.textContent = 'Close Preview';
-            
-            // Lazy load iframe on first open
-            if (!iframe.src) {
-              iframe.src = iframe.dataset.src;
-            }
-          }
-        }
-      </script>
     </main>
   </div>
 
