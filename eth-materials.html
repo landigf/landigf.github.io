@@ -299,6 +299,123 @@
     body.dark-mode .material-link:hover {
       background: var(--accent-color);
     }
+    
+    /* Drive Folder Section Styles */
+    .drive-section {
+      margin-top: 4rem;
+      padding: 2.5rem;
+      background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+      border-radius: 16px;
+      border: 2px solid var(--border-color, #e0e0e0);
+    }
+    
+    .drive-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .drive-header h2 {
+      font-size: 2rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .drive-header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    
+    .drive-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .drive-toggle-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+    
+    .drive-toggle-btn:active {
+      transform: translateY(0);
+    }
+    
+    .drive-preview-container {
+      margin-top: 2rem;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.3s ease, max-height 0.3s ease;
+    }
+    
+    .drive-preview-container.show {
+      opacity: 1;
+      max-height: 600px;
+    }
+    
+    .drive-iframe-wrapper {
+      border: 2px solid var(--border-color, #e0e0e0);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      background: white;
+    }
+    
+    .drive-iframe-wrapper iframe {
+      width: 100%;
+      height: 500px;
+      border: 0;
+      display: block;
+    }
+    
+    .drive-info {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: var(--bg-primary);
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+    
+    .drive-info p {
+      margin: 0.5rem 0;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+    
+    .drive-info strong {
+      color: var(--text-primary);
+    }
+    
+    body.dark-mode .drive-section {
+      background: linear-gradient(135deg, #667eea25 0%, #764ba225 100%);
+      border-color: #4a5568;
+    }
+    
+    body.dark-mode .drive-iframe-wrapper {
+      border-color: #4a5568;
+      background: #2d3748;
+    }
+    
+    body.dark-mode .drive-info {
+      background: #2d3748;
+    }
   </style>
 </head>
 <body>
@@ -485,13 +602,80 @@
         </section>
       </div>
 
+      <!-- Community Drive Folder Section -->
+      <div class="drive-section">
+        <div class="drive-header">
+          <h2>
+            <i class="fas fa-folder-open"></i>
+            Community Drive Folder
+          </h2>
+          <p>
+            <strong>Contribute & Access Materials:</strong> This is a shared Google Drive folder where anyone can upload helpful materials, past exams, summaries, or resources.
+          </p>
+        </div>
+        
+        <div style="text-align: center;">
+          <button class="drive-toggle-btn" onclick="toggleDrivePreview()" id="drive-toggle" aria-expanded="false">
+            <i class="fas fa-external-link-alt"></i>
+            <span id="drive-toggle-text">Open Shared Drive Folder</span>
+          </button>
+        </div>
+        
+        <div id="drive-preview" class="drive-preview-container">
+          <div class="drive-iframe-wrapper">
+            <!-- Google Drive folder: ETH Materials Community Contributions -->
+            <iframe 
+              id="drive-iframe" 
+              data-src="https://drive.google.com/embeddedfolderview?id=1mCxPzVJ7bOvveCxe_YL3Oh5FiL2TwZX7#grid" 
+              src="" 
+              loading="lazy" 
+              title="Shared Drive Preview"
+              allow="fullscreen">
+            </iframe>
+          </div>
+          
+          <div class="drive-info">
+            <p><strong>📝 How to contribute:</strong></p>
+            <p>• Click "Open in Drive" (top-right of the preview) to access the full folder</p>
+            <p>• Upload your notes, summaries, or helpful resources</p>
+            <p>• Organize files by course and topic</p>
+            <p><strong>⚠️ Note:</strong> Make sure your Drive folder is set to "Anyone with the link can edit" for community contributions</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Footer Note -->
-      <div style="margin-top: 4rem; padding: 2rem; text-align: center; color: var(--text-secondary); border-top: 1px solid var(--border-color, #e0e0e0);">
+      <div style="margin-top: 3rem; padding: 2rem; text-align: center; color: var(--text-secondary); border-top: 1px solid var(--border-color, #e0e0e0);">
         <p><strong>💡 Got suggestions?</strong> If you have materials to share or found these helpful, reach out! Let's build a better learning community together.</p>
         <p style="margin-top: 1rem; font-size: 0.9rem;">
           <a href="mailto:landig@ethz.ch" style="color: var(--accent-color);">📧 landig@ethz.ch</a>
         </p>
       </div>
+      
+      <script>
+        function toggleDrivePreview() {
+          const btn = document.getElementById('drive-toggle');
+          const container = document.getElementById('drive-preview');
+          const iframe = document.getElementById('drive-iframe');
+          const btnText = document.getElementById('drive-toggle-text');
+          const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+          
+          if (isExpanded) {
+            container.classList.remove('show');
+            btn.setAttribute('aria-expanded', 'false');
+            btnText.textContent = 'Open Shared Drive Folder';
+          } else {
+            container.classList.add('show');
+            btn.setAttribute('aria-expanded', 'true');
+            btnText.textContent = 'Close Preview';
+            
+            // Lazy load iframe on first open
+            if (!iframe.src) {
+              iframe.src = iframe.dataset.src;
+            }
+          }
+        }
+      </script>
     </main>
   </div>
 
