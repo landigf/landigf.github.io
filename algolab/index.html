@@ -608,10 +608,184 @@
       border-color: var(--accent);
       transform: scale(1.05);
     }
+    
+    /* Modal Popup Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      max-width: 700px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 32px;
+      position: relative;
+      animation: slideUp 0.3s ease;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes slideUp {
+      from { 
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 2rem;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: var(--tag-bg);
+      color: var(--text-main);
+    }
+
+    .modal-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      padding-right: 40px;
+    }
+
+    .modal-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .modal-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .modal-section {
+      margin-bottom: 24px;
+    }
+
+    .modal-section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.7;
+    }
+
+    .modal-section-content {
+      font-size: 1rem;
+      color: var(--text-main);
+      line-height: 1.6;
+      background: var(--panel);
+      padding: 16px;
+      border-radius: 10px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .modal-section-content.missing {
+      color: var(--text-muted);
+      font-style: italic;
+      border-left-color: var(--text-muted);
+    }
+
+    .modal-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: var(--accent);
+      color: #000;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.2s;
+      margin-top: 16px;
+    }
+
+    .modal-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+    }
+
+    .modal-link.disabled {
+      background: var(--tag-bg);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
   <div id="app">
+    <!-- Modal Popup -->
+    <div class="modal-overlay" id="problemModal">
+      <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <div class="modal-subtitle" id="modalSubtitle"></div>
+        <div class="modal-meta" id="modalMeta"></div>
+        
+        <div class="modal-section">
+          <div class="modal-section-title">Problem Description</div>
+          <div class="modal-section-content" id="modalDescription"></div>
+        </div>
+        
+        <div class="modal-section">
+          <div class="modal-section-title">Solution Approach</div>
+          <div class="modal-section-content" id="modalSolution"></div>
+        </div>
+        
+        <a href="#" class="modal-link" id="modalLink" target="_blank">
+          🔗 Open in Code Expert
+        </a>
+      </div>
+    </div>
+    
     <header>
       <h1>Algolab Problem Map</h1>
       <p>
@@ -761,35 +935,461 @@
         sizeBand: "medium",
         inputHint: "n up to 10^5, non-negative values",
         complexity: "O(n)",
-        link: "", // put Code Expert link here
+        description: "[missing]",
+        solution: "[missing]",
+        link: "",
         video: "",
         pdf: ""
       },
       {
         id: "lord-voldemort",
         storyTitle: "Lord Voldemort",
-        modelTitle:
-          "Weighted interval scheduling with cardinality constraint",
+        modelTitle: "Weighted interval scheduling with cardinality constraint",
         week: 5,
         methods: ["dp", "intervals", "binary search", "greedy"],
         sizeBand: "medium",
         inputHint: "n up to 2·10^5, k small (e.g. ≤ 10)",
         complexity: "O(n log n · k)",
-        link: "https://expert.ethz.ch/ide2/67fF4wzx4jHAsyArS", // put Code Expert link here
+        description: "Max length of non-overlapping intervals with cardinality constraint k",
+        solution: "Sort intervals and use DP or greedy approach to select maximum non-overlapping set",
+        link: "https://expert.ethz.ch/ide2/67fF4wzx4jHAsyArS",
         video: "",
         pdf: ""
       },
       {
         id: "clues",
         storyTitle: "Clues",
-        modelTitle:
-          "Delaunay triangulation + graph components / 2-coloring",
+        modelTitle: "Delaunay triangulation + graph components / 2-coloring",
         week: 7,
         methods: ["geometry", "delaunay triangulation", "graph components", "bfs"],
         sizeBand: "large",
         inputHint: "n, m up to 9·10^4, coordinates up to 2^24",
         complexity: "O((n + m) log n)",
-        link: "",
+        description: "Given radio stations with range r, determine if network can be 2-colored and if clients can communicate",
+        solution: "Use Delaunay Triangulation to construct network, DFS to assign colors and verify no interfering same-colored stations",
+        link: "https://expert.ethz.ch/solve/BpwLqmXhCfPfXQ4hF",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "the-sultan-trail",
+        storyTitle: "The Sultan Trail",
+        modelTitle: "MAX # of overlapping intervals",
+        week: 1,
+        methods: ["sweep line", "greedy"],
+        sizeBand: "medium",
+        inputHint: "n ~ 10^6",
+        complexity: "O(n log n)",
+        description: "Find max number of overlapping intervals at any point",
+        solution: "Sweep line: +1 at start, -1 at end, sort events (starts before ends), track maximum count",
+        link: "https://expert.ethz.ch/solve/cZJ5MF75rZ5N6RngJ",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "even-pairs",
+        storyTitle: "Even Pairs",
+        modelTitle: "# of subarrays with even sum",
+        week: 1,
+        methods: ["prefix sum", "combinatorics"],
+        sizeBand: "small",
+        inputHint: "n ~ 10^5",
+        complexity: "O(n)",
+        description: "Count number of subarrays with even sum",
+        solution: "Use prefix sums: count pairs where both cumulative sums are even or both odd using n*(n-1)/2",
+        link: "https://expert.ethz.ch/solve/icuMesQwsrB762q6Q",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "dominoes",
+        storyTitle: "Dominoes",
+        modelTitle: "Domino falling simulation",
+        week: 1,
+        methods: ["greedy"],
+        sizeBand: "small",
+        inputHint: "n ~ 10^5",
+        complexity: "O(n)",
+        description: "Determine how far dominoes fall starting from left",
+        solution: "Greedy: track fuel (remaining height), decrement each step, stop when ≤0, else take max(current, new height)",
+        link: "https://expert.ethz.ch/solve/BHCoFa7QqgnvfWJQN",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "search-snippets",
+        storyTitle: "Search Snippets",
+        modelTitle: "MIN interval containing all categories",
+        week: 2,
+        methods: ["greedy", "sliding window"],
+        sizeBand: "medium",
+        inputHint: "n ~ 10^5",
+        complexity: "O(n log n)",
+        description: "Find minimum interval containing all different categories at distinct positions",
+        solution: "Use greedy with min-heap to track minimum window containing all categories",
+        link: "https://expert.ethz.ch/solve/Rrd9wMDGxHn5mvBkr",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "severus-snape",
+        storyTitle: "Severus Snape",
+        modelTitle: "Min number of potions",
+        week: 2,
+        methods: ["dp", "greedy", "prefix sum"],
+        sizeBand: "medium",
+        inputHint: "n ~ 100",
+        complexity: "O(n^2)",
+        description: "Reach 3 values P, H, W by taking minimum number of potions of two types",
+        solution: "Combine DP for one potion type with greedy for another, using prefix sums and binary search",
+        link: "https://expert.ethz.ch/solve/eyZXcn6TZZHWNGZSe",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "san-francisco",
+        storyTitle: "San Francisco",
+        modelTitle: "Max score in directed graph within k moves",
+        week: 2,
+        methods: ["dp"],
+        sizeBand: "medium",
+        inputHint: "n ~ 10^3",
+        complexity: "O(n^2)",
+        description: "Get max score by traversing directed graph in max K moves with edge values",
+        solution: "DP with states dp[moves][node] to track maximum score reachable at each node within k moves",
+        link: "https://expert.ethz.ch/solve/NqPzfHTTW7wuruuiJ",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "greyjoy",
+        storyTitle: "Greyjoy",
+        modelTitle: "Max consecutive nodes sum = k in tree",
+        week: 2,
+        methods: ["prefix sum", "two sum"],
+        sizeBand: "medium",
+        inputHint: "n ~ 10^4",
+        complexity: "O(n^2)",
+        description: "Max length of consecutive nodes with sum equal to K in tree with root branches",
+        solution: "Use prefix sums with Two Sum for each branch, then combine branches adjusting for root",
+        link: "https://expert.ethz.ch/solve/rsADmS6rf3h3o3ZXC",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "burning-coins",
+        storyTitle: "Burning Coins",
+        modelTitle: "2-player game optimization",
+        week: 2,
+        methods: ["dp", "game theory"],
+        sizeBand: "medium",
+        inputHint: "n ~ 10^3",
+        complexity: "O(n^2)",
+        description: "Two player game: take first or last element, maximize value independently of opponent",
+        solution: "Game theory DP with memoization: recursively compute optimal moves assuming opponent plays optimally",
+        link: "https://expert.ethz.ch/solve/ppZM8mSxuQ3W2WWzZ",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "first-steps-bgl",
+        storyTitle: "First steps with BGL",
+        modelTitle: "Dijkstra + MST",
+        week: 3,
+        methods: ["shortest path", "mst"],
+        sizeBand: "small",
+        inputHint: "n ~ 100",
+        complexity: "O(n log n)",
+        description: "Basic graph algorithms using Boost Graph Library",
+        solution: "Apply Dijkstra's algorithm for shortest paths and Kruskal's for MST",
+        link: "https://expert.ethz.ch/solve/3abMHQP4DFYRnis2H",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "important-bridges",
+        storyTitle: "Important Bridges",
+        modelTitle: "Biconnected components",
+        week: 3,
+        methods: ["graph components", "biconnected"],
+        sizeBand: "medium",
+        inputHint: "n ~ 10^4",
+        complexity: "O(n log n)",
+        description: "Find edges that when removed disconnect at least 2 nodes",
+        solution: "Find biconnected components; edge is critical (bridge) if it's the only edge in its component",
+        link: "https://expert.ethz.ch/solve/4WGoT8H9DYhB4uk6v",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "ant-challenge",
+        storyTitle: "Ant Challenge",
+        modelTitle: "Multiple MST + Dijkstra",
+        week: 3,
+        methods: ["shortest path", "mst"],
+        sizeBand: "medium",
+        inputHint: "n ~ 100",
+        complexity: "O(n log n)",
+        description: "Combine multiple MSTs to find optimal path",
+        solution: "Compute MST for each network to find minimum edge weights, combine into single graph, run Dijkstra",
+        link: "https://expert.ethz.ch/solve/k2FMzXKo7QYwr2mNG",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "buddy-selection",
+        storyTitle: "Buddy Selection",
+        modelTitle: "Maximum matching with constraints",
+        week: 3,
+        methods: ["matching", "graph"],
+        sizeBand: "small",
+        inputHint: "n ~ 100",
+        complexity: "O(n^2)",
+        description: "Pair students such that every pair shares >f interests",
+        solution: "Build graph with edges for pairs with >k common interests, check if maximum matching covers all vertices using Edmonds' algorithm",
+        link: "https://expert.ethz.ch/solve/7mrSJzRR6oZT6H8Ri",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "hit",
+        storyTitle: "Hit",
+        modelTitle: "Ray-segment intersection",
+        week: 4,
+        methods: ["geometry"],
+        sizeBand: "small",
+        complexity: "O(n)",
+        description: "Ray-segment intersection tests",
+        solution: "Use CGAL geometric predicates to test ray-segment intersections efficiently",
+        link: "https://expert.ethz.ch/solve/MHNvZQgvkchbaAnmC",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "first-hit",
+        storyTitle: "First Hit",
+        modelTitle: "First ray-segment intersection",
+        week: 4,
+        methods: ["geometry"],
+        sizeBand: "medium",
+        complexity: "O(n) expected",
+        description: "Find first point where ray intersects a segment among n segments",
+        solution: "Randomized algorithm: shuffle segments, maintain closest intersection, clip ray. Expected O(log n) constructions",
+        link: "https://expert.ethz.ch/solve/JkBRJwrTXcfYu4xEb",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "antenna",
+        storyTitle: "Antenna",
+        modelTitle: "Minimum enclosing circle",
+        week: 4,
+        methods: ["geometry"],
+        sizeBand: "small",
+        complexity: "O(n)",
+        description: "[missing]",
+        solution: "[missing]",
+        link: "https://expert.ethz.ch/solve/xZRJCxKxuumWM2Qb8",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "hiking-maps",
+        storyTitle: "Hiking Maps",
+        modelTitle: "Minimum covering triangles",
+        week: 4,
+        methods: ["geometry", "sliding window"],
+        sizeBand: "medium",
+        complexity: "O(n × m)",
+        description: "Find minimum subsequence of triangles that fully covers hiking path",
+        solution: "Sliding window: expand to cover all segments, shrink to minimize. Use geometric predicates for containment",
+        link: "https://expert.ethz.ch/solve/3Pa2nyMpSAHA39qsR",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "germs",
+        storyTitle: "Germs",
+        modelTitle: "Growing circles",
+        week: 4,
+        methods: ["geometry", "delaunay triangulation"],
+        sizeBand: "medium",
+        complexity: "O(n log n)",
+        description: "Circular germs grow quadratically. Determine death times (first, median, last)",
+        solution: "Death time = distance to nearest neighbor. Use Delaunay Triangulation to find nearest neighbor in O(n log n)",
+        link: "https://expert.ethz.ch/solve/rvq3JfkXKNkjEmdDX",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "inball",
+        storyTitle: "Inball",
+        modelTitle: "Maximum ball in cave",
+        week: 4,
+        methods: ["linear programming", "geometry"],
+        sizeBand: "small",
+        complexity: "O(d × n)",
+        description: "Find maximum radius of d-dimensional ball fitting inside cave defined by linear inequalities",
+        solution: "LP problem: maximize r subject to a^T c + ||a||_2 r ≤ b for each half-space, solve with CGAL",
+        link: "https://expert.ethz.ch/solve/yABHvbN8F4J5HHxLT",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "asterix-the-gaul",
+        storyTitle: "Asterix the Gaul",
+        modelTitle: "DP optimization",
+        week: 5,
+        methods: ["dp"],
+        sizeBand: "medium",
+        complexity: "O(n^2)",
+        description: "[missing]",
+        solution: "[missing]",
+        link: "https://expert.ethz.ch/solve/HYMnEFkSPfGL77LhX",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "boats",
+        storyTitle: "Boats",
+        modelTitle: "Greedy interval scheduling",
+        week: 5,
+        methods: ["greedy", "intervals"],
+        sizeBand: "medium",
+        complexity: "O(n log n)",
+        description: "[missing]",
+        solution: "[missing]",
+        link: "https://expert.ethz.ch/solve/ugjqDKeCT7JCLgKkf",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "moving-books",
+        storyTitle: "Moving Books",
+        modelTitle: "Minimize rounds with constraints",
+        week: 5,
+        methods: ["greedy", "binary search"],
+        sizeBand: "medium",
+        inputHint: "n ~ 10^5",
+        complexity: "O(n log n)",
+        description: "People with strength s_i move boxes with weight w_j. Find minimum rounds",
+        solution: "Greedy: strongest people carry heaviest boxes they can. Use std::multiset for O(N log N) implementation",
+        link: "https://expert.ethz.ch/solve/d4Ycy2PoWL8D9vGok",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "planet-express",
+        storyTitle: "Planet Express",
+        modelTitle: "Multi-source Dijkstra with teleportation",
+        week: 5,
+        methods: ["shortest path", "graph components"],
+        sizeBand: "large",
+        inputHint: "n ~ 10^6",
+        complexity: "O(n log n)",
+        description: "Find shortest path from multiple sources to target with teleportation network",
+        solution: "Group teleport nodes by strongly connected components, add virtual source with cost 0, run Dijkstra",
+        link: "https://expert.ethz.ch/solve/Q2qjBgStjkxoEjBX2",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "knights",
+        storyTitle: "Knights",
+        modelTitle: "Max flow with vertex capacity",
+        week: 6,
+        methods: ["network flows"],
+        sizeBand: "medium",
+        complexity: "O(V^2 × E)",
+        description: "Max knights traversing grid from start to boundary with vertex capacity C",
+        solution: "Split each vertex into v_in and v_out connected by edge with capacity C. Source to starts, boundary to sink",
+        link: "https://expert.ethz.ch/solve/TmFaTbNReatKYvc2y",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "tiles",
+        storyTitle: "Tiles",
+        modelTitle: "Perfect matching in grid graph",
+        week: 6,
+        methods: ["matching"],
+        sizeBand: "small",
+        inputHint: "n ~ 100",
+        complexity: "O(n^2)",
+        description: "Check if each vertex can be covered with maximum matching",
+        solution: "Use Edmonds' algorithm; check if matching size × 2 equals number of vertices",
+        link: "https://expert.ethz.ch/solve/koeZJPBREr7CdHE5v",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "coin-tossing",
+        storyTitle: "Coin Tossing Tournament",
+        modelTitle: "Max flow game verification",
+        week: 6,
+        methods: ["network flows"],
+        sizeBand: "medium",
+        complexity: "O(V × E^2)",
+        description: "Verify tournament results with max flow (1 point per win)",
+        solution: "Model as max flow: matches as intermediate nodes, check if flow equals expected total points",
+        link: "https://expert.ethz.ch/solve/o6cyW5DLWT5AEhDRs",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "motorcycles",
+        storyTitle: "Motorcycles",
+        modelTitle: "Non-hitting positive plane rays",
+        week: 6,
+        methods: ["geometry"],
+        sizeBand: "medium",
+        complexity: "O(n log n)",
+        description: "Determine which motorcycle rays don't hit any other ray",
+        solution: "Sort by slope and position, use sweep line to determine which rays are never blocked",
+        link: "https://expert.ethz.ch/solve/E2zprburo9XkhJ9Rb",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "london",
+        storyTitle: "London",
+        modelTitle: "Ransom note from newspaper pieces",
+        week: 6,
+        methods: ["network flows"],
+        sizeBand: "medium",
+        complexity: "O(n^3)",
+        description: "Create ransom note from newspaper pieces (front/back letters)",
+        solution: "Max flow: source to letter pair nodes (pieces), to required letter nodes (note). Flow = note length means success",
+        link: "https://expert.ethz.ch/solve/SbpvKZD3wG6mEmPGN",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "kingdom-defense",
+        storyTitle: "Kingdom Defense",
+        modelTitle: "Circulation with demands and bounds",
+        week: 6,
+        methods: ["network flows"],
+        sizeBand: "medium",
+        complexity: "O(V × E^2)",
+        description: "Assign soldier movements satisfying vertex demands and edge min/max capacity",
+        solution: "Transform to max flow: adjust capacities to (max-min), add source/sink edges for minimum flow, check saturation",
+        link: "https://expert.ethz.ch/solve/jTYd5L8q7yWf5nQ9W",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "bistro",
+        storyTitle: "Bistro",
+        modelTitle: "Post office problem - nearest neighbor queries",
+        week: 7,
+        methods: ["geometry", "delaunay triangulation"],
+        sizeBand: "large",
+        inputHint: "n ~ 10^3",
+        complexity: "O(n log n + m log n)",
+        description: "Find closest point among n 2D points for m query points",
+        solution: "Build Delaunay triangulation, use nearest neighbor queries in O(log n) per query",
+        link: "https://expert.ethz.ch/solve/d5aPgvEuFywZSQxjK",
         video: "",
         pdf: ""
       }
@@ -1091,6 +1691,16 @@
         });
 
         card.appendChild(tagRow);
+
+        // Add click handler to open modal
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', (e) => {
+          // Don't open modal if clicking on links or textarea
+          if (e.target.tagName === 'A' || e.target.tagName === 'TEXTAREA') {
+            return;
+          }
+          openProblemModal(pInfo);
+        });
 
         const linkRow = document.createElement("div");
         linkRow.className = "problem-links";
@@ -1540,20 +2150,11 @@
         // Click interaction
         group.addEventListener('click', () => {
           if (node.type === 'problem') {
-            // Switch to list view and highlight this problem
-            document.querySelector('[data-tab="list-view"]').click();
-            setTimeout(() => {
-              const problemCards = document.querySelectorAll('.problem-card');
-              problemCards.forEach(card => {
-                if (card.dataset.story === node.label) {
-                  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                  card.style.outline = '3px solid #ffffff';
-                  setTimeout(() => {
-                    card.style.outline = '';
-                  }, 2000);
-                }
-              });
-            }, 300);
+            // Open modal with problem details
+            const problem = PROBLEMS.find(p => p.storyTitle === node.label);
+            if (problem) {
+              openProblemModal(problem);
+            }
           } else {
             // Filter by this technique
             selectNode(node.id);
@@ -1654,6 +2255,73 @@
         console.error('Error loading quiz stats:', e);
       }
     }
+
+    // === Modal functions =====================================================
+    
+    function openProblemModal(problem) {
+      const modal = document.getElementById('problemModal');
+      
+      // Set content
+      document.getElementById('modalTitle').textContent = problem.storyTitle;
+      document.getElementById('modalSubtitle').textContent = problem.modelTitle;
+      
+      // Meta tags
+      const metaHtml = `
+        <span class="tag tag-week">Week ${problem.week}</span>
+        <span class="tag tag-complexity">${problem.complexity}</span>
+        ${problem.inputHint ? `<span class="tag tag-size">${problem.inputHint}</span>` : ''}
+      `;
+      document.getElementById('modalMeta').innerHTML = metaHtml;
+      
+      // Description
+      const descEl = document.getElementById('modalDescription');
+      const description = problem.description || '[missing]';
+      descEl.textContent = description;
+      descEl.classList.toggle('missing', description === '[missing]');
+      
+      // Solution
+      const solEl = document.getElementById('modalSolution');
+      const solution = problem.solution || '[missing]';
+      solEl.textContent = solution;
+      solEl.classList.toggle('missing', solution === '[missing]');
+      
+      // Link
+      const linkEl = document.getElementById('modalLink');
+      if (problem.link) {
+        linkEl.href = problem.link;
+        linkEl.classList.remove('disabled');
+      } else {
+        linkEl.href = '#';
+        linkEl.classList.add('disabled');
+      }
+      
+      // Show modal
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeModal() {
+      const modal = document.getElementById('problemModal');
+      modal.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    
+    // Close modal on overlay click
+    document.addEventListener('DOMContentLoaded', () => {
+      const modal = document.getElementById('problemModal');
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+      
+      // Close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('show')) {
+          closeModal();
+        }
+      });
+    });
 
     function init() {
       initTabs();
