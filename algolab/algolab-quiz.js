@@ -239,8 +239,8 @@ function loadQuestion() {
     
     currentQuestion.questionType = questionType;
     
-    // Update UI
-    document.getElementById('problemTitle').textContent = exercise.name;
+    // Update UI - removed title display
+    // document.getElementById('problemTitle').textContent = exercise.name;
     
     // Meta information
     const metaHtml = `

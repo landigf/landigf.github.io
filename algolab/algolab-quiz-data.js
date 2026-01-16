@@ -226,5 +226,106 @@ const exercises = [
         description: "Basically we have n 2D points, and we have some new m points (queries) where we want to find the closest point to it. Brute force: O(n) to look for the closest point → O(m*n). Solution: Delaunay triangulation, precompute the original points, then query in O(logn) → O(m*logn). Print squared euclidean distances.",
         solution: "Build Delaunay triangulation of points, then use nearest neighbor queries in O(log n) per query",
         speciality: "Nearest Neighbor Search"
+    },
+    {
+        name: "Inball",
+        aka: "Maximum ball in cave",
+        week: "Week 04",
+        methods: "Linear Programming",
+        complexity: "O(d × n)",
+        description: "You are given a 'cave' defined by a set of linear inequalities in d-dimensional space. The goal is to find the maximum integral radius r of a d-dimensional ball that fits inside this cave. The condition for a ball of center c and radius r to fit in a half-space a^T x ≤ b is modeled as the linear constraint a^T c + ||a||_2 r ≤ b.",
+        solution: "Model as Linear Programming problem: maximize r subject to constraints a^T c + ||a||_2 r ≤ b for each half-space, solve using LP solver (e.g., CGAL)",
+        speciality: "LP Optimization"
+    },
+    {
+        name: "London",
+        aka: "Ransom note from newspaper",
+        week: "Week 06",
+        methods: "MaxFlow",
+        complexity: "O(n^3)",
+        description: "You are given a ransom note and a set of newspaper pieces. Each piece has a letter on the front and a different letter on the back. You must determine if it is possible to construct the note by cutting out pieces and choosing which side to face up.",
+        solution: "Model as Max Flow problem: construct flow network where source connects to letter pair nodes (newspaper pieces), which connect to required letter nodes (note positions). Max flow equals note length means success.",
+        speciality: "Bipartite Matching Flow"
+    },
+    {
+        name: "Clues",
+        aka: "Radio station coloring",
+        week: "Week 04",
+        methods: "Delaunay triangulation, DFS",
+        complexity: "O(n log n)",
+        description: "Given a set of radio stations (points) with range r, determine if the network can be 2-colored (no two interfering stations share a color) and if two specific clients can communicate. Stations interfere if distance < r.",
+        solution: "Use Delaunay Triangulation to efficiently construct the network (contains EMST for connectivity). Perform DFS to assign colors and verify no edges shorter than r connect same-colored nodes (bipartite check).",
+        speciality: "Graph 2-Coloring with Geometry"
+    },
+    {
+        name: "Knights",
+        aka: "Knights in hallway",
+        week: "Week 06",
+        methods: "MaxFlow",
+        complexity: "O(V^2 × E)",
+        description: "Find the maximum number of knights that can traverse a grid hallway from given starting points to an 'outside' boundary without colliding. Vertex capacities are limited (e.g., intersection capacity C).",
+        solution: "Model as Max Flow with vertex capacities: split each intersection vertex v into v_in and v_out connected by edge with capacity C. Connect starting positions to source and boundary nodes to sink.",
+        speciality: "Vertex Capacity Flow"
+    },
+    {
+        name: "Kingdom Defense",
+        aka: "Circulation with demands",
+        week: "Week 06",
+        methods: "MaxFlow",
+        complexity: "O(V × E^2)",
+        description: "Assign soldier movements in a network of cities and paths to satisfy vertex demands/supplies and edge capacities (both minimum and maximum flow limits). Each city has supply/demand, each path has min/max capacity.",
+        solution: "Transform to Max Flow: adjust edge capacities to (max - min), add source/sink edges to force minimum flow into/out of nodes, check if max flow saturates necessary edges.",
+        speciality: "Circulation Problem"
+    },
+    {
+        name: "First Hit",
+        aka: "Ray segment intersection",
+        week: "Week 04",
+        methods: "Computational Geometry",
+        complexity: "O(n) expected, O(n^2) worst",
+        description: "Given a ray r and a set of n segments, find the first point where the ray intersects a segment. Need to minimize expensive geometric constructions.",
+        solution: "Use randomized geometric algorithm: shuffle segments and iterate. Maintain closest intersection point and 'clip' ray to this point. Expected O(log n) geometric constructions.",
+        speciality: "Randomized Geometry"
+    },
+    {
+        name: "Buddy Selection",
+        aka: "Perfect matching with interests",
+        week: "Week 03",
+        methods: "Maximum matching",
+        complexity: "O(n^3)",
+        inputSize: "n ~ 100",
+        description: "Given a list of students and their interests, determine if it is possible to pair everyone up (perfect matching) such that every pair shares strictly more than f interests.",
+        solution: "Construct graph by comparing sorted interest lists for every pair (linear scan). Use Edmonds' maximum cardinality matching to find optimal pairing. Check if matching size × 2 equals number of students.",
+        speciality: "Perfect Matching Verification"
+    },
+    {
+        name: "Germs",
+        aka: "Growing circles",
+        week: "Week 04",
+        methods: "Delaunay triangulation",
+        complexity: "O(n log n)",
+        description: "Circular germs grow quadratically (r(t) = t^2 + 0.5). A germ dies when it touches another germ or the container boundary. Determine the time of the first death, median death, and last death.",
+        solution: "Death time is determined by distance to nearest neighbor (or boundary). Construct Delaunay Triangulation to find nearest neighbor for every germ in O(n log n). Extract death times and sort for statistics.",
+        speciality: "Nearest Neighbor with Delaunay"
+    },
+    {
+        name: "Hiking Maps",
+        aka: "Minimum covering triangles",
+        week: "Week 04",
+        methods: "Sliding Window, Computational Geometry",
+        complexity: "O(n × m)",
+        description: "You are given a hiking path (sequence of segments) and a set of map triangles. Find the minimum length subsequence of triangles that fully covers the path.",
+        solution: "Use sliding window (two-pointers): expand window (add triangles) until all path segments are covered, then shrink from start to minimize length. Use geometric predicates (orientation tests) for containment checks.",
+        speciality: "Geometric Sliding Window"
+    },
+    {
+        name: "Moving Books",
+        aka: "Minimize rounds",
+        week: "Week 05",
+        methods: "Binary Search, Greedy",
+        complexity: "O(N log N)",
+        description: "A set of people with strength s_i must move a set of boxes with weight w_j. Find the minimum number of rounds required to move all boxes. Each person can carry at most one box per round, and only if their strength ≥ box weight.",
+        solution: "Use greedy strategy: in each round, strongest available people should carry heaviest boxes they can lift. Efficiently implement using std::multiset to store and retrieve box weights in O(N log N) time.",
+        speciality: "Greedy with Multiset"
     }
 ];
