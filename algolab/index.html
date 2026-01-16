@@ -62,6 +62,57 @@
       font-weight: 400;
     }
 
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .quiz-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .quiz-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .stats-summary {
+      display: flex;
+      gap: 20px;
+      padding: 12px 20px;
+      background: var(--card);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .stat-value {
+      font-weight: 600;
+      color: var(--accent);
+    }
+
     main.layout {
       display: flex;
       flex: 1;
@@ -566,6 +617,27 @@
       <p>
         Pattern-match problems to techniques. Use global flip to switch between story names and underlying models.
       </p>
+      
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <a href="algolab-quiz.html" class="quiz-btn">
+          🎯 Start Practice Quiz
+        </a>
+        <div class="stats-summary" id="exercise-stats">
+          <div class="stat-item">
+            <span>📝</span>
+            <span><span class="stat-value" id="total-exercises">24</span> exercises</span>
+          </div>
+          <div class="stat-item">
+            <span>✅</span>
+            <span><span class="stat-value" id="completed-exercises">0</span> mastered</span>
+          </div>
+          <div class="stat-item">
+            <span>🔥</span>
+            <span><span class="stat-value" id="quiz-streak">0</span> streak</span>
+          </div>
+        </div>
+      </div>
       
       <!-- Tab Navigation -->
       <div class="tab-navigation">
@@ -1554,11 +1626,41 @@
 
     // === 9. Init =============================================================
 
+    function loadQuizStats() {
+      try {
+        const saved = localStorage.getItem('algolab_quiz_progress');
+        if (saved) {
+          const data = JSON.parse(saved);
+          
+          // Update total exercises (count from data)
+          const totalExercises = 24; // Update if you add more
+          document.getElementById('total-exercises').textContent = totalExercises;
+          
+          // Count mastered exercises (80%+ accuracy with 3+ consecutive correct)
+          let masteredCount = 0;
+          for (const exerciseName in data.exercises) {
+            const ex = data.exercises[exerciseName];
+            const successRate = ex.correct / (ex.correct + ex.incorrect);
+            if (successRate >= 0.8 && ex.consecutiveCorrect >= 3) {
+              masteredCount++;
+            }
+          }
+          document.getElementById('completed-exercises').textContent = masteredCount;
+          
+          // Update streak
+          document.getElementById('quiz-streak').textContent = data.currentStreak || 0;
+        }
+      } catch (e) {
+        console.error('Error loading quiz stats:', e);
+      }
+    }
+
     function init() {
       initTabs();
       initFilters();
       renderTree();
       renderProblemList();
+      loadQuizStats();
     }
 
     window.addEventListener("DOMContentLoaded", init);
