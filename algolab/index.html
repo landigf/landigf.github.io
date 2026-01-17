@@ -1946,13 +1946,33 @@
         node.level = level;
       });
       
-      // Add edges between technique nodes
+      // Add edges between technique nodes (hierarchy)
       NODES.forEach(node => {
         if (node.parent && nodeMap.has(node.parent)) {
           edges.push({
             source: node.parent,
             target: node.id,
             type: 'hierarchy'
+          });
+        }
+      });
+      
+      // Add cross-connections between related techniques (mind map style)
+      const relatedTechniques = [
+        { from: 'greedy', to: 'intervals', label: 'scheduling' },
+        { from: 'dp', to: 'intervals', label: 'optimization' },
+        { from: 'shortest-paths', to: 'flows', label: 'network' },
+        { from: 'greedy', to: 'dp', label: 'optimization' },
+        { from: 'geometry', to: 'graphs', label: 'spatial' }
+      ];
+      
+      relatedTechniques.forEach(rel => {
+        if (nodeMap.has(rel.from) && nodeMap.has(rel.to)) {
+          edges.push({
+            source: rel.from,
+            target: rel.to,
+            type: 'related',
+            label: rel.label
           });
         }
       });
@@ -2036,32 +2056,86 @@
 
     function drawEdges(container, edges) {
       const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-      const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
-      marker.setAttribute('id', 'arrowhead');
-      marker.setAttribute('markerWidth', '10');
-      marker.setAttribute('markerHeight', '10');
-      marker.setAttribute('refX', '9');
-      marker.setAttribute('refY', '3');
-      marker.setAttribute('orient', 'auto');
       
-      const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-      polygon.setAttribute('points', '0 0, 10 3, 0 6');
-      polygon.setAttribute('fill', '#86868b');
-      marker.appendChild(polygon);
-      defs.appendChild(marker);
+      // Create gradient for edges
+      const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+      gradient.setAttribute('id', 'edge-gradient');
+      gradient.setAttribute('gradientUnits', 'userSpaceOnUse');
+      const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop1.setAttribute('offset', '0%');
+      stop1.setAttribute('stop-color', '#667eea');
+      const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop2.setAttribute('offset', '100%');
+      stop2.setAttribute('stop-color', '#764ba2');
+      gradient.appendChild(stop1);
+      gradient.appendChild(stop2);
+      defs.appendChild(gradient);
+      
+      // Arrow markers for different types
+      const markerHierarchy = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+      markerHierarchy.setAttribute('id', 'arrowhead-hierarchy');
+      markerHierarchy.setAttribute('markerWidth', '10');
+      markerHierarchy.setAttribute('markerHeight', '10');
+      markerHierarchy.setAttribute('refX', '9');
+      markerHierarchy.setAttribute('refY', '3');
+      markerHierarchy.setAttribute('orient', 'auto');
+      const polygonHierarchy = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      polygonHierarchy.setAttribute('points', '0 0, 10 3, 0 6');
+      polygonHierarchy.setAttribute('fill', '#667eea');
+      markerHierarchy.appendChild(polygonHierarchy);
+      defs.appendChild(markerHierarchy);
+      
+      const markerUses = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+      markerUses.setAttribute('id', 'arrowhead-uses');
+      markerUses.setAttribute('markerWidth', '10');
+      markerUses.setAttribute('markerHeight', '10');
+      markerUses.setAttribute('refX', '9');
+      markerUses.setAttribute('refY', '3');
+      markerUses.setAttribute('orient', 'auto');
+      const polygonUses = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      polygonUses.setAttribute('points', '0 0, 10 3, 0 6');
+      polygonUses.setAttribute('fill', '#f5f5f7');
+      markerUses.appendChild(polygonUses);
+      defs.appendChild(markerUses);
+      
       container.appendChild(defs);
       
       edges.forEach(edge => {
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', edge.x1);
-        line.setAttribute('y1', edge.y1);
-        line.setAttribute('x2', edge.x2);
-        line.setAttribute('y2', edge.y2);
-        line.setAttribute('stroke', edge.type === 'hierarchy' ? '#6e6e73' : '#2c2c2e');
-        line.setAttribute('stroke-width', edge.type === 'hierarchy' ? '2' : '1');
-        line.setAttribute('marker-end', 'url(#arrowhead)');
-        line.setAttribute('opacity', '0.5');
-        container.appendChild(line);
+        // Use curved paths for better visual flow
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const dx = edge.x2 - edge.x1;
+        const dy = edge.y2 - edge.y1;
+        const dr = Math.sqrt(dx * dx + dy * dy);
+        
+        // Create smooth curve
+        const midX = (edge.x1 + edge.x2) / 2;
+        const midY = (edge.y1 + edge.y2) / 2;
+        const offsetX = -dy * 0.2;
+        const offsetY = dx * 0.2;
+        
+        const d = `M ${edge.x1} ${edge.y1} Q ${midX + offsetX} ${midY + offsetY} ${edge.x2} ${edge.y2}`;
+        path.setAttribute('d', d);
+        path.setAttribute('fill', 'none');
+        
+        if (edge.type === 'hierarchy') {
+          path.setAttribute('stroke', 'url(#edge-gradient)');
+          path.setAttribute('stroke-width', '3');
+          path.setAttribute('opacity', '0.85');
+          path.setAttribute('marker-end', 'url(#arrowhead-hierarchy)');
+        } else {
+          path.setAttribute('stroke', '#f5f5f7');
+          path.setAttribute('stroke-width', '2');
+          path.setAttribute('opacity', '0.4');
+          path.setAttribute('stroke-dasharray', '5,5');
+          path.setAttribute('marker-end', 'url(#arrowhead-uses)');
+        }
+        
+        // Add glow effect for hierarchy edges
+        if (edge.type === 'hierarchy') {
+          path.style.filter = 'drop-shadow(0 0 3px rgba(102, 126, 234, 0.5))';
+        }
+        
+        container.appendChild(path);
       });
     }
 
