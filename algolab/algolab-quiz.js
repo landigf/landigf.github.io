@@ -708,3 +708,269 @@ document.getElementById('cppModal')?.addEventListener('click', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     updateTotalStats();
 });
+
+// === Analysis Training Mode Functions ===================================
+
+let currentAnalysisExercise = null;
+let analysisSelectedType = null;
+let analysisSelectedMethod = null;
+let analysisSelectedComplexity = null;
+let currentAnalysisStage = 1;
+
+// Common problem types for training
+const problemTypes = [
+    "Max Flow", "Min-Cost Max-Flow", "Min-Cut", "Shortest Path", "Minimum Spanning Tree",
+    "Maximum Matching", "Bipartite Matching", "Graph Coloring", "Strong Connected Components",
+    "Interval Scheduling", "Knapsack Problem", "Longest Common Subsequence",
+    "Tree DP", "Game Theory DP", "Bitmask DP", "Two Pointers + DP",
+    "Circular Interval Scheduling", "Geometric Coverage", "Line Separation",
+    "Triangulation Problem", "Voronoi Diagram", "Convex Hull",
+    "Time-Expanded Network", "Constrained Path Finding", "Assignment Problem"
+];
+
+function startAnalysisTraining() {
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('analysisTrainingScreen').classList.remove('hidden');
+    currentAnalysisStage = 1;
+    loadAnalysisQuestion();
+}
+
+function loadAnalysisQuestion() {
+    // Get random exercise
+    const exercise = exercises[Math.floor(Math.random() * exercises.length)];
+    currentAnalysisExercise = exercise;
+    
+    // Reset state
+    analysisSelectedType = null;
+    analysisSelectedMethod = null;
+    analysisSelectedComplexity = null;
+    currentAnalysisStage = 1;
+    
+    // Update description
+    document.getElementById('analysisProblemDescription').textContent = exercise.description;
+    document.getElementById('analysisQuestionNumber').textContent = `Problem: ${exercise.name} (${exercise.week})`;
+    
+    // Reset stages
+    document.getElementById('analysisStage1').classList.remove('hidden');
+    document.getElementById('analysisStage2').classList.add('hidden');
+    document.getElementById('analysisStage3').classList.add('hidden');
+    document.getElementById('analysisNextBtn').classList.add('hidden');
+    document.getElementById('analysisFeedback').classList.remove('show');
+    
+    // Load Stage 1: Problem Type
+    loadAnalysisTypeOptions();
+}
+
+function loadAnalysisTypeOptions() {
+    const container = document.getElementById('analysisTypeOptions');
+    const correctType = currentAnalysisExercise.problemType || "General Problem";
+    
+    // Get 3 random wrong types
+    let wrongTypes = problemTypes
+        .filter(t => t !== correctType)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3);
+    
+    // Mix with correct answer
+    const allOptions = [correctType, ...wrongTypes].sort(() => Math.random() - 0.5);
+    
+    container.innerHTML = allOptions.map((type, index) => {
+        const label = String.fromCharCode(65 + index);
+        return `
+            <div class="option" onclick="selectAnalysisType(${index}, '${type.replace(/'/g, "\\'")}')">
+                <span class="option-label">${label}</span>
+                <span class="option-text">${type}</span>
+            </div>
+        `;
+    }).join('');
+    
+    document.getElementById('checkTypeBtn').disabled = true;
+}
+
+function selectAnalysisType(index, type) {
+    analysisSelectedType = type;
+    
+    // Remove previous selections
+    document.querySelectorAll('#analysisTypeOptions .option').forEach(opt => {
+        opt.classList.remove('selected');
+    });
+    
+    // Mark as selected
+    document.querySelectorAll('#analysisTypeOptions .option')[index].classList.add('selected');
+    document.getElementById('checkTypeBtn').disabled = false;
+}
+
+function checkAnalysisType() {
+    const correctType = currentAnalysisExercise.problemType || "General Problem";
+    const feedback = document.getElementById('analysisFeedback');
+    
+    if (analysisSelectedType === correctType) {
+        feedback.className = 'feedback show correct';
+        feedback.innerHTML = `
+            <div class="feedback-title">✅ Correct!</div>
+            <p><strong>Problem Type:</strong> ${correctType}</p>
+            <p><strong>Key Insight:</strong> ${currentAnalysisExercise.keyInsight || 'Good job identifying the pattern!'}</p>
+        `;
+        
+        // Move to next stage
+        setTimeout(() => {
+            document.getElementById('analysisStage1').classList.add('hidden');
+            document.getElementById('analysisStage2').classList.remove('hidden');
+            feedback.classList.remove('show');
+            loadAnalysisMethodOptions();
+        }, 2000);
+    } else {
+        feedback.className = 'feedback show incorrect';
+        feedback.innerHTML = `
+            <div class="feedback-title">❌ Not quite</div>
+            <p>The correct type is: <strong>${correctType}</strong></p>
+            <p>${currentAnalysisExercise.keyInsight || ''}</p>
+            <p>Try again!</p>
+        `;
+    }
+}
+
+function loadAnalysisMethodOptions() {
+    const container = document.getElementById('analysisMethodOptions');
+    const correctMethods = currentAnalysisExercise.methods;
+    
+    // Common methods
+    const allMethods = [
+        "Dynamic Programming", "Greedy", "BFS/DFS", "Dijkstra", "Bellman-Ford",
+        "Max Flow", "Min-Cost Max-Flow", "Binary Search", "Two Pointers",
+        "Sliding Window", "Delaunay Triangulation", "CGAL Geometry",
+        "Linear Programming", "Backtracking", "Divide and Conquer",
+        "Union Find", "Segment Tree", "Trie", "Bitmask DP"
+    ];
+    
+    // Get 3 random wrong methods
+    let wrongMethods = allMethods
+        .filter(m => m !== correctMethods && !correctMethods.includes(m))
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3);
+    
+    const allOptions = [correctMethods, ...wrongMethods].sort(() => Math.random() - 0.5);
+    
+    container.innerHTML = allOptions.map((method, index) => {
+        const label = String.fromCharCode(65 + index);
+        return `
+            <div class="option" onclick="selectAnalysisMethod(${index}, '${method.replace(/'/g, "\\'")}')">
+                <span class="option-label">${label}</span>
+                <span class="option-text">${method}</span>
+            </div>
+        `;
+    }).join('');
+    
+    document.getElementById('checkMethodBtn').disabled = true;
+}
+
+function selectAnalysisMethod(index, method) {
+    analysisSelectedMethod = method;
+    
+    document.querySelectorAll('#analysisMethodOptions .option').forEach(opt => {
+        opt.classList.remove('selected');
+    });
+    
+    document.querySelectorAll('#analysisMethodOptions .option')[index].classList.add('selected');
+    document.getElementById('checkMethodBtn').disabled = false;
+}
+
+function checkAnalysisMethod() {
+    const correctMethods = currentAnalysisExercise.methods;
+    const feedback = document.getElementById('analysisFeedback');
+    
+    if (analysisSelectedMethod === correctMethods) {
+        feedback.className = 'feedback show correct';
+        feedback.innerHTML = `
+            <div class="feedback-title">✅ Correct!</div>
+            <p><strong>Method:</strong> ${correctMethods}</p>
+            <p>Now let's verify the complexity!</p>
+        `;
+        
+        setTimeout(() => {
+            document.getElementById('analysisStage2').classList.add('hidden');
+            document.getElementById('analysisStage3').classList.remove('hidden');
+            feedback.classList.remove('show');
+            loadAnalysisComplexityOptions();
+        }, 2000);
+    } else {
+        feedback.className = 'feedback show incorrect';
+        feedback.innerHTML = `
+            <div class="feedback-title">❌ Not quite</div>
+            <p>The correct method is: <strong>${correctMethods}</strong></p>
+            <p>${currentAnalysisExercise.solution}</p>
+        `;
+    }
+}
+
+function loadAnalysisComplexityOptions() {
+    const container = document.getElementById('analysisComplexityOptions');
+    const correctComplexity = currentAnalysisExercise.complexity;
+    
+    const complexities = [
+        "O(1)", "O(log n)", "O(n)", "O(n log n)", "O(n^2)", 
+        "O(n^2 log n)", "O(n^3)", "O(2^n)", "O(n!)",
+        "O(V + E)", "O((V + E) log V)", "O(V * E^2)", "O(n * m)"
+    ];
+    
+    let wrongComplexities = complexities
+        .filter(c => c !== correctComplexity)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3);
+    
+    const allOptions = [correctComplexity, ...wrongComplexities].sort(() => Math.random() - 0.5);
+    
+    container.innerHTML = allOptions.map((complexity, index) => {
+        const label = String.fromCharCode(65 + index);
+        return `
+            <div class="option" onclick="selectAnalysisComplexity(${index}, '${complexity.replace(/'/g, "\\'")}')">
+                <span class="option-label">${label}</span>
+                <span class="option-text">${complexity}</span>
+            </div>
+        `;
+    }).join('');
+    
+    document.getElementById('checkComplexityBtn').disabled = true;
+}
+
+function selectAnalysisComplexity(index, complexity) {
+    analysisSelectedComplexity = complexity;
+    
+    document.querySelectorAll('#analysisComplexityOptions .option').forEach(opt => {
+        opt.classList.remove('selected');
+    });
+    
+    document.querySelectorAll('#analysisComplexityOptions .option')[index].classList.add('selected');
+    document.getElementById('checkComplexityBtn').disabled = false;
+}
+
+function checkAnalysisComplexity() {
+    const correctComplexity = currentAnalysisExercise.complexity;
+    const feedback = document.getElementById('analysisFeedback');
+    
+    if (analysisSelectedComplexity === correctComplexity) {
+        feedback.className = 'feedback show correct';
+        feedback.innerHTML = `
+            <div class="feedback-title">🎉 Perfect! You nailed all 3 steps!</div>
+            <p><strong>Complete Solution:</strong></p>
+            <p>1. Problem Type: ${currentAnalysisExercise.problemType || 'General'}</p>
+            <p>2. Method: ${currentAnalysisExercise.methods}</p>
+            <p>3. Complexity: ${correctComplexity}</p>
+            <p style="margin-top: 15px;"><strong>Solution:</strong> ${currentAnalysisExercise.solution}</p>
+        `;
+        
+        document.getElementById('analysisNextBtn').classList.remove('hidden');
+    } else {
+        feedback.className = 'feedback show incorrect';
+        feedback.innerHTML = `
+            <div class="feedback-title">❌ Not quite</div>
+            <p>The correct complexity is: <strong>${correctComplexity}</strong></p>
+            <p>Consider the input size and operations performed.</p>
+        `;
+    }
+}
+
+function nextAnalysisQuestion() {
+    loadAnalysisQuestion();
+}
+

@@ -412,54 +412,6 @@
             <button class="btn btn-primary" onclick="startQuiz()">Start Quiz</button>
             <button class="btn btn-secondary" onclick="showBrowseMode()" style="margin-left: 10px;">Browse All Questions</button>
             <button class="btn btn-secondary" onclick="resetProgress()" style="margin-left: 10px;">Reset Progress</button>
-            <button class="btn btn-primary" onclick="startAnalysisTraining()" style="margin-left: 10px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">🧠 Analysis Training</button>
-            
-            <div style="margin-top: 30px; padding: 20px; background: #e3f2fd; border-radius: 10px; text-align: left;">
-                <h3 style="color: #1976d2; margin-bottom: 15px;">🎓 What is Analysis Training?</h3>
-                <p style="margin-bottom: 10px;">Practice the 3 key exam skills:</p>
-                <ol style="margin-left: 20px; line-height: 1.8;">
-                    <li><strong>Problem Recognition:</strong> Identify problem type (Max Flow, Shortest Path, etc.)</li>
-                    <li><strong>Method Selection:</strong> Choose technique (DP, Greedy, Triangulation, etc.)</li>
-                    <li><strong>Complexity Analysis:</strong> Verify approach matches time constraints</li>
-                </ol>
-            </div>
-        </div>
-
-        <div id="analysisTrainingScreen" class="hidden">
-            <div class="quiz-content">
-                <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                    <h2 style="margin: 0;">🧠 Analysis Training Mode</h2>
-                    <p style="margin: 5px 0 0 0; font-size: 0.9em;">Practice identifying problem types and methods</p>
-                </div>
-                
-                <div class="question-number" id="analysisQuestionNumber">Question 1</div>
-                <div class="problem-description" id="analysisProblemDescription"></div>
-                
-                <div id="analysisStage1">
-                    <div class="question-prompt">Step 1: What TYPE of problem is this?</div>
-                    <div class="options" id="analysisTypeOptions"></div>
-                    <button class="btn btn-primary" id="checkTypeBtn" onclick="checkAnalysisType()" disabled style="margin-top: 20px;">Check Answer</button>
-                </div>
-                
-                <div id="analysisStage2" class="hidden">
-                    <div class="question-prompt">Step 2: Which METHOD should you use?</div>
-                    <div class="options" id="analysisMethodOptions"></div>
-                    <button class="btn btn-primary" id="checkMethodBtn" onclick="checkAnalysisMethod()" disabled style="margin-top: 20px;">Check Answer</button>
-                </div>
-                
-                <div id="analysisStage3" class="hidden">
-                    <div class="question-prompt">Step 3: What's the complexity?</div>
-                    <div class="options" id="analysisComplexityOptions"></div>
-                    <button class="btn btn-primary" id="checkComplexityBtn" onclick="checkAnalysisComplexity()" disabled style="margin-top: 20px;">Check Answer</button>
-                </div>
-                
-                <div class="feedback" id="analysisFeedback"></div>
-                
-                <div class="buttons hidden" id="analysisNextBtn">
-                    <button class="btn btn-secondary" onclick="backToStart()">← Back</button>
-                    <button class="btn btn-primary" onclick="nextAnalysisQuestion()">Next Problem →</button>
-                </div>
-            </div>
         </div>
 
         <div id="browseScreen" class="hidden">
