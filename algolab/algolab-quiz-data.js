@@ -1,331 +1,413 @@
-// Exercise data extracted from CSV
+// Exercise data with real problem descriptions and solutions from AlgoLab 2023
 const exercises = [
     {
-        name: "The Sultan Trail",
-        aka: "MAX # of overlapping intervals",
-        week: "Week 01",
-        methods: "Sweep Line",
-        complexity: "O(n logn)",
-        inputSize: "n ~ 10^6",
-        description: "We have a vector of intervals [start,end] and want to find the max number of overlapping intervals (in a point). We add +1 at each start and remove -1 at each end, we take the maximum. Pay attention to counting the starting before closing.",
-        solution: "Use sweep line algorithm: add +1 at each interval start and -1 at each end, sort events (prioritizing starts), then track maximum count",
-        speciality: "Sweep Line"
-    },
-    {
-        name: "Even Pairs",
-        aka: "# of subarrays with even sum",
-        week: "Week 01",
-        methods: "Combinatorics, Prefix sum",
-        complexity: "O(n)",
-        description: "We have a vector of integers, we want to count the number of subarrays with even sum. So xi+…+xj = Even Integer. Use prefix sum: S_i = x0+..+xi. Notice that Sj - S_i-1 is even when both are even or both are odd. Count all combination of pairs of indexes where Si,Sj are both even or odd.",
-        solution: "Use prefix sums and combinatorics: count pairs of indices where cumulative sums are both even or both odd using binomial coefficient n*(n-1)/2",
-        speciality: "Prefix Sum with Combinatorics"
-    },
-    {
         name: "Dominoes",
-        aka: "Dominoes",
         week: "Week 01",
         methods: "Greedy",
         complexity: "O(n)",
-        description: "We have a vector of positive integers representing the height of dominoes. At each index we have a piece, then we need to see how far dominoes will continue falling starting from left. Think of each domino as a gas station. We start with fuel equal to the height of the first, then for each step we decrement the fuel. At each index if the fuel is ≤ 0 then we need to stop. Otherwise, we get the fuel as the max(current, gasStation).",
-        solution: "Greedy approach: track remaining height as fuel, decrement at each step, stop when fuel ≤ 0, otherwise take max of current fuel and new domino height",
-        speciality: "Greedy Simulation"
+        description: "Given a vector of positive integers representing domino heights, determine how many dominoes will fall starting from the left.",
+        solution: "The key idea is to store the data about how many dominoes can be toppled from the current position.",
+        cppFile: "dominoes.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
     },
     {
-        name: "Search Snippets",
-        aka: "find MINIMUM interval containing all categories at distinct indexes",
-        week: "Week 02",
-        methods: "Greedy, min-heap",
-        complexity: "O(n logn)",
-        description: "Find the minimum interval that contains all different categories at distinct positions.",
-        solution: "Use greedy approach with min-heap to track minimum window containing all categories",
-        speciality: "Sliding Window with Heap"
+        name: "Even Pairs",
+        week: "Week 01",
+        methods: "Combinatorics, Prefix sum",
+        complexity: "O(n)",
+        description: "Count the number of subarrays with even sum in a vector of integers.",
+        solution: "Use prefix sums and combinatorics: count pairs of indices where cumulative sums are both even or both odd using binomial coefficient n*(n-1)/2.",
+        cppFile: "even_pairs.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
     },
     {
-        name: "Severus Snape",
-        aka: "min number of potions",
-        week: "Week 02",
-        methods: "Dynamic Programming, Greedy, Prefix sum",
-        complexity: "O(n^2)",
-        inputSize: "n ~ 100",
-        description: "We need to get at least 3 values P, H, W. We reach these values by taking potions of two types. For one type we go greedy. For the other there is no greedy approach so DP needed (brute force is infeasible). USE LONG LONG.",
-        solution: "Combine DP for one potion type with greedy for another, using prefix sums and binary search to minimize total potions needed",
-        speciality: "Hybrid DP + Greedy"
+        name: "Even Matrices",
+        week: "Week 01",
+        methods: "Prefix sum, Combinatorics",
+        complexity: "O(n^3)",
+        description: "Count all submatrices with even sum in a 2D matrix.",
+        solution: "Use 2D prefix sums to count submatrices. For each pair of rows, compute prefix sums and count even/odd occurrences.",
+        cppFile: "even_matrices.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
     },
     {
-        name: "San Francisco",
-        aka: "max score traversing directed graph WITHIN k moves",
-        week: "Week 02",
-        methods: "Dynamic Programming",
-        complexity: "O(n^2)",
-        inputSize: "n ~ 10^3",
-        description: "We have a directed graph, and the goal is to get the max score by traversing it in max K moves. We get score by traversing one edge (score += value of edge). Print 'Impossible' if cannot reach target.",
-        solution: "Use DP with states dp[moves][node] to track maximum score reachable at each node within k moves",
-        speciality: "Graph DP with Move Limit"
+        name: "Build the Sum",
+        week: "Week 01",
+        methods: "Basic",
+        complexity: "O(n)",
+        description: "Simple problem to compute sums and verify I/O handling.",
+        solution: "Read numbers and compute their sum. Basic warm-up problem.",
+        cppFile: "build_the_sum.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
     },
     {
-        name: "Greyjoy",
-        aka: "find max length of consecutive nodes with sum = k in tree",
+        name: "Beach Bars",
         week: "Week 02",
-        methods: "Prefix sum, Two Sum",
-        complexity: "O(n^2)",
-        inputSize: "n ~ 10^4",
-        description: "We have one root with only branches. GOAL: max length of consecutive nodes with sum of value of nodes equal to K. First solve for each branch with Two Sum or sliding window, then do Two Sum from different branches. Pay attention to change the target and remove root to avoid double counting.",
-        solution: "Use prefix sums with Two Sum approach for each branch, then combine branches adjusting for root value to find maximum length",
-        speciality: "Two Sum on Tree Paths"
+        methods: "Sliding Window",
+        complexity: "O(n log n)",
+        description: "Find the best location for a beach bar that maximizes parasols within distance 100, minimizing the maximum walking distance.",
+        solution: "It is a sliding window problem, moving the bar position from one end to the other of the beach while counting the number of parasols and the maximum distance to a parasol inside the current window. It is necessary to save in a vector all the locations with the same best characteristics. The best location has the maximum amount of parasols with the minimum maximum walking distance.",
+        cppFile: "beach_bars.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
     },
     {
         name: "Burning Coins",
-        aka: "2-player, 2 possible move",
         week: "Week 02",
-        methods: "2-player, Dynamic Programming",
+        methods: "Dynamic Programming, Game Theory",
         complexity: "O(n^2)",
-        inputSize: "n ~ 10^3",
-        description: "We have a vector of positive integers, it's a two player game where we can only make 2 actions: 1. take first element (left) 2. take last element (right). Each element has a value. The goal is to take the maximum value possible independently of opponent strategy.",
-        solution: "Use game theory DP with memoization: recursively compute optimal moves assuming opponent plays optimally, tracking me(i,j) and opp(i,j) states",
-        speciality: "Game Theory DP"
+        description: "Two players alternately take coins from either end of a line. Maximize your score assuming both play optimally.",
+        solution: "Use dynamic programming with game theory. For each subarray, compute the maximum difference the current player can achieve by choosing optimally from either end.",
+        cppFile: "burning_coins.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
     },
     {
-        name: "First steps with BGL",
-        aka: "Dijkstra + MST",
-        week: "Week 03",
-        methods: "Dijkstra, Minimum Spanning Tree",
-        complexity: "O(n logn)",
-        inputSize: "n ~ 100",
-        description: "Basic graph algorithms: Dijkstra's shortest path and Minimum Spanning Tree using Boost Graph Library.",
-        solution: "Apply Dijkstra's algorithm for shortest paths and Kruskal's algorithm for MST using BGL",
-        speciality: "Basic Graph Algorithms"
+        name: "Deck of Cards",
+        week: "Week 02",
+        methods: "Sliding Window",
+        complexity: "O(n)",
+        description: "Find the shortest consecutive subsequence of cards with sum exactly equal to k.",
+        solution: "Use sliding window with two pointers. Expand window when sum is too small, contract when sum is too large. Track minimum length when sum equals k.",
+        cppFile: "deck_of_cards.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
     },
     {
-        name: "Important Bridges",
-        aka: "biconnected components",
-        week: "Week 03",
-        methods: "Biconnected Graph",
-        complexity: "O(n logn)",
-        inputSize: "n ~ 10^4",
-        description: "Find edges that when removed cause at least 2 nodes to be no longer connected. Biconnected components find articulation points: if removed they disconnect. But here we are interested in the edges, so an edge is critical if there is just one edge in a component.",
-        solution: "Find biconnected components; an edge is critical (bridge) if it's the only edge in its component",
-        speciality: "Bridge Finding"
-    },
-    {
-        name: "Ant Challenge",
-        aka: "multiple MST + Dijkstra",
-        week: "Week 03",
-        methods: "Dijkstra, Minimum Spanning Tree",
-        complexity: "O(n logn)",
-        inputSize: "n ~ 100",
-        description: "Multiple MST for lowest edge cost + Dijkstra. Combine results from multiple MSTs to find optimal path.",
-        solution: "Compute MST for each network to find minimum edge weights, combine into single graph, then run Dijkstra",
-        speciality: "Multi-Network Graph"
-    },
-    {
-        name: "Buddy Selection",
-        aka: "maximum matching with only certain edges",
-        week: "Week 03",
-        methods: "Maximum matching",
-        complexity: "O(n^2)",
-        inputSize: "n ~ 100",
-        description: "Best pairing but we need to check if we can do better than a certain condition: 'the poorest pair has k+1 common interests'. Delete all edges between people that have less than k+1 common interests and then do max matching.",
-        solution: "Build graph with edges only between pairs with >k common interests, then check if maximum matching covers all vertices",
-        speciality: "Constrained Matching"
+        name: "The Great Game",
+        week: "Week 02",
+        methods: "Dynamic Programming, Game Theory",
+        complexity: "O(n * m)",
+        description: "Two players move a token on a directed graph. Sherlock wants to minimize moves to reach target, Moriarty wants to maximize. Determine the number of moves.",
+        solution: "Use dynamic programming on the graph. For Sherlock's turns, take minimum of successor moves; for Moriarty's turns, take maximum. Both play optimally.",
+        cppFile: "the_great_game.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
     },
     {
         name: "Lord Voldemort",
-        aka: "max length of non overlapping intervals",
-        week: "Week 03",
-        methods: "Dynamic Programming, Prefix sum",
-        complexity: "O(n logn)",
-        inputSize: "n ~ 10^6",
-        description: "Find the maximum length of non-overlapping intervals.",
-        solution: "Sort intervals and use DP or greedy approach to select maximum non-overlapping set",
-        speciality: "Interval Scheduling"
-    },
-    {
-        name: "Hit",
-        aka: "Hit",
-        week: "Week 04",
-        methods: "Computational Geometry",
-        description: "Computational geometry problem involving ray-segment intersection tests.",
-        solution: "Use CGAL geometric predicates to test ray-segment intersections efficiently",
-        speciality: "Ray Casting"
-    },
-    {
-        name: "Moving Books",
-        aka: "Check feasibility",
-        week: "Week 05",
+        week: "Week 02",
         methods: "Binary Search, Greedy",
-        description: "Check if it's feasible to move all books given constraints. Use binary search on answer combined with greedy verification.",
-        solution: "Binary search on number of trips, use greedy algorithm to verify if configuration is feasible",
-        speciality: "Binary Search + Greedy"
-    },
-    {
-        name: "Planet Express",
-        aka: "Multi-source Dijkstra with teleportation",
-        week: "Week 05",
-        methods: "Dijkstra, Strongly Connected Components",
-        complexity: "O(n logn)",
-        inputSize: "n ~ 10^6",
-        description: "Multi-source Dijkstra: add new source connecting to old sources with cost 0. Find shortest path from one of the sources to a target node + a network of teleportation. Print 'no' if impossible.",
-        solution: "Group teleport nodes by strongly connected components, add virtual source to all starting nodes with cost 0, run Dijkstra",
-        speciality: "Multi-source Shortest Path"
-    },
-    {
-        name: "Knights",
-        aka: "max flow with VERTEX CAPACITY",
-        week: "Week 06",
-        methods: "MaxFlow",
-        description: "Maximum flow problem with vertex capacity constraints. Split vertices to handle capacity.",
-        solution: "Split each vertex with capacity into two vertices connected by edge with that capacity, then run max flow",
-        speciality: "Vertex Capacity Flow"
-    },
-    {
-        name: "Tiles",
-        aka: "maximum matching in undirected unweighted graph",
-        week: "Week 06",
-        methods: "Maximum matching",
-        complexity: "O(n^2)",
-        inputSize: "n ~ 100",
-        description: "We have an undirected unweighted graph and we want to find if each vertex can be covered with maximum matching. Print 'yes'/'no'.",
-        solution: "Use Edmonds' algorithm for maximum matching; check if matching size * 2 equals number of vertices",
-        speciality: "Perfect Matching"
-    },
-    {
-        name: "Coin Tossing Tournament",
-        aka: "max flow game match",
-        week: "Week 06",
-        methods: "MaxFlow",
-        description: "Max flow game match with 1 point if win and 0 if lose. We can use this solution only if whatever the result of a match the same amount of points will be distributed.",
-        solution: "Model as max flow: matches as intermediate nodes, check if flow equals expected total points",
-        speciality: "Tournament Verification"
-    },
-    {
-        name: "Motorcycles",
-        aka: "Non hitting positive plane rays",
-        week: "Week 06",
-        methods: "Smart",
-        description: "Determine which motorcycle rays don't hit any other ray in positive plane.",
-        solution: "Sort by slope and position, use sweep line to determine which rays are never blocked",
-        speciality: "Geometric Sweep"
-    },
-    {
-        name: "London",
-        aka: "recreate word using pieces of journal",
-        week: "Week 06",
-        methods: "MaxFlow",
-        description: "Recreate a word using pieces of journal with front and back constraints.",
-        solution: "Model as max flow: character positions to paper pieces, considering front/back constraints",
-        speciality: "String Matching Flow"
-    },
-    {
-        name: "Bistro",
-        aka: "Post office problem",
-        week: "Week 07",
-        methods: "Delaunay triangulation",
-        complexity: "O(n logn)",
-        inputSize: "n ~ 10^3",
-        description: "Basically we have n 2D points, and we have some new m points (queries) where we want to find the closest point to it. Brute force: O(n) to look for the closest point → O(m*n). Solution: Delaunay triangulation, precompute the original points, then query in O(logn) → O(m*logn). Print squared euclidean distances.",
-        solution: "Build Delaunay triangulation of points, then use nearest neighbor queries in O(log n) per query",
-        speciality: "Nearest Neighbor Search"
-    },
-    {
-        name: "Inball",
-        aka: "Maximum ball in cave",
-        week: "Week 04",
-        methods: "Linear Programming",
-        complexity: "O(d × n)",
-        description: "You are given a 'cave' defined by a set of linear inequalities in d-dimensional space. The goal is to find the maximum integral radius r of a d-dimensional ball that fits inside this cave. The condition for a ball of center c and radius r to fit in a half-space a^T x ≤ b is modeled as the linear constraint a^T c + ||a||_2 r ≤ b.",
-        solution: "Model as Linear Programming problem: maximize r subject to constraints a^T c + ||a||_2 r ≤ b for each half-space, solve using LP solver (e.g., CGAL)",
-        speciality: "LP Optimization"
-    },
-    {
-        name: "London",
-        aka: "Ransom note from newspaper",
-        week: "Week 06",
-        methods: "MaxFlow",
-        complexity: "O(n^3)",
-        description: "You are given a ransom note and a set of newspaper pieces. Each piece has a letter on the front and a different letter on the back. You must determine if it is possible to construct the note by cutting out pieces and choosing which side to face up.",
-        solution: "Model as Max Flow problem: construct flow network where source connects to letter pair nodes (newspaper pieces), which connect to required letter nodes (note positions). Max flow equals note length means success.",
-        speciality: "Bipartite Matching Flow"
-    },
-    {
-        name: "Clues",
-        aka: "Radio station coloring",
-        week: "Week 04",
-        methods: "Delaunay triangulation, DFS",
         complexity: "O(n log n)",
-        description: "Given a set of radio stations (points) with range r, determine if the network can be 2-colored (no two interfering stations share a color) and if two specific clients can communicate. Stations interfere if distance < r.",
-        solution: "Use Delaunay Triangulation to efficiently construct the network (contains EMST for connectivity). Perform DFS to assign colors and verify no edges shorter than r connect same-colored nodes (bipartite check).",
-        speciality: "Graph 2-Coloring with Geometry"
-    },
-    {
-        name: "Knights",
-        aka: "Knights in hallway",
-        week: "Week 06",
-        methods: "MaxFlow",
-        complexity: "O(V^2 × E)",
-        description: "Find the maximum number of knights that can traverse a grid hallway from given starting points to an 'outside' boundary without colliding. Vertex capacities are limited (e.g., intersection capacity C).",
-        solution: "Model as Max Flow with vertex capacities: split each intersection vertex v into v_in and v_out connected by edge with capacity C. Connect starting positions to source and boundary nodes to sink.",
-        speciality: "Vertex Capacity Flow"
-    },
-    {
-        name: "Kingdom Defense",
-        aka: "Circulation with demands",
-        week: "Week 06",
-        methods: "MaxFlow",
-        complexity: "O(V × E^2)",
-        description: "Assign soldier movements in a network of cities and paths to satisfy vertex demands/supplies and edge capacities (both minimum and maximum flow limits). Each city has supply/demand, each path has min/max capacity.",
-        solution: "Transform to Max Flow: adjust edge capacities to (max - min), add source/sink edges to force minimum flow into/out of nodes, check if max flow saturates necessary edges.",
-        speciality: "Circulation Problem"
-    },
-    {
-        name: "First Hit",
-        aka: "Ray segment intersection",
-        week: "Week 04",
-        methods: "Computational Geometry",
-        complexity: "O(n) expected, O(n^2) worst",
-        description: "Given a ray r and a set of n segments, find the first point where the ray intersects a segment. Need to minimize expensive geometric constructions.",
-        solution: "Use randomized geometric algorithm: shuffle segments and iterate. Maintain closest intersection point and 'clip' ray to this point. Expected O(log n) geometric constructions.",
-        speciality: "Randomized Geometry"
+        description: "Place segments of given lengths on a line such that they cover at least m Horcruxes. Minimize the radius of the largest segment.",
+        solution: "Binary search on the radius. For each radius, greedily check if we can cover at least m Horcruxes with segments of that size.",
+        cppFile: "lord_voldemort.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
     },
     {
         name: "Buddy Selection",
-        aka: "Perfect matching with interests",
         week: "Week 03",
-        methods: "Maximum matching",
-        complexity: "O(n^3)",
-        inputSize: "n ~ 100",
-        description: "Given a list of students and their interests, determine if it is possible to pair everyone up (perfect matching) such that every pair shares strictly more than f interests.",
-        solution: "Construct graph by comparing sorted interest lists for every pair (linear scan). Use Edmonds' maximum cardinality matching to find optimal pairing. Check if matching size × 2 equals number of students.",
-        speciality: "Perfect Matching Verification"
+        methods: "Maximum Matching, BGL",
+        complexity: "O(n^2)",
+        description: "Match students into pairs based on common hobbies. Find if a perfect matching exists where each pair shares at least f hobbies.",
+        solution: "It is necessary to find new connections with more than f common hobbies. To quickly check how many common hobbies two students have, it's possible to sort the arrays containing the hobbies and then check one by one the strings. If there are enough common hobbies, add an edge. Find maximum matching using Edmond's algorithm. If the matching size is half the number of students, division is not optimal.",
+        cppFile: "buddy_selection.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
     },
     {
-        name: "Germs",
-        aka: "Growing circles",
+        name: "Important Bridges",
+        week: "Week 03",
+        methods: "BGL, Bridge Finding",
+        complexity: "O(V + E)",
+        description: "Find all bridges in an undirected graph - edges whose removal disconnects the graph.",
+        solution: "Use BGL to find articulation points and bridges. A bridge is an edge that is not part of any cycle.",
+        cppFile: "important_bridges.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Ant Challenge",
+        week: "Week 03",
+        methods: "BGL, Dijkstra",
+        complexity: "O((V + E) log V)",
+        description: "Find shortest paths for different ant species on a graph, where each species has different edge weights.",
+        solution: "Run Dijkstra's algorithm for each ant species with their specific edge weights. Compare paths to determine optimal routes.",
+        cppFile: "ant_challenge.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "First steps with BGL",
+        week: "Week 03",
+        methods: "BGL, Kruskal, Dijkstra",
+        complexity: "O((V + E) log V)",
+        description: "Introduction to Boost Graph Library - compute shortest paths and minimum spanning trees.",
+        solution: "Use BGL's built-in algorithms: Kruskal for MST, Dijkstra for shortest paths. Practice with BGL data structures and algorithms.",
+        cppFile: "first_steps_with_bgl.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "James Bond's sovereigns",
+        week: "Week 03",
+        methods: "BGL, Dijkstra, MST",
+        complexity: "O((V + E) log V)",
+        description: "Find paths and minimum spanning trees in a weighted graph representing MI6's network.",
+        solution: "Combine Dijkstra for shortest paths with Kruskal/Prim for MST. Handle multiple queries efficiently.",
+        cppFile: "James_Bonds_sovereigns.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Hit",
         week: "Week 04",
-        methods: "Delaunay triangulation",
+        methods: "CGAL, Geometry",
+        complexity: "O(n)",
+        description: "Determine if a ray intersects any of n segments in 2D.",
+        solution: "Use CGAL's geometric primitives to check ray-segment intersection. Handle edge cases for parallel rays and segments.",
+        cppFile: "hit.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "First Hit",
+        week: "Week 04",
+        methods: "CGAL, Geometry",
         complexity: "O(n log n)",
-        description: "Circular germs grow quadratically (r(t) = t^2 + 0.5). A germ dies when it touches another germ or the container boundary. Determine the time of the first death, median death, and last death.",
-        solution: "Death time is determined by distance to nearest neighbor (or boundary). Construct Delaunay Triangulation to find nearest neighbor for every germ in O(n log n). Extract death times and sort for statistics.",
-        speciality: "Nearest Neighbor with Delaunay"
+        description: "Given a ray and n segments, find the first segment that the ray hits.",
+        solution: "The key idea is to store the data about how many dominoes can be toppled from the current position.",
+        cppFile: "first_hit.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Antenna",
+        week: "Week 04",
+        methods: "CGAL, Min Circle",
+        complexity: "O(n)",
+        description: "Find the smallest circle that encloses all given points.",
+        solution: "Use CGAL's min_circle_2 algorithm to find the smallest enclosing circle. Handle degenerate cases.",
+        cppFile: "antenna.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
     },
     {
         name: "Hiking Maps",
-        aka: "Minimum covering triangles",
         week: "Week 04",
-        methods: "Sliding Window, Computational Geometry",
-        complexity: "O(n × m)",
-        description: "You are given a hiking path (sequence of segments) and a set of map triangles. Find the minimum length subsequence of triangles that fully covers the path.",
-        solution: "Use sliding window (two-pointers): expand window (add triangles) until all path segments are covered, then shrink from start to minimize length. Use geometric predicates (orientation tests) for containment checks.",
-        speciality: "Geometric Sliding Window"
+        methods: "CGAL, Geometry, Sliding Window",
+        complexity: "O(n^2)",
+        description: "Find the minimum number of consecutive triangular map pieces that cover a hiking path.",
+        solution: "Use CGAL to check if points are inside triangles. Apply sliding window to find minimum consecutive maps covering all path points.",
+        cppFile: "hiking_maps.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "The Iron Islands",
+        week: "Week 04",
+        methods: "CGAL, Delaunay Triangulation",
+        complexity: "O(n log n)",
+        description: "Connect islands using Delaunay triangulation to minimize maximum edge length in the waterways network.",
+        solution: "Build Delaunay triangulation of island positions. Use triangulation edges to construct optimal network connections.",
+        cppFile: "the_iron_islands.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
     },
     {
         name: "Moving Books",
-        aka: "Minimize rounds",
         week: "Week 05",
-        methods: "Binary Search, Greedy",
-        complexity: "O(N log N)",
-        description: "A set of people with strength s_i must move a set of boxes with weight w_j. Find the minimum number of rounds required to move all boxes. Each person can carry at most one box per round, and only if their strength ≥ box weight.",
-        solution: "Use greedy strategy: in each round, strongest available people should carry heaviest boxes they can lift. Efficiently implement using std::multiset to store and retrieve box weights in O(N log N) time.",
-        speciality: "Greedy with Multiset"
+        methods: "Greedy",
+        complexity: "O(n log n)",
+        description: "Friends with different strengths move boxes of different weights. Minimize the number of rounds to move all boxes.",
+        solution: "Sort friends by strength and boxes by weight in descending order. Greedily assign heaviest possible boxes to strongest available friends in each round.",
+        cppFile: "moving_books.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Asterix the Gaul",
+        week: "Week 05",
+        methods: "Split and List, Binary Search",
+        complexity: "O(2^(n/2) * log(2^(n/2)))",
+        description: "Find if we can achieve exactly required strength using subset of potion gulps, where moves cost varies.",
+        solution: "Use meet-in-the-middle: split potions into two halves, enumerate all subsets of each half, then binary search to find combinations that sum to target.",
+        cppFile: "asterix_the_gaul.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Severus Snape",
+        week: "Week 05",
+        methods: "Dynamic Programming, Prefix Sum",
+        complexity: "O(n^2)",
+        description: "Combine potions with different properties (power and happiness) to achieve minimum thresholds with minimum number of potions.",
+        solution: "Use DP with prefix sums. For each position, track minimum potions needed to achieve power and happiness thresholds.",
+        cppFile: "severus_snape.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Boats",
+        week: "Week 05",
+        methods: "Greedy, Interval Scheduling",
+        complexity: "O(n log n)",
+        description: "Place boats with given lengths at preferred positions on a river such that they don't overlap. Maximize the number of boats.",
+        solution: "Sort boats by position. Greedily place each boat as far left as possible without overlapping previous boats.",
+        cppFile: "boats.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Planet Express",
+        week: "Week 05",
+        methods: "BGL, Dijkstra",
+        complexity: "O((V + E) log V)",
+        description: "Find shortest path in a graph with teleportation network. Some edges have 0 cost (teleports).",
+        solution: "Model as graph with special 0-cost edges for teleports. Use Dijkstra to find shortest path considering teleportation network.",
+        cppFile: "planet_express.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Tiles",
+        week: "Week 06",
+        methods: "Max Flow, Bipartite Matching",
+        complexity: "O(V * E^2)",
+        description: "Cover a grid with 1x2 tiles. Some cells are blocked. Determine if all free cells can be covered.",
+        solution: "For every space, if it's an 'x', skip that space. If the space is even (i+j even), make it a starting position with edge to source capacity 1. Try placing 4 possible tiles connecting to landing spaces. If space is odd, connect to sink capacity 1. Max flow must equal half the number of free spaces.",
+        cppFile: "tiles.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "London",
+        week: "Week 06",
+        methods: "Max Flow",
+        complexity: "O(V * E^2)",
+        description: "Form a ransom note using letter pairs from newspaper clippings (front and back of paper pieces).",
+        solution: "All pairs of letters that newspaper pieces can form are stored in an array of size 26*26. Create max flow graph: source to each pair with capacity = occurrences; each pair connects to its two letters; each letter connects to sink with capacity = required count in note. Note is possible if flow equals number of letters needed.",
+        cppFile: "london.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Coin Tossing Tournament",
+        week: "Week 06",
+        methods: "Max Flow",
+        complexity: "O(V * E^2)",
+        description: "Verify if a tournament scoreboard is plausible given match results (some known, some unknown).",
+        solution: "Create graph for max flow with nodes for rounds and players. Source to each round (capacity 1). From each round, if winner known, edge to that player; if unknown, edges to both players. Each player to sink with capacity = their claimed score. Scoreboard plausible if max flow = number of matches and total score = number of matches.",
+        cppFile: "coin_tossing_tournament.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Knights",
+        week: "Week 06",
+        methods: "Max Flow, Independent Set",
+        complexity: "O(V * E^2)",
+        description: "Place maximum number of knights on a board with holes such that no two knights attack each other.",
+        solution: "Create graph of size n*n. If (i+j) mod 2 == 1, field is landing position; otherwise starting position. Connect source to starting positions, landing positions to sink. For each starting position, connect to valid landing positions. Max flow = max matching = min vertex cover. Maximum independent set = total fields - min vertex cover.",
+        cppFile: "knights.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Motorcycles",
+        week: "Week 06",
+        methods: "CGAL, Geometry",
+        complexity: "O(n^2)",
+        description: "Motorcycles start at different positions and drive in straight lines at different slopes. Determine which motorcycles never get blocked by others.",
+        solution: "Use CGAL to compute ray intersections. For each motorcycle, check if it intersects with others before reaching infinity. Track which motorcycles remain visible.",
+        cppFile: "motorcycles.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Bistro",
+        week: "Week 07",
+        methods: "CGAL, Delaunay Triangulation",
+        complexity: "O(n log n)",
+        description: "For each new restaurant location, find the distance to the nearest existing restaurant.",
+        solution: "Create a triangulation containing the locations of existing restaurants. For each new restaurant location, determine the nearest point in the triangulation and find the squared distance to that point.",
+        cppFile: "bistro.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Germs",
+        week: "Week 07",
+        methods: "CGAL, Delaunay Triangulation",
+        complexity: "O(n log n)",
+        description: "Bacteria colonies grow at constant rate. Determine when first collision occurs (with dish border or other colony).",
+        solution: "Calculate time at which each germ dies: Try all dish borders (distance between germ and border). Try all close pairs defined by triangulation edges (squared distance / 4). Order all minimum squared death radii. Calculate times using t = sqrt(sqrt(r^2) - 0.5). Return first, median, and last times.",
+        cppFile: "germs.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "H1N1",
+        week: "Week 07",
+        methods: "CGAL, Delaunay Triangulation, Widest Path",
+        complexity: "O(n log n)",
+        description: "People need to escape from infected persons. Find safe routes maintaining maximum distance from infected locations.",
+        solution: "From a face, find way out by traversing edges whose length is adequate (widest path problem). For each face, store maximum radius allowing escape route. Initialize infinite faces with infinite width, finite faces with 0. Use modified Dijkstra with priority queue to populate widest paths. For each user, check if face's widest path is wide enough.",
+        cppFile: "h1n1.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "GoldenEye",
+        week: "Week 07",
+        methods: "CGAL, Delaunay Triangulation, Disjoint Sets",
+        complexity: "O(n log n)",
+        description: "Jammers create circular interference zones. Find minimum power needed to complete missions between two points avoiding jammer coverage.",
+        solution: "Create triangulation with jammer positions. Find which missions can be done with power p by checking connected components of safe graph. To find minimum power for all missions, order edges by length and use disjoint sets. For each mission, update minimum power to allow start/end positions under jammers (power = 4 * d^2), then connect components.",
+        cppFile: "goldeneye.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Octopussy",
+        week: "Week 07",
+        methods: "Greedy, Binary Heap",
+        complexity: "O(n log n)",
+        description: "Bombs arranged in binary tree structure. Each bomb has explosion time. Can defuse one bomb per second. Determine if all bombs can be defused.",
+        solution: "Each bomb stores ordered vector of bombs to defuse before current one (union of vectors from left and right children). Order returned vector (defuse bombs that explode sooner first). For each bomb in order, defuse recursively. If not enough time, set explosion flag. Alternative: for bombs on top of others, set defusal time to min of below bomb's time and above bomb's time minus 1.",
+        cppFile: "octopussy.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Inball",
+        week: "Week 08",
+        methods: "Linear Programming, CGAL",
+        complexity: "O(n * d)",
+        description: "Find the largest ball that fits inside a d-dimensional polytope defined by linear inequalities.",
+        solution: "Distance of center point x to a plane is D = |a1*x1 + ... + ad*xd - b| / sqrt(a1^2 + ... + ad^2). Since a1*x1 + ... + ad*xd <= b, numerator is always negative, multiply by -1. Transform to inequality: sqrt(a1^2 + ... + ad^2) * D <= -a1*x1 - ... - ad*xd + b. D cannot be negative, set lower bound to 0. Maximize D (minimize -D).",
+        cppFile: "inball.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Kingdom Defence",
+        week: "Week 08",
+        methods: "Max Flow, Min-Cost Max-Flow",
+        complexity: "O(V * E^2)",
+        description: "Distribute soldiers among locations with supply/demand constraints and path capacity constraints (both min and max).",
+        solution: "Given soldiers present and needed at location, find demand and supply. Each path has capacity = max_capacity - min_capacity. Source location has demand increase = min_capacity. Destination has supply increase = min_capacity. Locations with positive supply connect to source, negative supply (demand) connect to sink. Check if flow equals total demand.",
+        cppFile: "kingdom_defence.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Diet",
+        week: "Week 08",
+        methods: "Linear Programming",
+        complexity: "O(n * m)",
+        description: "Choose quantities of foods to meet nutritional constraints (min/max for each nutrient) while minimizing cost.",
+        solution: "For each nutrient, two inequalities: q1*c_i,1 + ... + qj*c_i,j <= max_i and -q1*c_i,1 - ... - qj*c_i,j <= -min_i (multiply by -1 to standardize direction). Objective function minimizes q1*p1 + ... + qj*pj where pj is price of food j.",
+        cppFile: "diet.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Suez",
+        week: "Week 08",
+        methods: "Linear Programming, CGAL",
+        complexity: "O(n^2)",
+        description: "Place rectangular posters of variable size on a wall without overlapping existing posters or each other.",
+        solution: "Input values are fractions, use CGAL::Gmpq. For new poster constraints: a1+a2 <= max(2*|x2-x1|/w, 2*|y2-y1|/h). For new-old poster constraints: a1 <= max(2*|x2-x1|-w)/w, (2*|y2-y1|-h)/h) taking minimum across all old posters. Minimize (a1-a2-...-an) * (-2*(h+w)).",
+        cppFile: "suez.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "What is the Maximum",
+        week: "Week 08",
+        methods: "Linear Programming",
+        complexity: "O(n)",
+        description: "Simple LP maximization problem to verify LP solver setup.",
+        solution: "Solver always minimizes objective function. Invert all signs in objective function to maximize, then invert sign of result to get correct answer.",
+        cppFile: "what_is_the_maximum.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Clues",
+        week: "Week 10",
+        methods: "CGAL, Delaunay Triangulation, BFS, Graph Coloring",
+        complexity: "O(n log n)",
+        description: "Radio stations must use different frequencies if within range r. Two Sherlock locations must be connectable without interference.",
+        solution: "Create triangulation of stations with vertex indices. Save edges with length < r. Using BFS, color nodes with alternating frequencies if possible. Check for interference within same frequency using separate triangulations. If two mission points are close enough and on same connected component without interference, answer is 'y'.",
+        cppFile: "clues.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
+    },
+    {
+        name: "Lannister",
+        week: "Week 10",
+        methods: "Linear Programming, CGAL",
+        complexity: "O(n)",
+        description: "Build perpendicular water and sewage canals separating nobles and commons, minimizing total pipe length.",
+        solution: "Water canal non-vertical (bw=1), sewage non-horizontal (as=1). Place nobles left of sewage (as*xn+bs*yn+cs<=0), commons right (-as*xc-bs*yc-cs<=0). Set as=1. Check feasibility. For sewage pipes, sum lengths considering direction. For water pipes, minimize L where L>=|yh+aw*xh+cw| using L>=t and L>=-t. Ensure perpendicularity: bs+aw=0.",
+        cppFile: "lannister.cpp",
+        officialLink: "https://codeexpert.ethz.ch/algolab"
     }
 ];

@@ -219,7 +219,14 @@ function generateWrongComplexityAnswers(correctComplexity) {
 // Load a new question
 function loadQuestion() {
     const weightedExercises = progressTracker.getWeightedExercises();
-    const exercise = selectWeightedRandom(weightedExercises);
+    let exercise = selectWeightedRandom(weightedExercises);
+    
+    // Apply any local edits
+    const exercisesWithEdits = getExercisesWithEdits();
+    const editedExercise = exercisesWithEdits.find(ex => ex.name === exercise.name);
+    if (editedExercise) {
+        exercise = editedExercise;
+    }
     
     currentQuestion = exercise;
     selectedOption = null;
@@ -239,18 +246,7 @@ function loadQuestion() {
     
     currentQuestion.questionType = questionType;
     
-    // Update UI - removed title display
-    // document.getElementById('problemTitle').textContent = exercise.name;
-    
-    // Meta information
-    const metaHtml = `
-        ${exercise.week ? `<span class="badge badge-week">${exercise.week}</span>` : ''}
-        ${exercise.complexity ? `<span class="badge badge-complexity">${exercise.complexity}</span>` : ''}
-        ${exercise.methods ? `<span class="badge badge-method">${exercise.methods}</span>` : ''}
-    `;
-    document.getElementById('problemMeta').innerHTML = metaHtml;
-    
-    // Description
+    // Description (metadata badges removed as requested)
     document.getElementById('problemDescription').textContent = exercise.description;
     
     // Generate question based on type
@@ -429,6 +425,284 @@ function resetProgress() {
         alert('Progress has been reset!');
     }
 }
+
+// === Browse Mode Functions ===============================================
+
+let currentEditExercise = null;
+
+function showBrowseMode() {
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('browseScreen').classList.remove('hidden');
+    
+    // Populate method filter
+    const methods = new Set();
+    exercises.forEach(ex => {
+        if (ex.methods) {
+            ex.methods.split(',').forEach(m => methods.add(m.trim()));
+        }
+    });
+    
+    const methodFilter = document.getElementById('filterMethod');
+    methodFilter.innerHTML = '<option value="all">All Methods</option>';
+    Array.from(methods).sort().forEach(method => {
+        const opt = document.createElement('option');
+        opt.value = method;
+        opt.textContent = method;
+        methodFilter.appendChild(opt);
+    });
+    
+    // Add event listeners
+    document.getElementById('filterMethod').addEventListener('change', renderBrowseList);
+    document.getElementById('filterStatus').addEventListener('change', renderBrowseList);
+    document.getElementById('sortBy').addEventListener('change', renderBrowseList);
+    
+    renderBrowseList();
+}
+
+function renderBrowseList() {
+    const container = document.getElementById('browseList');
+    const filterMethod = document.getElementById('filterMethod').value;
+    const filterStatus = document.getElementById('filterStatus').value;
+    const sortBy = document.getElementById('sortBy').value;
+    
+    let filtered = getExercisesWithEdits().filter(ex => {
+        // Filter by method
+        if (filterMethod !== 'all') {
+            const methods = ex.methods ? ex.methods.toLowerCase().split(',').map(m => m.trim()) : [];
+            if (!methods.includes(filterMethod.toLowerCase())) return false;
+        }
+        
+        // Filter by status
+        if (filterStatus !== 'all') {
+            const data = progressTracker.getExerciseData(ex.name);
+            if (filterStatus === 'unattempted' && data) return false;
+            if (filterStatus === 'correct' && (!data || data.correct === 0)) return false;
+            if (filterStatus === 'incorrect' && (!data || data.incorrect === 0)) return false;
+        }
+        
+        return true;
+    });
+    
+    // Sort
+    filtered.sort((a, b) => {
+        const dataA = progressTracker.getExerciseData(a.name);
+        const dataB = progressTracker.getExerciseData(b.name);
+        
+        switch(sortBy) {
+            case 'name':
+                return a.name.localeCompare(b.name);
+            case 'date-desc':
+                const dateA = dataA?.lastAttempt ? new Date(dataA.lastAttempt) : new Date(0);
+                const dateB = dataB?.lastAttempt ? new Date(dataB.lastAttempt) : new Date(0);
+                return dateB - dateA;
+            case 'date-asc':
+                const dateA2 = dataA?.lastAttempt ? new Date(dataA.lastAttempt) : new Date(0);
+                const dateB2 = dataB?.lastAttempt ? new Date(dataB.lastAttempt) : new Date(0);
+                return dateA2 - dateB2;
+            case 'accuracy-asc':
+                const accA = dataA ? (dataA.correct / (dataA.correct + dataA.incorrect) || 0) : 0;
+                const accB = dataB ? (dataB.correct / (dataB.correct + dataB.incorrect) || 0) : 0;
+                return accA - accB;
+            case 'accuracy-desc':
+                const accA2 = dataA ? (dataA.correct / (dataA.correct + dataA.incorrect) || 0) : 0;
+                const accB2 = dataB ? (dataB.correct / (dataB.correct + dataB.incorrect) || 0) : 0;
+                return accB2 - accA2;
+            default:
+                return 0;
+        }
+    });
+    
+    container.innerHTML = '';
+    
+    filtered.forEach(ex => {
+        const data = progressTracker.getExerciseData(ex.name);
+        const accuracy = data ? Math.round(100 * data.correct / (data.correct + data.incorrect)) : 0;
+        const lastDate = data?.lastAttempt ? new Date(data.lastAttempt).toLocaleDateString() : 'Never';
+        
+        const card = document.createElement('div');
+        card.style.cssText = 'background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 15px; border: 2px solid #e9ecef;';
+        
+        const statusBadge = data ? 
+            (data.correct > 0 ? '✅' : (data.incorrect > 0 ? '❌' : '⭕')) : '⭕';
+        
+        card.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                <div style="flex: 1;">
+                    <h3 style="margin: 0 0 5px 0; font-size: 1.2em;">${statusBadge} ${ex.name}</h3>
+                    <div style="color: #6c757d; font-size: 0.9em; margin-bottom: 8px;">${ex.methods || 'No methods'}</div>
+                    <div style="color: #495057; margin-bottom: 10px;">${ex.description}</div>
+                    <div style="background: #fff; padding: 10px; border-radius: 8px; border-left: 3px solid #667eea;">
+                        <strong>Solution:</strong> ${ex.solution}
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 20px; font-size: 0.9em; color: #6c757d; margin-bottom: 10px;">
+                ${data ? `
+                    <span>📊 ${data.attempts} attempts</span>
+                    <span>✅ ${data.correct} correct</span>
+                    <span>❌ ${data.incorrect} incorrect</span>
+                    <span>🎯 ${isNaN(accuracy) ? 0 : accuracy}% accuracy</span>
+                    <span>📅 Last: ${lastDate}</span>
+                ` : '<span>Not attempted yet</span>'}
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="editExercise('${ex.name.replace(/'/g, "\\'")}')" 
+                        style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                    ✏️ Edit
+                </button>
+                ${ex.cppFile ? `
+                    <button onclick="viewCppCode('${ex.name.replace(/'/g, "\\'")}', '${ex.cppFile}')" 
+                            style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                        💻 View C++ Solution
+                    </button>
+                ` : ''}
+            </div>
+        `;
+        
+        container.appendChild(card);
+    });
+}
+
+function backToStart() {
+    document.getElementById('browseScreen').classList.add('hidden');
+    document.getElementById('editScreen').classList.add('hidden');
+    document.getElementById('startScreen').classList.remove('hidden');
+}
+
+// === Edit Functions ======================================================
+
+function editExercise(name) {
+    const exercise = getExercisesWithEdits().find(ex => ex.name === name);
+    if (!exercise) return;
+    
+    currentEditExercise = exercise;
+    
+    document.getElementById('editDescription').value = exercise.description;
+    document.getElementById('editSolution').value = exercise.solution;
+    document.getElementById('editMethods').value = exercise.methods || '';
+    
+    document.getElementById('browseScreen').classList.add('hidden');
+    document.getElementById('editScreen').classList.remove('hidden');
+}
+
+function saveEdit() {
+    if (!currentEditExercise) return;
+    
+    const edits = {
+        description: document.getElementById('editDescription').value,
+        solution: document.getElementById('editSolution').value,
+        methods: document.getElementById('editMethods').value
+    };
+    
+    // Save to localStorage
+    const editsKey = 'algolab_quiz_edits';
+    let allEdits = {};
+    try {
+        const saved = localStorage.getItem(editsKey);
+        if (saved) allEdits = JSON.parse(saved);
+    } catch(e) {}
+    
+    allEdits[currentEditExercise.name] = edits;
+    localStorage.setItem(editsKey, JSON.stringify(allEdits));
+    
+    alert('Changes saved locally!');
+    
+    // Go back to browse
+    document.getElementById('editScreen').classList.add('hidden');
+    document.getElementById('browseScreen').classList.remove('hidden');
+    renderBrowseList();
+}
+
+function cancelEdit() {
+    document.getElementById('editScreen').classList.add('hidden');
+    document.getElementById('browseScreen').classList.remove('hidden');
+}
+
+function resetToOriginal() {
+    if (!currentEditExercise) return;
+    
+    if (confirm('Reset this question to its original version?')) {
+        const editsKey = 'algolab_quiz_edits';
+        try {
+            const saved = localStorage.getItem(editsKey);
+            if (saved) {
+                let allEdits = JSON.parse(saved);
+                delete allEdits[currentEditExercise.name];
+                localStorage.setItem(editsKey, JSON.stringify(allEdits));
+            }
+        } catch(e) {}
+        
+        alert('Reset to original!');
+        cancelEdit();
+        renderBrowseList();
+    }
+}
+
+function getExercisesWithEdits() {
+    const editsKey = 'algolab_quiz_edits';
+    let allEdits = {};
+    try {
+        const saved = localStorage.getItem(editsKey);
+        if (saved) allEdits = JSON.parse(saved);
+    } catch(e) {}
+    
+    return exercises.map(ex => {
+        if (allEdits[ex.name]) {
+            return { ...ex, ...allEdits[ex.name] };
+        }
+        return ex;
+    });
+}
+
+// === C++ Code Viewer Functions ===========================================
+
+async function viewCppCode(name, filename) {
+    const exercise = exercises.find(ex => ex.name === name);
+    if (!exercise) return;
+    
+    const modal = document.getElementById('cppModal');
+    const title = document.getElementById('cppModalTitle');
+    const codeElement = document.getElementById('cppCode');
+    
+    title.textContent = `C++ Solution: ${name}`;
+    codeElement.textContent = 'Loading C++ code...';
+    modal.style.display = 'block';
+    
+    // Try to fetch the C++ file from the problems folder
+    const weekNum = exercise.week.replace('Week ', '');
+    const weekFolder = weekNum.padStart(2, '0');
+    const cppUrl = `/Algolab-2023-main/problems/week ${weekFolder}/${name}/${filename}`;
+    
+    try {
+        const response = await fetch(cppUrl);
+        if (response.ok) {
+            const code = await response.text();
+            codeElement.textContent = code;
+        } else {
+            codeElement.textContent = `// C++ solution file not available\n// Expected file: ${filename}\n// Week: ${exercise.week}\n// Problem: ${name}\n\n// You can find the solution at:\n// https://github.com/lorenzo-asquini/Algolab-2023/tree/main/problems/week%20${weekFolder}/${encodeURIComponent(name)}`;
+        }
+    } catch (error) {
+        codeElement.textContent = `// Error loading C++ file\n// The solution files are in the attached Algolab-2023 folder\n// Week ${exercise.week}: ${name}\n// File: ${filename}\n\n// GitHub: https://github.com/lorenzo-asquini/Algolab-2023/tree/main/problems/week%20${weekFolder}/${encodeURIComponent(name)}`;
+    }
+}
+
+function closeCppModal() {
+    document.getElementById('cppModal').style.display = 'none';
+}
+
+// Close modal on escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeCppModal();
+    }
+});
+
+// Close modal when clicking outside
+document.getElementById('cppModal')?.addEventListener('click', (e) => {
+    if (e.target.id === 'cppModal') {
+        closeCppModal();
+    }
+});
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {

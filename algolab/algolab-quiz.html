@@ -410,7 +410,65 @@
             </div>
 
             <button class="btn btn-primary" onclick="startQuiz()">Start Quiz</button>
+            <button class="btn btn-secondary" onclick="showBrowseMode()" style="margin-left: 10px;">Browse All Questions</button>
             <button class="btn btn-secondary" onclick="resetProgress()" style="margin-left: 10px;">Reset Progress</button>
+        </div>
+
+        <div id="browseScreen" class="hidden">
+            <div class="browse-header" style="padding: 20px; background: #f8f9fa; border-bottom: 2px solid #e9ecef;">
+                <h2 style="margin: 0 0 15px 0;">📚 Browse All Questions</h2>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                    <select id="filterMethod" style="padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
+                        <option value="all">All Methods</option>
+                    </select>
+                    <select id="filterStatus" style="padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
+                        <option value="all">All Status</option>
+                        <option value="correct">Answered Correctly</option>
+                        <option value="incorrect">Answered Incorrectly</option>
+                        <option value="unattempted">Not Attempted</option>
+                    </select>
+                    <select id="sortBy" style="padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
+                        <option value="name">Sort by Name</option>
+                        <option value="date-desc">Last Answered (Newest)</option>
+                        <option value="date-asc">Last Answered (Oldest)</option>
+                        <option value="accuracy-asc">Accuracy (Low to High)</option>
+                        <option value="accuracy-desc">Accuracy (High to Low)</option>
+                    </select>
+                    <button class="btn btn-secondary" onclick="backToStart()" style="margin-left: auto;">← Back</button>
+                </div>
+            </div>
+            <div id="browseList" style="padding: 20px; max-height: 70vh; overflow-y: auto;"></div>
+        </div>
+
+        <div id="editScreen" class="hidden">
+            <div style="padding: 30px;">
+                <h2 style="margin-bottom: 20px;">✏️ Edit Question</h2>
+                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
+                    <strong>⚠️ Local Changes Only:</strong> Edits are saved to your browser's localStorage. 
+                    If you clear your browser data or use a different browser/device, these changes will be lost.
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px;">Problem Description:</label>
+                    <textarea id="editDescription" style="width: 100%; min-height: 100px; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-family: inherit;"></textarea>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px;">Solution:</label>
+                    <textarea id="editSolution" style="width: 100%; min-height: 100px; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-family: inherit;"></textarea>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px;">Methods (comma-separated):</label>
+                    <input type="text" id="editMethods" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-family: inherit;">
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="saveEdit()">Save Changes</button>
+                    <button class="btn btn-secondary" onclick="cancelEdit()">Cancel</button>
+                    <button class="btn btn-secondary" onclick="resetToOriginal()" style="margin-left: auto; background: #dc3545;">Reset to Original</button>
+                </div>
+            </div>
         </div>
 
         <div id="quizScreen" class="hidden">
@@ -431,7 +489,6 @@
 
             <div class="quiz-content">
                 <div class="question-number" id="questionNumber">Question 1</div>
-                <div class="problem-meta" id="problemMeta"></div>
                 <div class="problem-description" id="problemDescription"></div>
                 <div class="question-prompt" id="questionPrompt">What is the correct solution approach?</div>
                 <div class="options" id="options"></div>
@@ -440,6 +497,19 @@
                     <button class="btn btn-primary" id="checkBtn" onclick="checkAnswer()" disabled>Check Answer</button>
                     <button class="btn btn-secondary hidden" id="nextBtn" onclick="nextQuestion()">Next Question</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- C++ Code Modal -->
+    <div id="cppModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow: auto;">
+        <div style="background: white; margin: 50px auto; max-width: 1000px; border-radius: 12px; position: relative;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center;">
+                <h2 id="cppModalTitle" style="margin: 0;">C++ Solution</h2>
+                <button onclick="closeCppModal()" style="background: none; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; width: 40px; height: 40px;">&times;</button>
+            </div>
+            <div style="padding: 30px; max-height: 70vh; overflow-y: auto;">
+                <pre id="cppCode" style="background: #f5f5f5; padding: 20px; border-radius: 8px; overflow-x: auto; font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.5;"></pre>
             </div>
         </div>
     </div>
