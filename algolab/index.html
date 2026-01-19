@@ -862,16 +862,15 @@
     <main class="tab-content" id="graph-view">
       <div class="graph-legend">
         <div class="legend-item">
-          <div class="legend-color" style="background: #ffffff;"></div>
-          <span>Technique Categories</span>
+          <div class="legend-color" style="background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%;"></div>
+          <span>Methods & Techniques</span>
         </div>
         <div class="legend-item">
-          <div class="legend-color" style="background: #86868b;"></div>
-          <span>Sub-Techniques</span>
-        </div>
-        <div class="legend-item">
-          <div class="legend-color" style="background: #f5f5f7; border: 1px solid #2c2c2e;"></div>
+          <div class="legend-color" style="background: linear-gradient(135deg, #f093fb, #f5576c); border-radius: 50%;"></div>
           <span>Problems</span>
+        </div>
+        <div class="legend-item">
+          <span style="font-size: 0.85rem; color: var(--text-secondary);">💡 Click nodes to see details • Drag to move • Scroll to zoom</span>
         </div>
       </div>
       <div id="graph-container">
@@ -1878,7 +1877,8 @@
       translateX: 0,
       translateY: 0,
       isDragging: false,
-      dragStart: { x: 0, y: 0 }
+      dragStart: { x: 0, y: 0 },
+      simulation: null
     };
 
     function renderGraph() {
@@ -1890,301 +1890,193 @@
       const height = container.clientHeight;
       svg.setAttribute('width', width);
       svg.setAttribute('height', height);
+      svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
       
       // Clear existing content
       svg.innerHTML = '';
+      
+      // Create defs for gradients and effects
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      
+      // Gradient for method nodes
+      const gradMethod = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient');
+      gradMethod.setAttribute('id', 'grad-method');
+      gradMethod.innerHTML = `
+        <stop offset="0%" style="stop-color:#764ba2;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#667eea;stop-opacity:1" />
+      `;
+      defs.appendChild(gradMethod);
+      
+      // Gradient for problem nodes
+      const gradProblem = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient');
+      gradProblem.setAttribute('id', 'grad-problem');
+      gradProblem.innerHTML = `
+        <stop offset="0%" style="stop-color:#f5576c;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#f093fb;stop-opacity:1" />
+      `;
+      defs.appendChild(gradProblem);
+      
+      // Glow filter for nodes
+      const filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+      filter.setAttribute('id', 'glow');
+      filter.innerHTML = `
+        <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+        <feMerge>
+          <feMergeNode in="coloredBlur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      `;
+      defs.appendChild(filter);
+      
+      svg.appendChild(defs);
       
       // Create main group for zoom/pan
       const mainGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       mainGroup.id = 'main-graph-group';
       svg.appendChild(mainGroup);
       
-      // Build graph data structure
-      const graphData = buildGraphData();
+      // Build graph data structure with force-directed layout
+      const graphData = buildForceGraphData();
       
-      // Calculate layout
-      const layout = calculateGraphLayout(graphData, width, height);
-      
-      // Draw edges first (so they appear behind nodes)
-      drawEdges(mainGroup, layout.edges);
-      
-      // Draw nodes
-      drawNodes(mainGroup, layout.nodes);
+      // Create force simulation
+      createForceSimulation(mainGroup, graphData, width, height);
       
       // Setup zoom/pan controls
       setupGraphControls(svg, mainGroup);
     }
 
-    function buildGraphData() {
+    function buildForceGraphData() {
       const nodes = [];
-      const edges = [];
-      const nodeMap = new Map();
+      const links = [];
+      const methodMap = new Map();
       
-      // Add technique nodes
-      NODES.forEach((node, idx) => {
-        const graphNode = {
-          id: node.id,
-          label: node.label,
-          type: node.parent ? 'sub-technique' : 'technique',
-          parent: node.parent,
-          techniques: node.techniques || [],
-          level: 0
+      // Create method nodes from unique problem methods
+      const methodsSet = new Set();
+      PROBLEMS.forEach(problem => {
+        problem.methods.forEach(method => methodsSet.add(method));
+      });
+      
+      // Add method nodes as large bubbles
+      Array.from(methodsSet).forEach(method => {
+        const methodNode = {
+          id: 'method-' + method,
+          label: prettyTag(method),
+          type: 'method',
+          method: method,
+          radius: 45 // Large bubble for methods
         };
-        nodes.push(graphNode);
-        nodeMap.set(node.id, graphNode);
+        nodes.push(methodNode);
+        methodMap.set(method, methodNode);
       });
       
-      // Calculate levels (depth in tree)
-      nodes.forEach(node => {
-        let level = 0;
-        let current = node;
-        while (current.parent) {
-          level++;
-          current = nodeMap.get(current.parent);
-          if (!current) break;
-        }
-        node.level = level;
-      });
-      
-      // Add edges between technique nodes (hierarchy)
-      NODES.forEach(node => {
-        if (node.parent && nodeMap.has(node.parent)) {
-          edges.push({
-            source: node.parent,
-            target: node.id,
-            type: 'hierarchy'
-          });
-        }
-      });
-      
-      // Add cross-connections between related techniques (mind map style)
-      const relatedTechniques = [
-        { from: 'greedy', to: 'intervals', label: 'scheduling' },
-        { from: 'dp', to: 'intervals', label: 'optimization' },
-        { from: 'shortest-paths', to: 'flows', label: 'network' },
-        { from: 'greedy', to: 'dp', label: 'optimization' },
-        { from: 'geometry', to: 'graphs', label: 'spatial' }
-      ];
-      
-      relatedTechniques.forEach(rel => {
-        if (nodeMap.has(rel.from) && nodeMap.has(rel.to)) {
-          edges.push({
-            source: rel.from,
-            target: rel.to,
-            type: 'related',
-            label: rel.label
-          });
-        }
-      });
-      
-      // Add problem nodes
+      // Add problem nodes as smaller bubbles
       PROBLEMS.forEach((problem, idx) => {
         const problemNode = {
           id: 'problem-' + idx,
           label: problem.storyTitle,
           modelTitle: problem.modelTitle,
           type: 'problem',
-          methods: problem.methods,
-          week: problem.week,
-          level: 999 // Problems at bottom
+          problem: problem,
+          radius: 25, // Smaller bubble for problems
+          methods: problem.methods
         };
         nodes.push(problemNode);
-        nodeMap.set(problemNode.id, problemNode);
         
-        // Connect to technique nodes
+        // Create links from problems to methods
         problem.methods.forEach(method => {
-          // Find nodes that contain this technique
-          NODES.forEach(techNode => {
-            if (techNode.techniques && techNode.techniques.includes(method)) {
-              edges.push({
-                source: techNode.id,
-                target: problemNode.id,
-                type: 'uses',
-                method: method
-              });
-            }
-          });
+          if (methodMap.has(method)) {
+            links.push({
+              source: problemNode.id,
+              target: 'method-' + method,
+              value: 1
+            });
+          }
         });
       });
       
-      return { nodes, edges, nodeMap };
+      return { nodes, links };
     }
 
-    function calculateGraphLayout(graphData, width, height) {
-      const { nodes, edges } = graphData;
+    function createForceSimulation(container, graphData, width, height) {
+      const { nodes, links } = graphData;
       
-      // Group nodes by level
-      const levels = {};
+      // Create a simple force simulation without D3.js
+      // We'll use a basic physics engine
+      
+      // Initialize positions randomly but clustered
       nodes.forEach(node => {
-        if (!levels[node.level]) levels[node.level] = [];
-        levels[node.level].push(node);
-      });
-      
-      const levelKeys = Object.keys(levels).map(Number).sort((a, b) => a - b);
-      const levelHeight = height / (levelKeys.length + 1);
-      
-      // Position nodes
-      const layoutNodes = [];
-      levelKeys.forEach((level, levelIdx) => {
-        const nodesAtLevel = levels[level];
-        const spacing = width / (nodesAtLevel.length + 1);
-        
-        nodesAtLevel.forEach((node, idx) => {
-          layoutNodes.push({
-            ...node,
-            x: spacing * (idx + 1),
-            y: levelHeight * (levelIdx + 1)
-          });
-        });
-      });
-      
-      // Position edges
-      const layoutEdges = edges.map(edge => {
-        const source = layoutNodes.find(n => n.id === edge.source);
-        const target = layoutNodes.find(n => n.id === edge.target);
-        return {
-          ...edge,
-          x1: source.x,
-          y1: source.y,
-          x2: target.x,
-          y2: target.y
-        };
-      });
-      
-      return { nodes: layoutNodes, edges: layoutEdges };
-    }
-
-    function drawEdges(container, edges) {
-      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-      
-      // Create gradient for edges
-      const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
-      gradient.setAttribute('id', 'edge-gradient');
-      gradient.setAttribute('gradientUnits', 'userSpaceOnUse');
-      const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-      stop1.setAttribute('offset', '0%');
-      stop1.setAttribute('stop-color', '#667eea');
-      const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-      stop2.setAttribute('offset', '100%');
-      stop2.setAttribute('stop-color', '#764ba2');
-      gradient.appendChild(stop1);
-      gradient.appendChild(stop2);
-      defs.appendChild(gradient);
-      
-      // Arrow markers for different types
-      const markerHierarchy = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
-      markerHierarchy.setAttribute('id', 'arrowhead-hierarchy');
-      markerHierarchy.setAttribute('markerWidth', '10');
-      markerHierarchy.setAttribute('markerHeight', '10');
-      markerHierarchy.setAttribute('refX', '9');
-      markerHierarchy.setAttribute('refY', '3');
-      markerHierarchy.setAttribute('orient', 'auto');
-      const polygonHierarchy = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-      polygonHierarchy.setAttribute('points', '0 0, 10 3, 0 6');
-      polygonHierarchy.setAttribute('fill', '#667eea');
-      markerHierarchy.appendChild(polygonHierarchy);
-      defs.appendChild(markerHierarchy);
-      
-      const markerUses = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
-      markerUses.setAttribute('id', 'arrowhead-uses');
-      markerUses.setAttribute('markerWidth', '10');
-      markerUses.setAttribute('markerHeight', '10');
-      markerUses.setAttribute('refX', '9');
-      markerUses.setAttribute('refY', '3');
-      markerUses.setAttribute('orient', 'auto');
-      const polygonUses = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-      polygonUses.setAttribute('points', '0 0, 10 3, 0 6');
-      polygonUses.setAttribute('fill', '#f5f5f7');
-      markerUses.appendChild(polygonUses);
-      defs.appendChild(markerUses);
-      
-      container.appendChild(defs);
-      
-      edges.forEach(edge => {
-        // Use curved paths for better visual flow
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        const dx = edge.x2 - edge.x1;
-        const dy = edge.y2 - edge.y1;
-        const dr = Math.sqrt(dx * dx + dy * dy);
-        
-        // Create smooth curve
-        const midX = (edge.x1 + edge.x2) / 2;
-        const midY = (edge.y1 + edge.y2) / 2;
-        const offsetX = -dy * 0.2;
-        const offsetY = dx * 0.2;
-        
-        const d = `M ${edge.x1} ${edge.y1} Q ${midX + offsetX} ${midY + offsetY} ${edge.x2} ${edge.y2}`;
-        path.setAttribute('d', d);
-        path.setAttribute('fill', 'none');
-        
-        if (edge.type === 'hierarchy') {
-          path.setAttribute('stroke', 'url(#edge-gradient)');
-          path.setAttribute('stroke-width', '3');
-          path.setAttribute('opacity', '0.85');
-          path.setAttribute('marker-end', 'url(#arrowhead-hierarchy)');
+        if (node.type === 'method') {
+          // Methods in center area
+          node.x = width / 2 + (Math.random() - 0.5) * width * 0.3;
+          node.y = height / 2 + (Math.random() - 0.5) * height * 0.3;
         } else {
-          path.setAttribute('stroke', '#f5f5f7');
-          path.setAttribute('stroke-width', '2');
-          path.setAttribute('opacity', '0.4');
-          path.setAttribute('stroke-dasharray', '5,5');
-          path.setAttribute('marker-end', 'url(#arrowhead-uses)');
+          // Problems around the edges
+          const angle = Math.random() * Math.PI * 2;
+          const distance = width * 0.35 + Math.random() * width * 0.15;
+          node.x = width / 2 + Math.cos(angle) * distance;
+          node.y = height / 2 + Math.sin(angle) * distance;
         }
-        
-        // Add glow effect for hierarchy edges
-        if (edge.type === 'hierarchy') {
-          path.style.filter = 'drop-shadow(0 0 3px rgba(102, 126, 234, 0.5))';
-        }
-        
-        container.appendChild(path);
+        node.vx = 0;
+        node.vy = 0;
       });
-    }
-
-    function drawNodes(container, nodes) {
+      
+      // Create edges group
+      const edgesGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      edgesGroup.setAttribute('class', 'edges');
+      container.appendChild(edgesGroup);
+      
+      // Create nodes group
+      const nodesGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      nodesGroup.setAttribute('class', 'nodes');
+      container.appendChild(nodesGroup);
+      
+      // Draw initial edges
+      links.forEach((link, i) => {
+        const sourceNode = nodes.find(n => n.id === link.source);
+        const targetNode = nodes.find(n => n.id === link.target);
+        
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('class', 'link');
+        line.setAttribute('stroke', 'rgba(255, 255, 255, 0.15)');
+        line.setAttribute('stroke-width', '2');
+        line.setAttribute('x1', sourceNode.x);
+        line.setAttribute('y1', sourceNode.y);
+        line.setAttribute('x2', targetNode.x);
+        line.setAttribute('y2', targetNode.y);
+        edgesGroup.appendChild(line);
+        
+        link.element = line;
+        link.sourceNode = sourceNode;
+        link.targetNode = targetNode;
+      });
+      
+      // Draw nodes
       nodes.forEach(node => {
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        group.setAttribute('class', 'node');
         group.setAttribute('transform', `translate(${node.x}, ${node.y})`);
         group.style.cursor = 'pointer';
         
-        // All nodes are rectangles for better readability
-        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        // Circle bubble
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('r', node.radius);
+        circle.setAttribute('fill', node.type === 'method' ? 'url(#grad-method)' : 'url(#grad-problem)');
+        circle.setAttribute('stroke', '#ffffff');
+        circle.setAttribute('stroke-width', '2');
+        circle.setAttribute('filter', 'url(#glow)');
+        group.appendChild(circle);
         
-        let rectWidth, rectHeight, fillColor;
-        
-        if (node.type === 'problem') {
-          rectWidth = 140;
-          rectHeight = 70;
-          fillColor = '#f5f5f7';
-        } else if (node.type === 'technique') {
-          rectWidth = 120;
-          rectHeight = 60;
-          fillColor = '#ffffff';
-        } else {
-          rectWidth = 110;
-          rectHeight = 55;
-          fillColor = '#86868b';
-        }
-        
-        rect.setAttribute('x', -rectWidth / 2);
-        rect.setAttribute('y', -rectHeight / 2);
-        rect.setAttribute('width', rectWidth);
-        rect.setAttribute('height', rectHeight);
-        rect.setAttribute('rx', '10');
-        rect.setAttribute('fill', fillColor);
-        rect.setAttribute('stroke', '#2c2c2e');
-        rect.setAttribute('stroke-width', '2');
-        group.appendChild(rect);
-        
-        // Label with better text wrapping
+        // Label
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('y', '0');
         text.setAttribute('dominant-baseline', 'middle');
-        text.setAttribute('fill', node.type === 'sub-technique' ? '#ffffff' : '#000000');
-        text.setAttribute('font-size', node.type === 'problem' ? '12' : '13');
-        text.setAttribute('font-weight', '500');
+        text.setAttribute('fill', '#ffffff');
+        text.setAttribute('font-size', node.type === 'method' ? '14' : '11');
+        text.setAttribute('font-weight', '600');
+        text.setAttribute('pointer-events', 'none');
         
-        // Wrap text if too long
-        const maxChars = node.type === 'problem' ? 18 : 15;
+        // Wrap text
+        const maxChars = node.type === 'method' ? 12 : 15;
         const words = node.label.split(' ');
         let lines = [];
         let currentLine = '';
@@ -2201,43 +2093,230 @@
         
         if (lines.length === 1) {
           text.textContent = lines[0];
-          group.appendChild(text);
         } else {
-          // Multiple lines
           lines.slice(0, 2).forEach((line, i) => {
             const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
             tspan.setAttribute('x', '0');
-            tspan.setAttribute('dy', i === 0 ? '-0.4em' : '1.2em');
-            tspan.textContent = line.length > maxChars ? line.substring(0, maxChars - 2) + '...' : line;
+            tspan.setAttribute('dy', i === 0 ? (lines.length > 1 ? '-0.6em' : '0') : '1.2em');
+            tspan.textContent = line;
             text.appendChild(tspan);
           });
-          group.appendChild(text);
         }
+        group.appendChild(text);
         
-        // Hover tooltip
-        const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-        title.textContent = node.type === 'problem' ? 
-          `${node.label}\nModel: ${node.modelTitle}\nWeek ${node.week}` : 
-          node.label;
-        group.appendChild(title);
+        // Interaction
+        let isDraggingNode = false;
+        let dragOffset = { x: 0, y: 0 };
         
-        // Click interaction
-        group.addEventListener('click', () => {
-          if (node.type === 'problem') {
-            // Open modal with problem details
-            const problem = PROBLEMS.find(p => p.storyTitle === node.label);
-            if (problem) {
-              openProblemModal(problem);
-            }
-          } else {
-            // Filter by this technique
-            selectNode(node.id);
-            document.querySelector('[data-tab="list-view"]').click();
+        group.addEventListener('mousedown', (e) => {
+          e.stopPropagation();
+          isDraggingNode = true;
+          const pt = svg.createSVGPoint();
+          pt.x = e.clientX;
+          pt.y = e.clientY;
+          const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+          dragOffset.x = svgP.x - node.x;
+          dragOffset.y = svgP.y - node.y;
+        });
+        
+        const svg = document.getElementById('graph-canvas');
+        svg.addEventListener('mousemove', (e) => {
+          if (isDraggingNode) {
+            const pt = svg.createSVGPoint();
+            pt.x = e.clientX;
+            pt.y = e.clientY;
+            const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+            node.x = svgP.x - dragOffset.x;
+            node.y = svgP.y - dragOffset.y;
+            
+            // Update node position
+            group.setAttribute('transform', `translate(${node.x}, ${node.y})`);
+            
+            // Update connected links
+            links.forEach(link => {
+              if (link.sourceNode === node || link.targetNode === node) {
+                link.element.setAttribute('x1', link.sourceNode.x);
+                link.element.setAttribute('y1', link.sourceNode.y);
+                link.element.setAttribute('x2', link.targetNode.x);
+                link.element.setAttribute('y2', link.targetNode.y);
+              }
+            });
           }
         });
         
-        container.appendChild(group);
+        svg.addEventListener('mouseup', () => {
+          isDraggingNode = false;
+        });
+        
+        group.addEventListener('click', (e) => {
+          if (!isDraggingNode) {
+            if (node.type === 'problem') {
+              openProblemModal(node.problem);
+            } else {
+              // Highlight connected problems
+              highlightMethodConnections(node, nodes, links, nodesGroup);
+            }
+          }
+        });
+        
+        // Hover effect
+        group.addEventListener('mouseenter', () => {
+          if (!isDraggingNode) {
+            circle.setAttribute('stroke-width', '4');
+            circle.style.filter = 'url(#glow) drop-shadow(0 0 10px rgba(255,255,255,0.8))';
+            
+            // Highlight connected edges
+            links.forEach(link => {
+              if (link.sourceNode === node || link.targetNode === node) {
+                link.element.setAttribute('stroke', 'rgba(255, 255, 255, 0.6)');
+                link.element.setAttribute('stroke-width', '3');
+              }
+            });
+          }
+        });
+        
+        group.addEventListener('mouseleave', () => {
+          circle.setAttribute('stroke-width', '2');
+          circle.style.filter = 'url(#glow)';
+          
+          // Reset edges
+          links.forEach(link => {
+            link.element.setAttribute('stroke', 'rgba(255, 255, 255, 0.15)');
+            link.element.setAttribute('stroke-width', '2');
+          });
+        });
+        
+        nodesGroup.appendChild(group);
+        node.element = group;
       });
+      
+      // Simple physics simulation
+      function simulate() {
+        const alpha = 0.3;
+        const damping = 0.8;
+        
+        // Apply forces
+        nodes.forEach(node => {
+          node.vx *= damping;
+          node.vy *= damping;
+        });
+        
+        // Repulsion between all nodes
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            const nodeA = nodes[i];
+            const nodeB = nodes[j];
+            const dx = nodeB.x - nodeA.x;
+            const dy = nodeB.y - nodeA.y;
+            const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+            const minDistance = nodeA.radius + nodeB.radius + 50;
+            
+            if (distance < minDistance) {
+              const force = (minDistance - distance) * 0.1;
+              const fx = (dx / distance) * force;
+              const fy = (dy / distance) * force;
+              
+              nodeA.vx -= fx;
+              nodeA.vy -= fy;
+              nodeB.vx += fx;
+              nodeB.vy += fy;
+            }
+          }
+        }
+        
+        // Attraction along links
+        links.forEach(link => {
+          const dx = link.targetNode.x - link.sourceNode.x;
+          const dy = link.targetNode.y - link.sourceNode.y;
+          const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+          const targetDistance = 150;
+          const force = (distance - targetDistance) * 0.1;
+          
+          const fx = (dx / distance) * force;
+          const fy = (dy / distance) * force;
+          
+          link.sourceNode.vx += fx;
+          link.sourceNode.vy += fy;
+          link.targetNode.vx -= fx;
+          link.targetNode.vy -= fy;
+        });
+        
+        // Center force (weak)
+        nodes.forEach(node => {
+          const dx = width / 2 - node.x;
+          const dy = height / 2 - node.y;
+          node.vx += dx * 0.001;
+          node.vy += dy * 0.001;
+        });
+        
+        // Update positions
+        nodes.forEach(node => {
+          node.x += node.vx;
+          node.y += node.vy;
+          
+          // Keep within bounds
+          node.x = Math.max(node.radius + 10, Math.min(width - node.radius - 10, node.x));
+          node.y = Math.max(node.radius + 10, Math.min(height - node.radius - 10, node.y));
+          
+          node.element.setAttribute('transform', `translate(${node.x}, ${node.y})`);
+        });
+        
+        // Update links
+        links.forEach(link => {
+          link.element.setAttribute('x1', link.sourceNode.x);
+          link.element.setAttribute('y1', link.sourceNode.y);
+          link.element.setAttribute('x2', link.targetNode.x);
+          link.element.setAttribute('y2', link.targetNode.y);
+        });
+      }
+      
+      // Run simulation for a bit
+      let iterations = 0;
+      const maxIterations = 300;
+      const interval = setInterval(() => {
+        simulate();
+        iterations++;
+        if (iterations >= maxIterations) {
+          clearInterval(interval);
+        }
+      }, 16);
+      
+      graphState.simulation = { nodes, links, simulate };
+    }
+
+    function highlightMethodConnections(methodNode, allNodes, allLinks, nodesGroup) {
+      // Reset all
+      allNodes.forEach(node => {
+        if (node.element) {
+          node.element.style.opacity = '0.3';
+        }
+      });
+      allLinks.forEach(link => {
+        link.element.setAttribute('stroke', 'rgba(255, 255, 255, 0.05)');
+      });
+      
+      // Highlight method
+      methodNode.element.style.opacity = '1';
+      
+      // Highlight connected problems
+      allLinks.forEach(link => {
+        if (link.targetNode === methodNode) {
+          link.sourceNode.element.style.opacity = '1';
+          link.element.setAttribute('stroke', 'rgba(255, 255, 255, 0.6)');
+        }
+      });
+      
+      // Reset after 3 seconds
+      setTimeout(() => {
+        allNodes.forEach(node => {
+          if (node.element) {
+            node.element.style.opacity = '1';
+          }
+        });
+        allLinks.forEach(link => {
+          link.element.setAttribute('stroke', 'rgba(255, 255, 255, 0.15)');
+        });
+      }, 3000);
     }
 
     function setupGraphControls(svg, mainGroup) {

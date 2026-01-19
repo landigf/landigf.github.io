@@ -546,12 +546,12 @@ function renderBrowseList() {
                 ` : '<span>Not attempted yet</span>'}
             </div>
             <div style="display: flex; gap: 10px;">
-                <button onclick="editExercise('${ex.name.replace(/'/g, "\\'")}')" 
+                <button onclick="editExercise(\`${ex.name}\`)" 
                         style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
                     ✏️ Edit
                 </button>
                 ${ex.cppFile ? `
-                    <button onclick="viewCppCode('${ex.name.replace(/'/g, "\\'")}', '${ex.cppFile}')" 
+                    <button onclick="viewCppCode(\`${ex.name}\`, \`${ex.cppFile}\`)" 
                             style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
                         💻 View C++ Solution
                     </button>
@@ -763,7 +763,7 @@ function loadAnalysisQuestion() {
 
 function loadAnalysisTypeOptions() {
     const container = document.getElementById('analysisTypeOptions');
-    const correctType = currentAnalysisExercise.problemType || "General Problem";
+    const correctType = currentAnalysisExercise.problemType || currentAnalysisExercise.methods || "General Problem";
     
     // Get 3 random wrong types
     let wrongTypes = problemTypes
@@ -777,7 +777,7 @@ function loadAnalysisTypeOptions() {
     container.innerHTML = allOptions.map((type, index) => {
         const label = String.fromCharCode(65 + index);
         return `
-            <div class="option" onclick="selectAnalysisType(${index}, '${type.replace(/'/g, "\\'")}')">
+            <div class="option" onclick="selectAnalysisType(${index}, \`${type}\`)"> 
                 <span class="option-label">${label}</span>
                 <span class="option-text">${type}</span>
             </div>
@@ -832,7 +832,7 @@ function checkAnalysisType() {
 
 function loadAnalysisMethodOptions() {
     const container = document.getElementById('analysisMethodOptions');
-    const correctMethods = currentAnalysisExercise.methods;
+    const correctMethods = currentAnalysisExercise.methods || currentAnalysisExercise.problemType || "Dynamic Programming";
     
     // Common methods
     const allMethods = [
@@ -854,7 +854,7 @@ function loadAnalysisMethodOptions() {
     container.innerHTML = allOptions.map((method, index) => {
         const label = String.fromCharCode(65 + index);
         return `
-            <div class="option" onclick="selectAnalysisMethod(${index}, '${method.replace(/'/g, "\\'")}')">
+            <div class="option" onclick="selectAnalysisMethod(${index}, \`${method}\`)">
                 <span class="option-label">${label}</span>
                 <span class="option-text">${method}</span>
             </div>
@@ -905,7 +905,7 @@ function checkAnalysisMethod() {
 
 function loadAnalysisComplexityOptions() {
     const container = document.getElementById('analysisComplexityOptions');
-    const correctComplexity = currentAnalysisExercise.complexity;
+    const correctComplexity = currentAnalysisExercise.complexity || "O(n)";
     
     const complexities = [
         "O(1)", "O(log n)", "O(n)", "O(n log n)", "O(n^2)", 
@@ -923,7 +923,7 @@ function loadAnalysisComplexityOptions() {
     container.innerHTML = allOptions.map((complexity, index) => {
         const label = String.fromCharCode(65 + index);
         return `
-            <div class="option" onclick="selectAnalysisComplexity(${index}, '${complexity.replace(/'/g, "\\'")}')">
+            <div class="option" onclick="selectAnalysisComplexity(${index}, \`${complexity}\`)">
                 <span class="option-label">${label}</span>
                 <span class="option-text">${complexity}</span>
             </div>

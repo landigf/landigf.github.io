@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algolab - Match Training</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .controls {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .controls button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.95em;
+            color: #495057;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 1.2em;
+            color: #667eea;
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 40px;
+            min-height: 500px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .column h2 {
+            text-align: center;
+            color: #333;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .card {
+            background: white;
+            border: 3px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .card.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .card.matched {
+            border-color: #28a745;
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(40, 167, 69, 0.05) 100%);
+            opacity: 0.7;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .card.incorrect {
+            border-color: #dc3545;
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1) 0%, rgba(220, 53, 69, 0.05) 100%);
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .card-content {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .card-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .badge-week {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-method {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .match-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5em;
+        }
+
+        .feedback {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 20px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            font-size: 1.1em;
+            font-weight: 600;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .feedback.show {
+            opacity: 1;
+        }
+
+        .feedback.correct {
+            border-left: 5px solid #28a745;
+            color: #28a745;
+        }
+
+        .feedback.incorrect {
+            border-left: 5px solid #dc3545;
+            color: #dc3545;
+        }
+
+        .completion-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .completion-screen.show {
+            display: flex;
+        }
+
+        .completion-content {
+            background: white;
+            padding: 60px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .completion-content h2 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .completion-stats {
+            font-size: 1.3em;
+            color: #333;
+            margin: 30px 0;
+            line-height: 2;
+        }
+
+        .completion-stats span {
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        @media (max-width: 900px) {
+            .game-area {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Algolab Match Training</h1>
+            <p>Match each problem with its correct solution approach</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn-primary" onclick="newRound()">🔄 New Round</button>
+            <button class="btn-success" onclick="checkMatch()" id="checkBtn" disabled>✓ Check Match</button>
+            <button class="btn-secondary" onclick="showAllProblems()">📚 Browse All</button>
+            <div class="stats">
+                <div class="stat-item">
+                    <span>Correct:</span>
+                    <span class="stat-value" id="correctCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Incorrect:</span>
+                    <span class="stat-value" id="incorrectCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Streak:</span>
+                    <span class="stat-value" id="streakCount">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="column">
+                <h2>📋 Problems</h2>
+                <div id="problemsColumn"></div>
+            </div>
+            <div class="column">
+                <h2>💡 Solutions</h2>
+                <div id="solutionsColumn"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+    
+    <div class="completion-screen" id="completionScreen">
+        <div class="completion-content">
+            <h2>🎉 Round Complete!</h2>
+            <div class="completion-stats" id="completionStats"></div>
+            <button class="btn-primary" onclick="newRound()" style="font-size: 1.2em; padding: 15px 40px; margin-top: 20px;">
+                Start New Round
+            </button>
+        </div>
+    </div>
+
+    <script src="algolab-quiz-data.js"></script>
+    <script>
+        // Game state
+        let currentProblems = [];
+        let currentSolutions = [];
+        let selectedProblem = null;
+        let selectedSolution = null;
+        let matchedPairs = new Set();
+        let stats = {
+            correct: 0,
+            incorrect: 0,
+            streak: 0,
+            roundCorrect: 0,
+            roundTotal: 0
+        };
+
+        // Load stats from localStorage
+        function loadStats() {
+            const saved = localStorage.getItem('match_training_stats');
+            if (saved) {
+                const savedStats = JSON.parse(saved);
+                stats.correct = savedStats.correct || 0;
+                stats.incorrect = savedStats.incorrect || 0;
+                stats.streak = savedStats.streak || 0;
+                updateStatsDisplay();
+            }
+        }
+
+        // Save stats to localStorage
+        function saveStats() {
+            localStorage.setItem('match_training_stats', JSON.stringify({
+                correct: stats.correct,
+                incorrect: stats.incorrect,
+                streak: stats.streak
+            }));
+        }
+
+        // Update stats display
+        function updateStatsDisplay() {
+            document.getElementById('correctCount').textContent = stats.correct;
+            document.getElementById('incorrectCount').textContent = stats.incorrect;
+            document.getElementById('streakCount').textContent = stats.streak;
+        }
+
+        // Start a new round
+        function newRound() {
+            // Reset round state
+            matchedPairs.clear();
+            selectedProblem = null;
+            selectedSolution = null;
+            stats.roundCorrect = 0;
+            stats.roundTotal = 0;
+            
+            // Hide completion screen
+            document.getElementById('completionScreen').classList.remove('show');
+            
+            // Select 5 random exercises
+            const shuffled = [...exercises].sort(() => Math.random() - 0.5);
+            currentProblems = shuffled.slice(0, 5);
+            
+            // Create solutions array and shuffle it
+            currentSolutions = currentProblems.map(p => ({
+                name: p.name,
+                solution: p.solution,
+                methods: p.methods
+            })).sort(() => Math.random() - 0.5);
+            
+            stats.roundTotal = currentProblems.length;
+            
+            renderCards();
+        }
+
+        // Render problem and solution cards
+        function renderCards() {
+            const problemsCol = document.getElementById('problemsColumn');
+            const solutionsCol = document.getElementById('solutionsColumn');
+            
+            // Render problems
+            problemsCol.innerHTML = currentProblems.map((problem, index) => {
+                const isMatched = matchedPairs.has(problem.name);
+                return `
+                    <div class="card ${isMatched ? 'matched' : ''}" data-problem="${index}" onclick="selectProblem(${index})">
+                        ${isMatched ? '<span class="match-indicator">✓</span>' : ''}
+                        <div class="card-badge badge-week">${problem.week || 'Mixed'}</div>
+                        <div class="card-title">${problem.name}</div>
+                        <div class="card-content">${problem.description}</div>
+                        ${problem.methods ? `<div class="card-badge badge-method" style="margin-top: 10px;">${problem.methods}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+            
+            // Render solutions
+            solutionsCol.innerHTML = currentSolutions.map((solution, index) => {
+                const isMatched = matchedPairs.has(solution.name);
+                return `
+                    <div class="card ${isMatched ? 'matched' : ''}" data-solution="${index}" onclick="selectSolution(${index})">
+                        ${isMatched ? '<span class="match-indicator">✓</span>' : ''}
+                        <div class="card-title">Solution Approach</div>
+                        <div class="card-content">${solution.solution}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Select a problem
+        function selectProblem(index) {
+            if (matchedPairs.has(currentProblems[index].name)) return;
+            
+            // Clear previous selection
+            document.querySelectorAll('[data-problem]').forEach(el => el.classList.remove('selected', 'incorrect'));
+            
+            selectedProblem = index;
+            document.querySelector(`[data-problem="${index}"]`).classList.add('selected');
+            
+            updateCheckButton();
+        }
+
+        // Select a solution
+        function selectSolution(index) {
+            if (matchedPairs.has(currentSolutions[index].name)) return;
+            
+            // Clear previous selection
+            document.querySelectorAll('[data-solution]').forEach(el => el.classList.remove('selected', 'incorrect'));
+            
+            selectedSolution = index;
+            document.querySelector(`[data-solution="${index}"]`).classList.add('selected');
+            
+            updateCheckButton();
+        }
+
+        // Update check button state
+        function updateCheckButton() {
+            const checkBtn = document.getElementById('checkBtn');
+            checkBtn.disabled = selectedProblem === null || selectedSolution === null;
+        }
+
+        // Check if the match is correct
+        function checkMatch() {
+            if (selectedProblem === null || selectedSolution === null) return;
+            
+            const problem = currentProblems[selectedProblem];
+            const solution = currentSolutions[selectedSolution];
+            
+            const isCorrect = problem.name === solution.name;
+            
+            if (isCorrect) {
+                // Correct match!
+                matchedPairs.add(problem.name);
+                stats.correct++;
+                stats.streak++;
+                stats.roundCorrect++;
+                
+                showFeedback('✓ Perfect match!', true);
+                
+                // Check if round is complete
+                if (matchedPairs.size === currentProblems.length) {
+                    setTimeout(showCompletionScreen, 1000);
+                }
+            } else {
+                // Incorrect match
+                stats.incorrect++;
+                stats.streak = 0;
+                
+                showFeedback('✗ Not quite! Try again.', false);
+                
+                // Add incorrect class
+                document.querySelector(`[data-problem="${selectedProblem}"]`).classList.add('incorrect');
+                document.querySelector(`[data-solution="${selectedSolution}"]`).classList.add('incorrect');
+                
+                // Remove incorrect class after animation
+                setTimeout(() => {
+                    document.querySelectorAll('.incorrect').forEach(el => el.classList.remove('incorrect'));
+                }, 500);
+            }
+            
+            // Reset selections
+            selectedProblem = null;
+            selectedSolution = null;
+            
+            // Update UI
+            saveStats();
+            updateStatsDisplay();
+            renderCards();
+            updateCheckButton();
+        }
+
+        // Show feedback message
+        function showFeedback(message, isCorrect) {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = message;
+            feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'} show`;
+            
+            setTimeout(() => {
+                feedback.classList.remove('show');
+            }, 2000);
+        }
+
+        // Show completion screen
+        function showCompletionScreen() {
+            const accuracy = Math.round((stats.roundCorrect / stats.roundTotal) * 100);
+            document.getElementById('completionStats').innerHTML = `
+                You matched all ${stats.roundTotal} pairs!<br>
+                <span>Accuracy: ${accuracy}%</span><br>
+                Current streak: <span>${stats.streak}</span>
+            `;
+            document.getElementById('completionScreen').classList.add('show');
+        }
+
+        // Browse all problems (redirect to main quiz)
+        function showAllProblems() {
+            window.location.href = 'algolab-quiz.html';
+        }
+
+        // Initialize
+        loadStats();
+        newRound();
+    </script>
+</body>
+</html>
