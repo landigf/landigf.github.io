@@ -298,6 +298,164 @@
       font-size: 1.2rem;
     }
 
+    /* Methodology Visual View */
+    .methodology-section {
+      margin-bottom: 40px;
+      padding: 30px;
+      background: #111;
+      border: 2px solid #333;
+    }
+
+    .methodology-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .methodology-header h2 {
+      font-size: 1.8rem;
+      margin: 0;
+    }
+
+    .view-toggle {
+      display: flex;
+      gap: 10px;
+    }
+
+    .view-toggle button {
+      background: transparent;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .view-toggle button.active {
+      background: #fff;
+      color: #000;
+      border-color: #fff;
+    }
+
+    .view-toggle button:hover {
+      border-color: #fff;
+    }
+
+    .methodology-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .method-card {
+      background: #0a0a0a;
+      border: 1px solid #333;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .method-card:hover {
+      border-color: #fff;
+      transform: translateY(-3px);
+    }
+
+    .method-card.active {
+      border-color: #fff;
+      background: #1a1a1a;
+    }
+
+    .method-name {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .method-count {
+      color: #888;
+      font-size: 0.85rem;
+    }
+
+    .method-bar {
+      height: 3px;
+      background: #333;
+      margin-top: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .method-bar-fill {
+      height: 100%;
+      background: #fff;
+      transition: width 0.3s;
+    }
+
+    .methodology-graph {
+      display: none;
+      min-height: 400px;
+      position: relative;
+      overflow-x: auto;
+      padding: 20px 0;
+    }
+
+    .methodology-graph.active {
+      display: block;
+    }
+
+    .graph-container {
+      display: flex;
+      gap: 40px;
+      min-width: max-content;
+    }
+
+    .graph-column {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .graph-column-title {
+      font-size: 0.9rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .graph-node {
+      background: #0a0a0a;
+      border: 1px solid #333;
+      padding: 12px 16px;
+      min-width: 180px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .graph-node:hover,
+    .graph-node.highlighted {
+      border-color: #fff;
+      background: #1a1a1a;
+    }
+
+    .graph-node-label {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .graph-node-count {
+      font-size: 0.75rem;
+      color: #666;
+      margin-top: 4px;
+    }
+
     @media (max-width: 768px) {
       .container {
         padding: 30px 15px;
@@ -317,6 +475,15 @@
 
       .exercise-item {
         padding: 20px;
+      }
+
+      .methodology-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .graph-container {
+        flex-direction: column;
+        gap: 20px;
       }
     }
   </style>
@@ -339,6 +506,24 @@
       <select id="weekFilter" onchange="filterExercises()">
         <option value="">All Weeks</option>
       </select>
+    </div>
+
+    <div class="methodology-section">
+      <div class="methodology-header">
+        <h2>Methodology Map</h2>
+        <div class="view-toggle">
+          <button id="gridViewBtn" class="active" onclick="switchView('grid')">Grid</button>
+          <button id="graphViewBtn" onclick="switchView('graph')">Graph</button>
+        </div>
+      </div>
+
+      <div id="methodologyGrid" class="methodology-grid">
+        <!-- Method cards will be loaded here -->
+      </div>
+
+      <div id="methodologyGraph" class="methodology-graph">
+        <!-- Graph visualization will be loaded here -->
+      </div>
     </div>
 
     <div class="exercise-list" id="exerciseList">
@@ -491,6 +676,144 @@
       renderExercises(filtered);
     }
 
+    // Methodology visualization
+    let selectedMethod = null;
+    let currentView = 'grid';
+
+    function switchView(view) {
+      currentView = view;
+      document.getElementById('gridViewBtn').classList.toggle('active', view === 'grid');
+      document.getElementById('graphViewBtn').classList.toggle('active', view === 'graph');
+      document.getElementById('methodologyGrid').classList.toggle('active', view === 'grid');
+      document.getElementById('methodologyGraph').classList.toggle('active', view === 'graph');
+    }
+
+    function buildMethodologyData() {
+      const methodMap = new Map();
+      
+      EXERCISES.forEach((ex, index) => {
+        if (ex.methods) {
+          const methods = ex.methods.split(',').map(m => m.trim());
+          methods.forEach(method => {
+            if (!methodMap.has(method)) {
+              methodMap.set(method, []);
+            }
+            methodMap.get(method).push({ exercise: ex, index });
+          });
+        }
+      });
+
+      return methodMap;
+    }
+
+    function renderMethodologyGrid(methodMap) {
+      const maxCount = Math.max(...Array.from(methodMap.values()).map(arr => arr.length));
+      
+      const html = Array.from(methodMap.entries())
+        .sort((a, b) => b[1].length - a[1].length)
+        .map(([method, exercises]) => {
+          const percentage = (exercises.length / maxCount) * 100;
+          return `
+            <div class="method-card" onclick="filterByMethod('${method.replace(/'/g, "\\'")}')">
+              <div class="method-name">${method}</div>
+              <div class="method-count">${exercises.length} exercise${exercises.length !== 1 ? 's' : ''}</div>
+              <div class="method-bar">
+                <div class="method-bar-fill" style="width: ${percentage}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+      document.getElementById('methodologyGrid').innerHTML = html;
+    }
+
+    function renderMethodologyGraph(methodMap) {
+      const sortedMethods = Array.from(methodMap.entries())
+        .sort((a, b) => b[1].length - a[1].length)
+        .slice(0, 15); // Show top 15 methods
+
+      // Group exercises by week
+      const weekMap = new Map();
+      EXERCISES.forEach((ex, index) => {
+        const week = ex.week || 'Other';
+        if (!weekMap.has(week)) {
+          weekMap.set(week, []);
+        }
+        weekMap.get(week).push({ exercise: ex, index });
+      });
+
+      const methodsColumn = sortedMethods.map(([method, exercises]) => `
+        <div class="graph-node" data-method="${method}">
+          <div class="graph-node-label">${method}</div>
+          <div class="graph-node-count">${exercises.length} exercises</div>
+        </div>
+      `).join('');
+
+      const weeksColumn = Array.from(weekMap.entries())
+        .sort((a, b) => {
+          if (a[0] === 'Other') return 1;
+          if (b[0] === 'Other') return -1;
+          return a[0].localeCompare(b[0]);
+        })
+        .map(([week, exercises]) => `
+          <div class="graph-node" data-week="${week}">
+            <div class="graph-node-label">Week ${week}</div>
+            <div class="graph-node-count">${exercises.length} exercises</div>
+          </div>
+        `).join('');
+
+      const html = `
+        <div class="graph-container">
+          <div class="graph-column">
+            <div class="graph-column-title">Top Methods</div>
+            ${methodsColumn}
+          </div>
+          <div class="graph-column">
+            <div class="graph-column-title">Weeks</div>
+            ${weeksColumn}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('methodologyGraph').innerHTML = html;
+
+      // Add hover interactions
+      document.querySelectorAll('.graph-node').forEach(node => {
+        node.addEventListener('click', function() {
+          const method = this.dataset.method;
+          const week = this.dataset.week;
+          
+          if (method) {
+            filterByMethod(method);
+          } else if (week) {
+            document.getElementById('weekFilter').value = week === 'Other' ? '' : week;
+            filterExercises();
+          }
+        });
+      });
+    }
+
+    function filterByMethod(method) {
+      selectedMethod = selectedMethod === method ? null : method;
+      
+      // Highlight selected method card
+      document.querySelectorAll('.method-card').forEach(card => {
+        card.classList.remove('active');
+      });
+      
+      if (selectedMethod) {
+        const filtered = EXERCISES.filter(ex => 
+          ex.methods && ex.methods.includes(selectedMethod)
+        );
+        renderExercises(filtered);
+        
+        // Scroll to exercises
+        document.getElementById('exerciseList').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        renderExercises();
+      }
+    }
+
     // Initialize
     if (EXERCISES && EXERCISES.length > 0) {
       // Populate week filter
@@ -502,6 +825,11 @@
         option.textContent = `Week ${week}`;
         weekSelect.appendChild(option);
       });
+
+      // Build and render methodology visualizations
+      const methodMap = buildMethodologyData();
+      renderMethodologyGrid(methodMap);
+      renderMethodologyGraph(methodMap);
 
       renderExercises();
     } else {
