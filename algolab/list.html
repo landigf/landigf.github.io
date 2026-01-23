@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algolab - Full List</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+      background: #000;
+      color: #fff;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    header {
+      border-bottom: 2px solid #fff;
+      padding-bottom: 30px;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      color: #aaa;
+      font-size: 1rem;
+    }
+
+    .nav {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .nav a, .nav button {
+      color: #fff;
+      background: transparent;
+      text-decoration: none;
+      padding: 8px 16px;
+      border: 1px solid #fff;
+      transition: all 0.2s;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+
+    .nav a:hover, .nav button:hover {
+      background: #fff;
+      color: #000;
+    }
+
+    .search-filter {
+      margin-bottom: 30px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .search-filter input,
+    .search-filter select {
+      background: #111;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 10px 15px;
+      font-family: inherit;
+      font-size: 1rem;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .search-filter input:focus,
+    .search-filter select:focus {
+      outline: none;
+      border-color: #fff;
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .exercise-item {
+      background: #111;
+      border: 2px solid #333;
+      padding: 30px;
+      transition: border-color 0.3s;
+    }
+
+    .exercise-item:hover {
+      border-color: #666;
+    }
+
+    .exercise-item.expanded {
+      border-color: #fff;
+    }
+
+    .exercise-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 20px;
+      cursor: pointer;
+    }
+
+    .exercise-info {
+      flex: 1;
+    }
+
+    .exercise-name {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .exercise-aka {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .exercise-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: #000;
+      border: 1px solid #444;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+
+    .exercise-number {
+      color: #444;
+      font-size: 2rem;
+      font-weight: 700;
+      min-width: 60px;
+      text-align: right;
+    }
+
+    .exercise-details {
+      display: none;
+      margin-top: 25px;
+      padding-top: 25px;
+      border-top: 1px solid #333;
+    }
+
+    .exercise-item.expanded .exercise-details {
+      display: block;
+    }
+
+    .detail-section {
+      margin-bottom: 25px;
+    }
+
+    .detail-title {
+      color: #888;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .detail-content {
+      font-size: 1rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .solution-short {
+      background: #0a0a0a;
+      border-left: 3px solid #fff;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .solution-code {
+      background: #0a0a0a;
+      border: 1px solid #222;
+      padding: 15px;
+      overflow-x: auto;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .solution-code pre {
+      margin: 0;
+      white-space: pre;
+      color: #ddd;
+    }
+
+    .comment-section {
+      margin-top: 25px;
+      padding-top: 25px;
+      border-top: 1px solid #333;
+    }
+
+    .comments-list {
+      margin-bottom: 15px;
+    }
+
+    .comment {
+      background: #0a0a0a;
+      border-left: 2px solid #444;
+      padding: 12px 15px;
+      margin-bottom: 10px;
+    }
+
+    .comment-meta {
+      color: #666;
+      font-size: 0.8rem;
+      margin-bottom: 5px;
+    }
+
+    .comment-text {
+      color: #ddd;
+      font-size: 0.95rem;
+    }
+
+    .comment-form {
+      display: flex;
+      gap: 10px;
+    }
+
+    .comment-form textarea {
+      flex: 1;
+      background: #0a0a0a;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 10px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .comment-form textarea:focus {
+      outline: none;
+      border-color: #fff;
+    }
+
+    .comment-form button {
+      background: #fff;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .comment-form button:hover {
+      background: #ddd;
+    }
+
+    .external-link {
+      display: inline-block;
+      margin-top: 10px;
+      color: #888;
+      text-decoration: none;
+      font-size: 0.9rem;
+      border-bottom: 1px solid #444;
+      transition: all 0.2s;
+    }
+
+    .external-link:hover {
+      color: #fff;
+      border-color: #fff;
+    }
+
+    .no-results {
+      text-align: center;
+      color: #666;
+      padding: 60px 20px;
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 15px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .exercise-top {
+        flex-direction: column-reverse;
+      }
+
+      .exercise-number {
+        text-align: left;
+      }
+
+      .exercise-item {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Algolab - Full List</h1>
+      <p class="subtitle">Browse and annotate all exercises</p>
+      <div class="nav">
+        <a href="index.html">← Back</a>
+        <a href="practice.html">Practice Mode</a>
+        <button onclick="expandAll()">Expand All</button>
+        <button onclick="collapseAll()">Collapse All</button>
+      </div>
+    </header>
+
+    <div class="search-filter">
+      <input type="text" id="searchInput" placeholder="Search exercises..." onkeyup="filterExercises()">
+      <select id="weekFilter" onchange="filterExercises()">
+        <option value="">All Weeks</option>
+      </select>
+    </div>
+
+    <div class="exercise-list" id="exerciseList">
+      <!-- Exercises will be loaded here -->
+    </div>
+  </div>
+
+  <script src="exercises-data.js"></script>
+  <script>
+    // Load comments from localStorage
+    function getComments(exerciseName) {
+      const comments = localStorage.getItem(`comments_${exerciseName}`);
+      return comments ? JSON.parse(comments) : [];
+    }
+
+    function saveComment(exerciseName, comment) {
+      const comments = getComments(exerciseName);
+      comments.push({
+        text: comment,
+        date: new Date().toISOString()
+      });
+      localStorage.setItem(`comments_${exerciseName}`, JSON.stringify(comments));
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatDate(isoString) {
+      const date = new Date(isoString);
+      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }
+
+    function renderComments(exerciseName) {
+      const comments = getComments(exerciseName);
+      if (comments.length === 0) {
+        return '<div class="comment-meta">No comments yet</div>';
+      }
+      return comments.map(c => `
+        <div class="comment">
+          <div class="comment-meta">${formatDate(c.date)}</div>
+          <div class="comment-text">${escapeHtml(c.text)}</div>
+        </div>
+      `).join('');
+    }
+
+    function addComment(exerciseName, index) {
+      const textarea = document.getElementById(`comment_${index}`);
+      const comment = textarea.value.trim();
+      
+      if (comment) {
+        saveComment(exerciseName, comment);
+        textarea.value = '';
+        
+        // Re-render the comments section
+        const commentsDiv = document.getElementById(`comments_${index}`);
+        commentsDiv.innerHTML = renderComments(exerciseName);
+      }
+    }
+
+    function toggleExercise(index) {
+      const item = document.getElementById(`exercise_${index}`);
+      item.classList.toggle('expanded');
+    }
+
+    function expandAll() {
+      document.querySelectorAll('.exercise-item').forEach(item => {
+        item.classList.add('expanded');
+      });
+    }
+
+    function collapseAll() {
+      document.querySelectorAll('.exercise-item').forEach(item => {
+        item.classList.remove('expanded');
+      });
+    }
+
+    function renderExercises(exercises = EXERCISES) {
+      const html = exercises.map((ex, index) => `
+        <div class="exercise-item" id="exercise_${index}">
+          <div class="exercise-top" onclick="toggleExercise(${index})">
+            <div class="exercise-info">
+              <div class="exercise-name">${ex.name || 'Untitled Exercise'}</div>
+              ${ex.aka ? `<div class="exercise-aka">${ex.aka}</div>` : ''}
+              <div class="exercise-tags">
+                ${ex.week ? `<span class="tag">Week ${ex.week}</span>` : ''}
+                ${ex.methods ? ex.methods.split(',').map(m => `<span class="tag">${m.trim()}</span>`).join('') : ''}
+              </div>
+            </div>
+            <div class="exercise-number">#${index + 1}</div>
+          </div>
+
+          <div class="exercise-details">
+            ${ex.problemModel ? `
+            <div class="detail-section">
+              <div class="detail-title">Problem</div>
+              <div class="detail-content">${ex.problemModel}</div>
+            </div>
+            ` : ''}
+
+            ${ex.solutionShort || ex.solution ? `
+            <div class="detail-section">
+              <div class="detail-title">Solution</div>
+              ${ex.solutionShort ? `<div class="solution-short">${ex.solutionShort}</div>` : ''}
+              ${ex.solution ? `
+              <div class="solution-code">
+                <pre>${escapeHtml(ex.solution)}</pre>
+              </div>
+              ` : ''}
+            </div>
+            ` : ''}
+
+            ${ex.link ? `<a href="${ex.link}" target="_blank" class="external-link">View on Expert →</a>` : ''}
+
+            <div class="comment-section">
+              <div class="detail-title">Comments & Notes</div>
+              <div class="comments-list" id="comments_${index}">
+                ${renderComments(ex.name)}
+              </div>
+              <div class="comment-form">
+                <textarea id="comment_${index}" placeholder="Add a comment or note..."></textarea>
+                <button onclick="addComment('${ex.name.replace(/'/g, "\\'")}', ${index})">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('exerciseList').innerHTML = html || '<div class="no-results">No exercises found</div>';
+    }
+
+    function filterExercises() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const weekFilter = document.getElementById('weekFilter').value;
+
+      const filtered = EXERCISES.filter(ex => {
+        const matchesSearch = !searchTerm || 
+          (ex.name && ex.name.toLowerCase().includes(searchTerm)) ||
+          (ex.aka && ex.aka.toLowerCase().includes(searchTerm)) ||
+          (ex.methods && ex.methods.toLowerCase().includes(searchTerm)) ||
+          (ex.problemModel && ex.problemModel.toLowerCase().includes(searchTerm));
+
+        const matchesWeek = !weekFilter || ex.week === weekFilter;
+
+        return matchesSearch && matchesWeek;
+      });
+
+      renderExercises(filtered);
+    }
+
+    // Initialize
+    if (EXERCISES && EXERCISES.length > 0) {
+      // Populate week filter
+      const weeks = [...new Set(EXERCISES.map(ex => ex.week).filter(w => w))].sort();
+      const weekSelect = document.getElementById('weekFilter');
+      weeks.forEach(week => {
+        const option = document.createElement('option');
+        option.value = week;
+        option.textContent = `Week ${week}`;
+        weekSelect.appendChild(option);
+      });
+
+      renderExercises();
+    } else {
+      document.getElementById('exerciseList').innerHTML = '<div class="no-results">No exercises found</div>';
+    }
+  </script>
+</body>
+</html>

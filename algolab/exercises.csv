@@ -1,0 +1,4166 @@
+﻿Exercise Name,AKA,Week,Methods Used,Completion Status,Problem Model,Solution short,Solution,BestTime (minutes),Tips to remember,Speciality To Recognize It,Problem History,Exercise Link
+The Sultan Trail,MAX # of overlapping intervals,Week 01,Sweep Line,Completed,"We have a vector of intervals [start,end] and want to find the max number of overlapping intervals (in a point).","We add +1 at each start and remove -1 at each end, we take the maximum.
+
+Pay attention to counting the starting before closing.","#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+void solve(){
+int n; cin >> n;
+vector<pair<int,int>> sl;
+for(int i = 0; i < n; ++i){
+int start, end; cin >> start>>end;
+sl.push_back({start, 1});
+sl.push_back({end, -1});
+}
+sort(sl.begin(), sl.end(), [](const pair<int,int>& a, const pair<int,int>& b) {
+if (a.first == b.first) return a.second > b.second; // +1 before -1
+return a.first < b.first;
+});
+int maks = 0;
+int count = 0;
+for(auto &e: sl){
+count += e.second;
+maks = max(maks, count);
+}
+cout << maks;
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+}",,,,Default,https://expert.ethz.ch/solve/cZJ5MF75rZ5N6RngJ
+Even Matrix,Counting even-sum submatrices via prefix-parity aggregation,Week 01,"Combinatorics, Prefix sum",Learn&ShutUp,"Given an n x n binary matrix, count how many submatrices (i1..i2, j1..j2) have an even sum of elements. Do this for up to t ≤ 15 test cases, with n ≤ 200.","
+1. Build 2D prefix sum matrix m so any rectangle sum can be computed in O(1):
+sum(y1..y2, x1..x2) = m[y2][x2] - m[y1-1][x2] - m[y2][x1-1] + m[y1-1][x1-1].
+2. Fix a pair of rows (y1, y2), and consider the 1D array over columns:
+prefix[x] = sum(y1..y2, 1..x) (your sum(y1,y2,1,x2,m)).
+3. Any submatrix spanning rows y1..y2 and columns l..r has sum:
+prefix[r] - prefix[l-1].
+
+This is even iff prefix[r] and prefix[l-1] have the same parity.
+4. So for each row-pair, count how many prefix parities are even/odd:
+    ◦ You count parity for x=1..n into nEven, nOdd.
+    ◦ There is also the “empty prefix” at x=0 which is even, so total even-prefixes is nEven + 1.
+    ◦ Number of even-sum subarrays = C(nEven+1, 2) + C(nOdd, 2)
+
+which expands to exactly what you add:
+C(nEven,2) + nEven + C(nOdd,2).
+5. Sum that over all O(n^2) row pairs.
+","#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int sum(int y1, int y2, int x1, int x2, const vector<vector<int>>& m){
+return m[y2][x2] - m[y1-1][x2] - m[y2][x1-1] + m[y1-1][x1-1];
+}
+
+void solve(){
+int n; cin >> n;
+vector<vector<int>> m(n+1,vector<int> (n+1,0));
+for(int i = 1; i <= n; ++i){
+for(int j = 1; j <= n; ++j){
+int num; cin >> num;
+m[i][j] = m[i-1][j] + m[i][j-1] - m[i-1][j-1] + num;
+}
+}
+long long res = 0;
+for(int y1 = 1; y1 <= n; ++y1){
+for(int y2 = y1; y2 <= n; ++y2){
+long long nEven = 0, nOdd = 0;
+for(int x2 = 1; x2 <= n; ++x2){
+if(sum(y1,y2,1,x2, m)%2) ++nOdd;
+else ++nEven;
+}
+res += (nEven*(nEven-1))/2 + nEven + nOdd*(nOdd-1)/2;
+}
+}
+cout << res;
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+}",,,,Default,https://expert.ethz.ch/solve/fWbSHmehcgKXovbpK
+Even Pairs,# of subarrays with even sum,Week 01,"Combinatorics, Prefix sum",Completed,"We have a vector of integers, we want to count the number of subarrays with even sum.
+
+So xi+…+xj = Even Integer.","Brute force: computer the sum of each subarray → O(n^2)
+
+Prefix sum: precompute the cumulative sum → S_i = x0+..+xi;
+Notice that:
+- Sj - S_i-1 = xi+..+xj
+When it’s even ?
+1. both Sj, S_i-1 are even
+2. both are odd
+
+so count all the combination of pairs of indexes were Si,Sj are both even or odd.
+
+Once we find all indexes pairs, and odd, then we what to know the unique pairs → binomial coefficient: (N 2) = n*(n-1)/2.
+
+sum the pairs of even and odd, starting with #even = 1 because it’s the empty interval → needed to count as subarray also single even number.","#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+void solve(){
+int n; cin >> n;
+vector<int> v(n);
+for(int i = 0; i < n; ++i){
+cin >> v[i];
+if(i != 0) v[i] += v[i-1];
+}
+int nEven = 1, nOdd = 0;
+for(int i = 0; i < n; ++i){
+if(v[i]%2) ++nOdd;
+else ++nEven;
+}
+cout << nEven*(nEven-1)/2 + nOdd*(nOdd-1)/2;
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+}",,,,Default,https://expert.ethz.ch/solve/icuMesQwsrB762q6Q
+Dominoes,Dominoes,Week 01,Greedy,Completed,"We have a vector of positive integers representing the height of dominoes, AT EACH INDEX WE HAVA A PIECE, then we need to see how far dominoes will continue falling starting from left.","think of each dominoes as a gas station. We start with fuel equal to the height of the first, then for each step we decrement the fuel. At each index if the fuel is ≤ 0 then we need to stop. Otherwise, we get the fuel as the max(current, gasStation).","#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+void solve(){
+int n; cin >> n;
+vector<int> v(n);
+for(int i = 0; i < n; ++i){
+cin >> v[i];
+}
+int hrem = v[0];
+for(int i = 1; i < n; ++i){
+--hrem;
+if(hrem <= 0) {
+cout << i;
+return;
+} else {
+hrem = max(v[i],hrem);
+}
+}
+cout << n;
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+}",,,,Default,https://expert.ethz.ch/solve/BHCoFa7QqgnvfWJQN
+Search Snippets,Shortest interval covering one occurrence from each of k sorted lists (minimum search snippet),Week 02,"Greedy, min-heap",Completed,"Given a query of n distinct words, you receive for each word a sorted list of positions where it occurs in a document. All positions are distinct across all lists. You must output the minimum snippet length (b − a + 1) of a contiguous interval [a, b] that contains at least one occurrence of every word. 
+","Maintain one “current” chosen position per word and keep the current window spanning them.
+1. Initialize by taking the first position from each word’s list (treat each list as a queue/iterator).
+2. Put these n current positions into a min-heap keyed by position; also track current_max across the n chosen positions.
+3. The current snippet is minpos,currentmaxmin_pos, current_maxminpos,currentmax; update the best length.
+4. To potentially shrink/improve, advance the word that currently has the minimum position: pop heap min (pos, word_id), fetch the next position from that word’s list, push it, and update current_max if needed.
+5. Stop when the popped word has no next position (you can’t keep all n words represented anymore).
+
+This is the standard “smallest range covering k lists” greedy: only moving the current minimum can reduce the window. ","#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+using namespace std;
+
+void solve(){
+int n; cin >> n;
+vector<int> wcount(n);
+for(int i = 0; i < n; ++i){
+cin >> wcount[i];
+}
+vector<queue<int>> wpos(n);
+for(int i = 0; i < n; ++i){
+for(int j = 0; j < wcount[i]; ++j){
+int pi; cin >> pi;
+wpos[i].push(pi);
+}
+}
+priority_queue<pair<int,int>> pq;
+int curr_max = 0;
+for(int i = 0; i < n; ++i){
+int curr_pos = wpos[i].front(); wpos[i].pop();
+pq.push({-curr_pos, i});
+curr_max = max(curr_max, curr_pos);
+}
+
+int curr_min = -pq.top().first;
+int res = curr_max - curr_min + 1;
+while((int)pq.size() == n){
+int curr_word = pq.top().second; pq.pop();
+if(wpos[curr_word].empty()) break;
+int curr_pos = wpos[curr_word].front(); wpos[curr_word].pop();
+pq.push({-curr_pos, curr_word});
+curr_max = max(curr_max, curr_pos);
+int curr_min = -pq.top().first;
+res = min(res, curr_max - curr_min + 1);
+}
+
+cout << res;
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+if(cin >> t) cout << ""eoror\n"";
+}",,,,Default,https://expert.ethz.ch/solve/Rrd9wMDGxHn5mvBkr
+Severus Snape,min number of potions,Week 02,"0/1 Knapsack, Dynamic Programming, Greedy, Prefix sum",Completed,"You need to pick a minimum-size subset of potions to reach at least: Power P, Happiness H, Wit W. Start from 0,0,0.
+• Type A potion i gives +pi power and +hi happiness, but decreases wit by exactly a.
+• Type B potion j gives +wj wit, but decreases power by exactly b, happiness unchanged.
+
+Negative power/wit during the process is allowed; only final thresholds matter. Output the minimum number of potions, or -1.","Key observation: once you fix how many A potions you take (say count_A), the wit requirement becomes a fixed target for B, and the power requirement becomes a fixed “remaining power” after paying B’s penalty.
+1. Preprocess type B (greedy works):
+• Sort wj descending.
+• Build prefix sums prefB[t] = sum of top t wj.
+
+Then for any required wit target W_needed, the minimum number of B potions is the smallest t with prefB[t] ≥ W_needed (found by lower_bound).
+1. Iterate count_A from 0..n. For each count_A:
+• Wit after A decreases by count_A * a, so B must cover:
+
+W_needed = W + count_A * a.
+• Use prefix sums + binary search to get count_B needed (or skip if impossible).
+1. For this count_A, compute the maximum power you can get from choosing exactly count_A A-potions while reaching happiness ≥ H:
+• DP state: “with exactly count_A picks and happiness threshold, what’s the max power?”
+
+Because happiness is small (≤1024), you can DP over happiness, but power is big, so you maximize power.
+1. Check feasibility:
+• Power available after B penalty is max_power_A − count_B * b.
+
+If that is ≥ P, update answer with count_A + count_B.
+Return the minimum over all count_A, else -1. ","#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <unordered_map>
+using namespace std;
+
+void solve(){
+int n, m; cin >> n >> m;
+long long a, b; cin >> a >> b;
+long long P, W; int H;
+cin >> P >> H >> W;
+vector<pair<long long,int>> typeA(n);
+for(int i = 0; i < n; ++i){
+cin >> typeA[i].first;
+cin >> typeA[i].second;
+}
+vector<long long> typeB(m);
+for(int i = 0; i < m; ++i){
+cin >> typeB[i];
+}
+sort(typeB.begin(), typeB.end(), greater<>());
+for(int i = 1; i < m; ++i){
+typeB[i] += typeB[i-1];
+}
+vector<vector<long long>> dp(n+1, vector<long long> (H+1, -1));
+dp[0][0] = 0;
+for(int z = 1; z <= n; ++z){
+long long p = typeA[z-1].first;
+int h = typeA[z-1].second;
+for(int i = z; i >= 1; --i){
+for(int j = H; j >= 0; --j){
+dp[i][j] = max(dp[i][j], dp[i-1][j]);
+if(dp[i-1][j] == -1) continue;
+int targetJ = min(H, j+h);
+dp[i][targetJ] = max(dp[i][targetJ], dp[i-1][j]+p);
+}
+}
+}
+long long res = -1;
+for(int i = 1; i <= n; ++i){
+if(dp[i][H] == -1) continue;
+long long Prem = P - dp[i][H];
+
+long long Wneeded = W + ai;
+// if to slow use a multiset instead of vector
+auto it = lower_bound(typeB.begin(), typeB.end(), Wneeded);
+if(it == typeB.end()) continue;
+int drinked = (int)distance(typeB.begin(),it)+1;
+
+Prem += bdrinked;
+if(Prem <= 0){
+res = i + drinked;
+break;
+}
+}
+
+cout << res;
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+}",,,"3 min values with minimum number of stuff
+
+USE LONG LONG",Default,https://expert.ethz.ch/solve/eyZXcn6TZZHWNGZSe
+San Francisco,Longest-path-in-exact-steps with free resets from sinks (k-step max-score DP),Week 02,Dynamic Programming,Completed,"You have a directed graph with n nodes and m directed edges; traversing an edge (u→v) earns p points (p ≥ 0). You start at node 0. A node with outdegree 0 is a “sink”; from a sink you may teleport back to node 0 for free (no move, no score). You have at most k moves. Output the minimum number of moves needed to reach score ≥ x, or Impossible if you can’t reach x within k moves.","Solution description (iterative / bottom-up DP):
+
+Define dp[i][v] = maximum score achievable after exactly i moves, ending at node v.
+• Init: dp[0][0] = 0, others = -∞.
+• For i = 0..k−1 and each node u with dp[i][u] valid: for each edge (u→v,p), update:
+    ◦ If v is terminal, next state is node 0: dp[i+1][0] = max(dp[i+1][0], dp[i][u] + p)
+    ◦ Else: dp[i+1][v] = max(dp[i+1][v], dp[i][u] + p)
+• Answer: smallest i with dp[i][0] (or max over nodes, depending on formulation) ≥ x; else Impossible. 
+this (1)
+Solution description (recursive / top-down with memoization, matching your code):
+
+Define help(movesLeft, node) = maximum additional score achievable starting from “node” with exactly movesLeft moves remaining.
+• Base: if movesLeft == 0 return 0.
+• Memo: memo[movesLeft][node] caches results to avoid recomputation.
+• Transition: try all outgoing edges (node→v, p) and take the best:
+    ◦ If v is terminal: candidate = p + help(movesLeft−1, 0)
+    ◦ Else: candidate = p + help(movesLeft−1, v)
+    ◦ currBest = max over candidates
+• Then compute help(i,0) for i=1..k and return the first i where help(i,0) ≥ x, else Impossible.","#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <unordered_map>
+using namespace std;
+
+void solve(){
+int n, m; cin >>n>>m;
+long long x; cin >> x;
+int k; cin >> k;
+vector<unordered_map<int,int>> graph(n);
+for(int i = 0; i < m; ++i){
+int u, v, p; cin >> u >> v >> p;
+if(graph[u].find(v) != graph[u].end()){
+graph[u][v] = max(graph[u][v], p);
+} else graph[u][v] = p;
+}
+vector<vector<long long>> dp(k+1, vector<long long> (n, -1));
+dp[0][0] = 0;
+for(int i = 1; i <= k; ++i){
+for(int j = 0; j < n; ++j){
+if(dp[i-1][j] == -1) continue;
+for(auto &e: graph[j]){
+int v = e.first;
+int p = e.second;
+dp[i][v] = max(dp[i][v], dp[i-1][j]+p);
+if(dp[i][v] >= x){
+cout << i;
+return;
+}
+if(graph[v].size() == 0){
+dp[i][0] = max(dp[i][0], dp[i][v]);
+}
+}
+}
+}
+cout << ""Impossible"";
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+}",,,Print “Impossible”,Default,https://expert.ethz.ch/solve/NqPzfHTTW7wuruuiJ
+Greyjoy,find max length of consecutive nodes with sum = k → in a tree with one node with w branches (root) and all the other node at most one children.,Week 02,"Prefix sum, Two Sum",Completed,"We have one root only branches.
+GOAL: max length of consecutive nodes with sum of value of nods equal to K.
+","first solve for each branche with Two Sum or sliding window, than do Two Sum from different branches, PAY ATTENTION TO CHANGE THE TARGET OF TWO SUM AND REMOVE THE ROOT TO AVOID DOUBLE COUNTING","#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <unordered_map>
+using namespace std;
+
+void solve(){
+int n, k, w; cin >> n >> k >> w;
+vector<int> c(n);
+for(int i = 0; i < n; ++i){
+cin >> c[i];
+}
+vector<vector<int>> islands(w);
+for(int i = 0; i < w; ++i){
+int l; cin >> l;
+for(int j = 0; j < l; ++j){
+int x; cin >> x;
+islands[i].push_back(x);
+}
+}
+vector<vector<long long>> costs(w);
+for(int i = 0; i < w; ++i){
+int l = (int)islands[i].size();
+costs[i].push_back(c[islands[i][0]]);
+for(int j = 1; j < l; ++j){
+costs[i].push_back(costs[i][j-1]+c[islands[i][j]]);
+}
+}
+int res = 0;
+// solve for each waterway
+for(int i = 0; i < w; ++i){
+unordered_map<long long, int> map;
+map[0] = -1;
+for(int j = 0; j < (int)islands[i].size(); ++j){
+long long goal = costs[i][j] - k;
+if(map.find(goal) != map.end()){
+res = max(res, j-map[goal]);
+}
+map[costs[i][j]] = j;
+}
+}
+// look combinations
+unordered_map<long long, int> map;
+for(int i = 0; i < w; ++i){
+for(int j = 0; j < (int)islands[i].size(); ++j){
+long long goal = k - costs[i][j] + costs[i][0];
+if(map.find(goal) != map.end()){
+res = max(res, j+map[goal]+1);
+}
+}
+for(int j = 0; j < (int)islands[i].size(); ++j){
+if(map.find(costs[i][j]) != map.end()){
+map[costs[i][j]] = max(j,map[costs[i][j]]);
+} else map[costs[i][j]] = j;
+}
+}
+cout << res;
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+}",,,,Not in 2024,https://expert.ethz.ch/solve/rsADmS6rf3h3o3ZXC
+Burning Coins,"2-player, 2 possible move",Week 02,"2-player, Dynamic Programming",Completed,"Given a query of n distinct words, you receive for each word a sorted list of positions where it occurs in a document. All positions are distinct across all lists. You must output the minimum snippet length (b − a + 1) of a contiguous interval [a, b] that contains at least one occurrence of every word.","For each round i consider base case: just one element, just 2 element, then I need to consider all possible combinations of what could happen
+
+2^n possibilities → TOO MUCH
+
+so memoization :)","#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+typedef vector<vector<int>> vvi;
+int me(int i, int j, const vector<int>& coins, vvi& memo);
+int opp(int i, int j, const vector<int>& coins, vvi& memo);
+
+int me(int i, int j, const vector<int>& coins, vvi& memo){
+if(j < i) return 0;
+if(i == j) return coins[i];
+if(i+1 == j) return max(coins[i],coins[j]);
+if(memo[i][j] != -1) return memo[i][j];
+memo[i][j] =  max(coins[i]+opp(i+1,j,coins,memo),coins[j]+opp(i,j-1,coins,memo));
+return memo[i][j];
+}
+
+int opp(int i, int j, const vector<int>& coins, vvi& memo){
+if(j < i) return 0;
+if(i == j) return 0;
+if(i+1 == j) return min(coins[i],coins[j]);
+return min(me(i+1,j,coins,memo),me(i,j-1,coins,memo));
+}
+
+void solve(){
+int n; cin >> n;
+vector<int> coins(n);
+for(int i = 0; i < n; ++i){
+cin >> coins[i];
+}
+vvi memo(n, vector<int> (n,-1));
+cout << me(0, n-1, coins, memo);
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+}",,,,Default,https://expert.ethz.ch/solve/ppZM8mSxuQ3W2WWzZ
+First steps with BGL,Dijkstra + MST,Week 03,"Dijkstra, Minimum Spanning Tree",Completed,Implement Dijkstra and MST,Implement Dijkstra and MST,"// STL includes
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// BGL includes
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/kruskal_min_spanning_tree.hpp>
+#include <boost/graph/dijkstra_shortest_paths.hpp>
+
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
+boost::no_property, boost::property<boost::edge_weight_t, int> >      weighted_graph;
+typedef boost::property_map<weighted_graph, boost::edge_weight_t>::type weight_map;
+typedef boost::graph_traits<weighted_graph>::edge_descriptor            edge_desc;
+typedef boost::graph_traits<weighted_graph>::vertex_descriptor          vertex_desc;
+
+
+
+int dijkstra_dist(const weighted_graph &G, int s, int t) {
+int n = boost::num_vertices(G);
+std::vector<int> dist_map(n);
+
+boost::dijkstra_shortest_paths(G, s,
+boost::distance_map(boost::make_iterator_property_map(
+dist_map.begin(), boost::get(boost::vertex_index, G))));
+int maks = 0;
+for(int i = 0; i < n; ++i){
+if(dist_map[i] > maks) maks = dist_map[i];
+}
+return maks;
+}
+
+void solve(){
+int n, m; cin >> n >> m;
+weighted_graph G(n);
+weight_map weights = boost::get(boost::edge_weight, G);
+edge_desc e;
+for(int i = 0; i < m; ++i){
+int u, v, c; cin >> u >> v >> c;
+e = boost::add_edge(u, v, G).first; weights[e]=c;
+}
+
+std::vector<edge_desc> mst;    // vector to store MST edges (not a property map!)
+
+boost::kruskal_minimum_spanning_tree(G, std::back_inserter(mst));
+int res = 0;
+for (std::vector<edge_desc>::iterator it = mst.begin(); it != mst.end(); ++it) {
+res += weights[*it];
+}
+
+cout << res << "" "" << dijkstra_dist(G, 0, 1);
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+}",,,lol,Default,https://expert.ethz.ch/solve/3abMHQP4DFYRnis2H
+Important Bridges,Bridge-finding via biconnected components (critical edges are components of size 1),Week 03,Biconnected Graph,Completed,"You are given an undirected graph of islands (n nodes) connected by bridges (m edges), with no multi-edges. The graph is connected (you can reach any island from any other). A bridge is critical if removing it disconnects the graph (some pair of islands becomes unreachable). For each test case, output all critical bridges, sorted lexicographically (u < v on each edge, and edges sorted by u then v). ","Critical bridges are exactly the edges that are not part of any cycle. In a biconnected-components (BCC) edge decomposition, this corresponds to BCCs that contain exactly one edge.
+Steps:
+1. Build the undirected graph.
+2. Run biconnected_components(g, component) which assigns each edge an integer component id (BCC id).
+3. Group edges by their component id; for each component, count how many edges it contains.
+4. Every component with size == 1 corresponds to a bridge; collect that single edge.
+5. Normalize each edge as (min(u,v), max(u,v)), sort lexicographically, print.
+Note: You compute articulation points too, but they aren’t needed for the output; bridges are already identified by “BCC size 1”.","#include <boost/config.hpp>
+#include <vector>
+#include <list>
+#include <boost/graph/biconnected_components.hpp>
+#include <boost/graph/adjacency_list.hpp>
+#include <iterator>
+#include <iostream>
+#include <algorithm>
+namespace boost
+{
+struct edge_component_t
+{
+enum
+{
+num = 555
+};
+typedef edge_property_tag kind;
+} edge_component;
+}
+
+void solve(){
+
+using namespace boost;
+typedef adjacency_list< vecS, vecS, undirectedS, no_property,
+property< edge_component_t, std::size_t > >
+graph_t;
+typedef graph_traits< graph_t >::vertex_descriptor vertex_t;
+int n, m; std::cin >> n >> m;
+graph_t g(n);
+for(int i = 0; i < m; ++i){
+int u,v; std::cin >> u >> v;
+add_edge(u, v, g);
+}
+
+property_map< graph_t, edge_component_t >::type component
+= get(edge_component, g);
+
+std::size_t num_comps = biconnected_components(g, component);
+//std::cerr << ""Found "" << num_comps << "" biconnected components.\n"";
+std::vector<std::vector<std::pair<int,int>>> edges_in_comp((int)num_comps);
+
+std::vector< vertex_t > art_points;
+articulation_points(g, std::back_inserter(art_points));
+//std::cerr << ""Found "" << art_points.size() << "" articulation points.\n"";
+
+graph_traits< graph_t >::edge_iterator ei, ei_end;
+for (boost::tie(ei, ei_end) = edges(g); ei != ei_end; ++ei){
+int a1 = source(*ei, g);
+int b1 = target(*ei, g);
+if(b1 < a1) swap(a1,b1);
+edges_in_comp[component[*ei]].push_back({a1,b1});
+}
+std::vector<std::pair<int,int>> res;
+for(int i = 0; i < (int)num_comps; ++i){
+if(edges_in_comp[i].size() == 1) res.push_back(edges_in_comp[i][0]);
+}
+std::sort(res.begin(), res.end());
+if((int)res.size() == 0){
+std::cout << 0<<""\n""; return;
+}
+std::cout << (int)res.size()<<""\n"";
+for(int i = 0; i < (int)res.size(); ++i){
+std::cout << res[i].first << "" "" << res[i].second<<""\n"";
+}
+}
+
+int main(){
+std::ios_base::sync_with_stdio(false);
+int t; std::cin >> t;
+while(t--){
+solve();
+}
+}",,,sort nodes to read,Default,https://expert.ethz.ch/solve/4WGoT8H9DYhB4uk6v
+Ant Challenge,Multi-species shortest path on union of Prim-MST networks (MST per species + Dijkstra),Week 03,"Dijkstra, Minimum Spanning Tree",Completed,"Forest is an undirected connected graph with n trees and e edges. Each edge has a travel time per species (s species). Each species can only traverse edges in its private network, which was built by exploring from its hive by repeatedly adding the next tree that is fastest to reach from the already explored set (unique choice guaranteed). You must transport a breadcrumb from start node a to finish node b using edges that are in at least one private network; along each used edge you may choose the species that traverses that edge fastest among those whose private network contains it. Output the minimum total travel time. 
+","
+1. Build each species’ private network as an MST.
+
+The exploration rule is exactly Prim’s algorithm behavior (growing a tree by repeatedly taking the cheapest edge that connects the explored set to a new vertex; uniqueness ensures determinism). So for each species i, run Prim (or Kruskal) using that species’ edge weights, producing an MST Ti with n−1 edges. 
+this (4)
+2. Merge the MSTs into a single usable graph.
+
+For every original edge (u,v), if it appears in at least one MST, include it in a merged graph G’. Set its weight to:
+• w’(u,v) = min over species i where (u,v) ∈ Ti of w_i(u,v).
+
+Edges that are in no private network are excluded.
+1. Shortest path on the merged graph.
+
+Run Dijkstra from a to compute dist[b] in G’. That distance is the optimal total time, because any valid route must use only edges covered by at least one network, and per edge you are always best off picking the minimum available species time.","// STL includes
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+// BGL includes
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/kruskal_min_spanning_tree.hpp>
+#include <boost/graph/dijkstra_shortest_paths.hpp>
+
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
+boost::no_property, boost::property<boost::edge_weight_t, int> >      weighted_graph;
+typedef boost::property_map<weighted_graph, boost::edge_weight_t>::type weight_map;
+typedef boost::graph_traits<weighted_graph>::edge_descriptor            edge_desc;
+typedef boost::graph_traits<weighted_graph>::vertex_descriptor          vertex_desc;
+
+void kruskal(const weighted_graph &G) {
+std::vector<edge_desc> mst;    // vector to store MST edges (not a property map!)
+
+boost::kruskal_minimum_spanning_tree(G, std::back_inserter(mst));
+
+for (std::vector<edge_desc>::iterator it = mst.begin(); it != mst.end(); ++it) {
+std::cout << boost::source(*it, G) << "" "" << boost::target(*it, G) << ""\n"";
+}
+}
+
+int dijkstra_dist(const weighted_graph &G, int s, int t) {
+int n = boost::num_vertices(G);
+std::vector<int> dist_map(n);
+
+boost::dijkstra_shortest_paths(G, s,
+boost::distance_map(boost::make_iterator_property_map(
+dist_map.begin(), boost::get(boost::vertex_index, G))));
+
+return dist_map[t];
+}
+
+void solve(){
+int n,e,s,a,b; cin>>n>>e>>s>>a>>b;
+vector<weighted_graph> networks(s, weighted_graph(n));
+vector<weight_map> wmaps(s);
+for(int i = 0; i < s; ++i){
+wmaps[i] = boost::get(boost::edge_weight, networks[i]);
+}
+for(int i = 0; i < e; ++i){
+int t1,t2; cin >> t1 >> t2;
+for(int j = 0; j < s; ++j){
+int wi; cin >> wi;
+edge_desc ed;
+ed = boost::add_edge(t1, t2, networks[j]).first; wmaps[j][ed]=wi;
+}
+}
+for(int i = 0; i < s; ++i){
+int hi; cin >> hi;
+}
+vector<vector<int>> best_w(n, vector<int> (n,-1));
+for(int i = 0; i < s; ++i){
+std::vector<edge_desc> mst;    // vector to store MST edges (not a property map!)
+boost::kruskal_minimum_spanning_tree(networks[i], std::back_inserter(mst));
+
+for (std::vector<edge_desc>::iterator it = mst.begin(); it != mst.end(); ++it) {
+int t1 = boost::source(*it, networks[i]);
+int t2 = boost::target(*it, networks[i]);
+if(best_w[t1][t2] == -1) best_w[t1][t2] = wmaps[i][*it];
+else best_w[t1][t2] = min(best_w[t1][t2], wmaps[i][*it]);
+best_w[t2][t1] = best_w[t1][t2];
+}
+}
+weighted_graph G(n);
+weight_map weights = boost::get(boost::edge_weight, G);
+for(int t1 = 0; t1 < n; ++t1){
+for(int t2 = t1+1; t2 < n; ++t2){
+if(best_w[t1][t2] == -1) continue;
+edge_desc e;
+e = boost::add_edge(t1, t2, G).first; weights[e]=best_w[t1][t2];
+}
+}
+std::cout << dijkstra_dist(G, a, b);
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+if(cin >> t) cout << ""\n"";
+}",,,multiple MST for lowest edge cost + dijkstra,Default,https://expert.ethz.ch/solve/k2FMzXKo7QYwr2mNG
+Buddy Selection,Threshold graph perfect matching (build edges by “similarity > f” and test if perfect matching exists),Week 03,Maximum matching,Completed,"You have n (even) students, each described by exactly c distinct keywords. Dr. Fuzzman’s pairing guarantees that the minimum number of shared keywords among all buddy pairs is f. Decide whether there exists a pairing of all students into n/2 disjoint pairs such that every pair shares strictly more than f keywords. Output not optimal if such a pairing exists, else optimal.","
+1. Compute common-keyword counts for every pair (i,j).
+
+Build an inverted index: map each keyword to the list of students containing it.
+
+For each keyword’s list L, for every pair (u,v) in L, increment common[u][v].
+
+This avoids comparing all c keywords for all n^2 pairs directly and is fast enough at n=400.
+2. Build a graph of “allowed buddy pairs”.
+
+Create an undirected graph G with one vertex per student.
+
+Add edge (i,j) iff common[i][j] > f.
+
+Now the question becomes: does G contain a perfect matching?
+3. Run maximum matching in a general graph.
+
+Use Edmonds’ Blossom algorithm to compute maximum cardinality matching in G.
+• If matching_size == n/2 ⇒ we can pair everyone with >f common keywords ⇒ output not optimal.
+• Else output optimal.","// STL includes
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <unordered_map>
+#include <string>
+using namespace std;
+// BGL includes
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/max_cardinality_matching.hpp>
+
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS> graph;
+typedef boost::graph_traits<graph>::vertex_descriptor                       vertex_desc;
+
+int maximum_matching(const graph &G) {
+int n = boost::num_vertices(G);
+std::vector<vertex_desc> mate_map(n);  // exterior property map
+
+boost::edmonds_maximum_cardinality_matching(G,
+boost::make_iterator_property_map(mate_map.begin(), boost::get(boost::vertex_index, G)));
+int res = boost::matching_size(G,
+boost::make_iterator_property_map(mate_map.begin(), boost::get(boost::vertex_index, G)));
+return res;
+
+}
+
+void solve(){
+int n, c, f; cin >> n >> c >> f;
+unordered_map<string, vector<int>> um;
+vector<vector<string>> interests(n, vector<string> (c));
+for(int i = 0; i < n; ++i){
+for(int j = 0; j < c; ++j){
+string car; cin >> car;
+um[car].push_back(i);
+interests[i][j] = car;
+}
+}
+vector<vector<int>> common(n, vector<int> (n));
+for(int i = 0; i < n; ++i){
+for(string str: interests[i]){
+for(int j: um[str]){
+++common[i][j];
+}
+}
+}
+
+graph G(n);
+for(int i = 0; i < n; ++i){
+for(int j = i+1; j < n; ++j){
+if(common[i][j] > f) boost::add_edge(i, j, G);
+}
+}
+if(maximum_matching(G)*2 == n) cout << ""not optimal"";
+else cout << ""optimal"";
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+}",,,not optimal,Default,https://expert.ethz.ch/solve/7mrSJzRR6oZT6H8Ri
+Lord Voldemort,Maximum total length of exactly m disjoint k-sum subarrays (weighted interval scheduling with fixed count),Week 03,"Dynamic Programming, Prefix sum, Sliding Window",Rewrite it,"You have an array v[0..n−1] of positive integers (evil per Horcrux). There are exactly m wizards, each must destroy a non-empty contiguous segment whose sum is exactly k. Segments must be pairwise disjoint. Goal: maximize the total number of Horcruxes destroyed (sum of segment lengths). Output that maximum, or fail if it’s impossible to assign m disjoint k-sum segments.","
+1. Enumerate all candidate segments with sum exactly k
+
+Because all vi are positive, use a sliding window: expand right pointer, shrink left pointer when sum > k, record an interval (l,r) whenever sum == k.
+
+Important: with strictly positive values, each l participates in at most one k-sum interval, so the number of recorded intervals L is O(n).
+2. Convert to weighted intervals
+
+For each found interval i:
+• start[i], end[i]
+• weight[i] = end[i] − start[i] + 1 (how many Horcruxes destroyed)
+1. Sort intervals by end (increasing)
+
+Compute prev[i]: the index of the last interval that ends strictly before start[i] (i.e., end[prev[i]] < start[i]).
+
+You can compute prev via binary search over the sorted end[] array.
+2. DP: pick exactly m disjoint intervals maximizing total weight
+
+Let dp[j][i] = maximum total destroyed length using exactly j intervals among the first i intervals in sorted order (1-based i).
+
+Transition (classic weighted scheduling with count constraint):
+• Skip interval i: dp[j][i] = dp[j][i−1]
+• Take interval i: dp[j][i] = max(dp[j][i], weight[i] + dp[j−1][prev[i]])
+
+Answer is dp[m][L]. If dp[m][L] is “impossible” (e.g., −inf), output fail.","#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <unordered_map>
+
+using namespace std;
+
+// Structure to hold segment information
+struct Segment {
+int start, end, length;
+
+// Custom comparator to sort segments by their end point
+bool operator<(const Segment& other) const {
+return end < other.end;
+}
+};
+
+void solve() {
+int n, m;
+long long k;
+cin >> n >> m >> k;
+
+vector<int> v(n);
+for (int i = 0; i < n; i++) {
+cin >> v[i];
+}
+
+// --- FIX 1: Find all segments in O(N) using a hash map ---
+vector<Segment> segments;
+unordered_map<long long, vector<int>> prefix_sum_map;
+prefix_sum_map[0].push_back(-1); // Base case for segments starting at index 0
+
+long long current_sum = 0;
+for (int i = 0; i < n; i++) {
+current_sum += v[i];
+long long target = current_sum - k;
+
+if (prefix_sum_map.count(target)) {
+// For every time we've seen the target sum, a valid segment exists
+for (int start_index : prefix_sum_map[target]) {
+segments.push_back({start_index + 1, i, i - (start_index + 1) + 1});
+}
+}
+prefix_sum_map[current_sum].push_back(i);
+}
+
+if (segments.empty()) {
+cout << ""fail"" << endl;
+return;
+}
+
+// Sort segments by their end point to enable binary search
+sort(segments.begin(), segments.end());
+
+int s = segments.size();
+
+// dp[i][j] = maximum horcruxes using exactly j wizards from first i segments (sorted by end point)
+vector<vector<int>> dp(s + 1, vector<int>(m + 1, -1));
+for(int i=0; i<=s; ++i) {
+dp[i][0] = 0; // Base case: 0 wizards = 0 horcruxes
+}
+
+for (int i = 1; i <= s; i++) {
+Segment& cur = segments[i-1];
+
+// --- FIX 2: Find last non-overlapping segment in O(log i) using binary search ---
+int last_non_overlapping_idx = -1;
+
+// We need a segment that ends before the current one starts.
+// We search for the first segment that ends at or after cur.start.
+auto it = lower_bound(segments.begin(), segments.begin() + i - 1, cur.start,
+[](const Segment& seg, int val) {
+return seg.end < val;
+});
+
+// The index we want is the one right before the iterator 'it'.
+if (it != segments.begin()) {
+last_non_overlapping_idx = distance(segments.begin(), it - 1);
+}
+
+for (int j = 1; j <= m; j++) {
+// Option 1: Don't take the current segment i.
+int option1 = dp[i-1][j];
+
+// Option 2: Take the current segment i.
+int option2 = -1;
+// The result is the length of the current segment plus the best result
+// from j-1 wizards using segments that don't overlap with the current one.
+int prev_dp_idx = (last_non_overlapping_idx == -1) ? 0 : last_non_overlapping_idx + 1;
+
+if (dp[prev_dp_idx][j-1] != -1) {
+option2 = dp[prev_dp_idx][j-1] + cur.length;
+}
+
+dp[i][j] = max(option1, option2);
+}
+}
+
+if (dp[s][m] <= 0) { // Check for <=0 since -1 is used for impossible
+cout << ""fail"" << endl;
+} else {
+cout << dp[s][m] << endl;
+}
+}
+
+int main() {
+ios_base::sync_with_stdio(false);
+cin.tie(NULL);
+int t;
+cin >> t;
+while (t--) {
+solve();
+}
+return 0;
+}",,,Print “fail”,Default,https://expert.ethz.ch/ide2/67fF4wzx4jHAsyArS
+Fighting Pits of Meereen,Two-track scheduling with bounded imbalance and short memory (DP over histories + score),Week 04,"Dynamic Programming, Encoding",Learn&ShutUp,"You have a queue of n fighters (each has a type in 0..k−1). Each round you must send the next fighter either to the north or south entrance. Round excitement is:
+• 
+    ◦ 1000 × (number of distinct types among the last min(m,q) fighters sent through that chosen entrance, including the current one)
+• − 2^|p−q| where p and q are the total fighters sent through north and south up to now
+
+Every round’s excitement must be non-negative, otherwise the schedule is invalid. Maximize the total excitement over all rounds. ","Use DP over the queue index, the imbalance, and the last m fighters sent through each entrance.
+1. Bound the imbalance:
+
+The penalty term is 2^|p−q|, while the positive part is at most 1000·m ≤ 3000.
+
+So once |p−q| is large enough (e.g., ≥ 12), the penalty dominates and the round score becomes negative no matter what, meaning such states are useless. Cap diff = p−q to a small range like [-12, 12].
+2. Encode “memory” per entrance:
+
+You must know the last m types for north and for south to compute “distinct types”.
+
+Because k ≤ 4 and m ≤ 3, store history as an integer in base (k+1) using 0 as “empty” and 1..k for types.
+
+This gives at most (k+1)^m ≤ 5^3 = 125 states per entrance.
+3. DP state and transition:
+
+Let dp[i][hn][hs][d] = maximum total excitement after processing first i fighters, where hn/hs are encoded histories for north/south and d is the capped imbalance.
+
+Transition by sending fighter i to north or to south:
+• Decode/update the chosen entrance history by shifting in the new type
+• Update imbalance d±1
+• Compute round excitement from (distinct in updated history) and penalty 2^|new_d|
+• Only allow transition if round excitement ≥ 0
+
+Take the max over choices.
+Answer is the maximum dp[n][][][*].","#include <bits/stdc++.h>
+typedef std::vector<int> VI;
+typedef std::vector<VI> VVI;
+typedef std::vector<VVI> VVVI;
+typedef std::vector<VVVI> VVVVI;
+
+struct fq{int f1, f2, f3;};
+int n, k, m;
+
+int distinct(fq f, int m){
+if (m == 2) return std::unordered_set<int>({0, f.f1, f.f2}).size() - 1;
+else return std::unordered_set<int>({0, f.f1, f.f2, f.f3}).size() - 1;
+}
+
+int solve(int curr, VVVVI& dp, VI& fighters, fq& north, fq& south, int diff){
+if (curr == n) return 0;
+if (diff > 12) return INT_MIN;
+int encn = north.f15 + north.f2;
+int encs = south.f15 + south.f2;
+int diffp = diff + 12;
+int value = dp[curr][encn][encs][diffp];
+if (value != -1) return value;
+int nextf = fighters[curr];
+fq nnorth = {nextf, north.f1, north.f2};
+fq ssouth = {nextf, south.f1, south.f2};
+int best = 0;
+int north_exc = 1000distinct(nnorth, m) - pow(2, std::abs(diff + 1));
+int south_exc = 1000distinct(ssouth, m) - pow(2, std::abs(diff - 1));
+if (north_exc > 0) best = north_exc + solve(curr + 1, dp, fighters, nnorth, south, diff + 1);
+if (south_exc > 0) best = std::max(best, south_exc + solve(curr + 1, dp, fighters, north, ssouth, diff - 1));
+dp[curr][encn][encs][diffp] = best;
+return best;
+}
+
+void solve(){
+std::cin >> n >> k >> m;
+VI fighters(n);
+for (int i = 0; i < n; i++){
+int x; std::cin >> x;
+fighters[i] = x + 1;
+}
+fq north = {0, 0, 0};
+fq south = {0, 0, 0};
+VVVVI dp(n, VVVI(25, VVI(25, VI(25, -1))));
+std::cout << solve(0, dp, fighters, north, south, 0) << '\n';
+}
+
+int main(){
+std::ios_base::sync_with_stdio(false);
+int t; std::cin>>t;
+while(t--) solve();
+}",,,,Default,https://expert.ethz.ch/solve/9RHRajXhHaoSxqd8p
+Hiking Maps,Minimum-length contiguous subsequence covering all path legs (triangle containment + sliding window),Week 04,"Computational Geometry, Sliding Window",Rewrite it,"You have a hiking path with m points p0..p(m−1), forming m−1 legs (segments pi–p(i+1)). You also have n triangular map parts t0..t(n−1). You are only allowed to buy a contiguous block of map parts tb..t(e−1) at cost (e−b). The block is valid if every leg of the hike is fully contained in at least one triangle in the block. Output the minimum possible cost. Instances are guaranteed solvable by taking all parts.","
+1. For each triangle, precompute which legs it covers.
+
+A triangle is given by 3 edges, but each edge is described by two points lying on that edge. You first normalize each edge direction so that “not right_turn(edge_start, edge_end, point)” means “point is inside or on boundary”.
+
+Then for each path point pk, test if it is inside the triangle by checking it is not to the “right” of any of the 3 directed edges.
+
+Because a triangle is convex, a leg pj–p(j+1) is fully inside iff both endpoints are inside. Store all such leg indices j in tr_covers_leg[i].
+2. Find the minimum contiguous block of triangles covering all legs (two pointers).
+
+Maintain a window [l, r] over triangles. Keep an array covered[leg] counting how many triangles in the current window cover that leg, and a counter count = number of legs with covered[leg] > 0.
+• Extend r to the right, adding triangle r’s covered legs.
+• While count == m−1 (all legs covered), shrink from the left to minimize window length and update best = min(best, r−l+1).
+
+This yields the minimal cost because cost equals number of triangles bought.","#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <set>
+using namespace std;
+
+struct triangle {
+vector<K::Point_2> points;
+};
+
+void solve() {
+int n, m; cin >> m >> n;
+vector<K::Point_2> legs_points(m);
+for(int i = 0; i < m; ++i){
+K::FT x, y;
+cin >> x >> y;
+legs_points[i] = K::Point_2(x,y);
+}
+vector<triangle> triangles(n);
+vector<vector<int>> tr_covers_leg(n);
+for(int i = 0; i < n; ++i){
+triangles[i].points.resize(7);
+for(int j = 0; j < 6; ++j){
+int x, y; cin >> x >> y;
+triangles[i].points[j] = K::Point_2(x,y);
+}
+triangles[i].points[6] = triangles[i].points[0];
+for(int z = 0; z <=4; z+=2){
+if(CGAL::right_turn(triangles[i].points[z],
+triangles[i].points[z+1],
+triangles[i].points[z+2]))
+swap(triangles[i].points[z],triangles[i].points[z+1]);
+}
+vector<bool> point_is_inside(m, true);
+for (int k = 0; k < m; ++k) {
+// Un punto è dentro se sta dallo stesso lato (o sul bordo)
+// rispetto a tutti e 3 i lati del triangolo
+for(int z = 0; z <=4; z+=2){
+if(CGAL::right_turn(triangles[i].points[z],
+triangles[i].points[z+1],
+legs_points[k]))
+point_is_inside[k] = false;
+}
+}
+for (int j = 0; j < m - 1; ++j) {
+if (point_is_inside[j] && point_is_inside[j+1]) {
+tr_covers_leg[i].push_back(j);
+}
+}
+}
+int best = n+1;
+vector<int> covered(m-1, 0);
+int l = 0, r = 0;
+int count = 0;
+while(r < n){
+for(int leg: tr_covers_leg[r]) {
+if(covered[leg] == 0) ++count;
+++covered[leg];
+}
+while(count == m-1 && l < n){
+best = min(best, r-l+1);
+for(int leg: tr_covers_leg[l]) {
+--covered[leg];
+if(covered[leg] == 0) --count;
+}
+++l;
+}
+++r;
+}
+cout << best;
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+if(cin >> t) cout << ""erorroo\n"";
+}",,,,Default,https://expert.ethz.ch/solve/3Pa2nyMpSAHA39qsR
+Hit,Ray–segment intersection detection (early-exit CGAL geometry),Week 04,Computational Geometry,Completed,"Given a ray starting at (x,y) and passing through (a,b), and n obstacle segments (each with endpoints (r,s) and (t,u)), determine whether the ray intersects at least one segment (endpoints count as part of the segment). For each test case, output yes if any intersection exists, otherwise no. Multiple test cases until a line 0. Coordinates are large (|coord| < 2^51), so 32-bit ints are unsafe.","Represent the laser path as a CGAL Ray_2.For each segment: build a Segment_2 and call CGAL::do_intersect(ray, seg).If any call returns true, print yes. Otherwise after all segments, print no.Micro-optimization used: once hit == true, the code still consumes input lines but skips CGAL construction/intersection tests.","#include <iostream>
+#include <vector>
+#include <CGAL/intersections.h>
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+
+typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+typedef K::Point_2 Point;
+typedef K::Ray_2 Ray;
+typedef K::Segment_2 Segment;
+
+void solve(int n){
+K::FT x, y, a, b;
+std::cin >> x >> y >> a >> b;
+Ray ray(Point(x,y), Point(a,b));
+bool hit = false;
+for(int i = 0; i < n; ++i){
+if(hit){
+long long h,j,k,l;
+std::cin >> h >> j >> k >> l;
+} else {
+K::FT r, s, t, u;
+std::cin >> r >> s >> t >> u;
+Segment seg(Point(r,s), Point(t,u));
+if(!hit && CGAL::do_intersect(ray, seg)){
+hit = true;
+}
+}
+}
+if(hit) std::cout << ""yes"";
+else std::cout << ""no"";
+}
+
+int main(){
+std::ios_base::sync_with_stdio(false);
+int n;
+while(true){
+std::cin >> n;
+if(n == 0) break;
+solve(n);
+std::cout << ""\n"";
+}
+}",,,,Default,https://expert.ethz.ch/solve/MHNvZQgvkchbaAnmC
+Antenna,Minimum enclosing circle (smallest radius covering all points),Week 04,Minimum enclosing circle,Rewrite it,"Given n citizen home coordinates (xi, yi), choose a transmitter location anywhere in the plane and a transmission radius R so that all points are within distance R from the transmitter. Output the smallest integer radius that guarantees coverage (i.e., ceil of the optimal real-valued radius). Multiple test cases end with 0.","
+• The optimal transmitter radius is the radius of the minimum enclosing circle of the point set. The circle is defined by 2 or 3 boundary points.
+• Use CGAL Min_circle_2 to compute the minimum enclosing circle from all points (internally randomized incremental).
+• Extract the circle’s squared radius, take the exact square root (exact kernel with sqrt), then output the smallest integer ≥ radius using a safe ceil_to_double routine (fixes double conversion edge cases).
+","#include <CGAL/Exact_predicates_exact_constructions_kernel_with_sqrt.h>
+#include <CGAL/Min_circle_2.h>
+#include <CGAL/Min_circle_2_traits_2.h>
+#include <vector>
+#include <bits/stdc++.h>
+// typedefs
+typedef  CGAL::Exact_predicates_exact_constructions_kernel_with_sqrt K;
+typedef  CGAL::Min_circle_2_traits_2<K>  Traits;
+typedef  CGAL::Min_circle_2<Traits>      Min_circle;
+
+
+double ceil_to_double(const K::FT& x) {
+double a = std::ceil(CGAL::to_double(x));
+while(a < x) a += 1;
+while(a-1 >= x) a -= 1;
+return a;
+}
+
+void solve(int n){
+std::vector<K::Point_2> P;
+for (int i = 0; i < n; ++i){
+K::FT x, y; std::cin >> x >> y;
+P.push_back(K::Point_2(x,y));
+}
+
+if (n == 1) {
+std::cout << 0;
+return;
+}
+
+Min_circle mc(P.begin(), P.end(), true);
+Traits::Circle c = mc.circle();
+K::FT r = CGAL::sqrt(c.squared_radius());
+std::cout << ceil_to_double(r);
+}
+
+int main(){
+std::ios_base::sync_with_stdio(false);
+int n; std::cin >> n;
+while(n != 0){
+solve(n); std::cout << ""\n"";
+std::cin >> n;
+}
+}",,,,Default,https://expert.ethz.ch/solve/xZRJCxKxuumWM2Qb8
+First Hit,Nearest ray–segment intersection (first hit) with pruning (exact CGAL),Week 04,Computational Geometry,Rewrite it,"Given a ray starting at (x,y) going through (a,b), and n obstacle segments, find the first intersection point along the ray with any segment (segments include endpoints). If there is no intersection, output no. Otherwise output the intersection coordinates rounded down (floor) to integers. Multiple test cases until 0. Coordinates are integers with absolute value < 2^51 (so you must avoid 32-bit overflow and precision issues).","Read all segments; shuffle them. Shuffling is not required for correctness, but it increases the chance of finding a near intersection early, making later pruning effective.Maintain has_hit and the currently best (closest) intersection point best_p.For each segment:
+• If no hit yet: test do_intersect(ray, seg).
+• If hit already: build a finite search segment from ray start to best_p, and test do_intersect(search_seg, seg). This prunes any segment that only intersects the ray beyond the current best hit.
+• Only if the predicate says “intersects”, compute the actual intersection via CGAL::intersection(ray, seg) (this is the expensive step).
+• Intersection can be:
+    ◦ a point: candidate hit = that point
+    ◦ a segment (collinear overlap): candidate hit = closer endpoint of the overlap to the ray origin
+• Update best_p if candidate is closer to the origin (use has_smaller_distance_to_point).If no hit found, print no. Otherwise print floor(best_p.x) floor(best_p.y) using a safe floor_to_double routine to avoid rounding bugs with exact-to-double conversion.","#include <bits/stdc++.h>
+#include <CGAL/Exact_predicates_exact_constructions_kernel.h>
+
+// CGAL type definitions
+using K = CGAL::Exact_predicates_exact_constructions_kernel;
+using P = K::Point_2;
+using R = K::Ray_2;
+using S = K::Segment_2;
+
+// Custom function to correctly floor the exact CGAL number type to a double.
+// This is necessary to handle potential floating-point inaccuracies.
+double floor_to_double(const K::FT& x) {
+double a = floor(CGAL::to_double(x));
+while (a > x) a -= 1;
+while (a + 1 <= x) a += 1;
+return a;
+}
+
+int main() {
+// Fast I/O
+std::ios::sync_with_stdio(false);
+std::cin.tie(nullptr);
+
+int n;
+while (std::cin >> n && n != 0) {
+long x, y, a, b;
+std::cin >> x >> y >> a >> b;
+
+P source_p(x, y);
+R ray(source_p, P(a, b));
+
+std::vector<S> segs;
+segs.reserve(n);
+for (int i = 0; i < n; ++i) {
+long r, s, t, u;
+std::cin >> r >> s >> t >> u;
+segs.emplace_back(P(r, s), P(t, u));
+}
+
+// Shuffling the segments increases the chance of finding a close hit early,
+// which makes our optimization more effective.
+std::random_shuffle(segs.begin(), segs.end());
+
+bool has_hit = false;
+P best_p;
+
+for (const auto& seg : segs) {
+// --- OPTIMIZATION START ---
+// The key improvement is to change the intersection test based on whether
+// we have already found a potential intersection point.
+bool potential_closer_hit;
+if (has_hit) {
+// If we have a hit, we only care about new intersections that are closer.
+// We create a temporary segment from the ray's start to the current best point.
+// Checking for intersection with this shorter segment is much faster because
+// it prunes any segments that hit the ray beyond our current best point.
+S search_seg(source_p, best_p);
+potential_closer_hit = CGAL::do_intersect(search_seg, seg);
+} else {
+// If we haven't found any hit yet, we must check against the infinite ray.
+potential_closer_hit = CGAL::do_intersect(ray, seg);
+}
+
+if (!potential_closer_hit) {
+continue; // Skip the expensive calculation below.
+}
+// --- OPTIMIZATION END ---
+
+// This part is the expensive ""construction"" of the intersection point.
+// We only run it if the faster ""predicate"" check above passes.
+auto inter = CGAL::intersection(ray, seg);
+if (!inter) continue; // Should not happen if do_intersect passed, but good for safety.
+
+if (const P* p = boost::get<P>(&*inter)) {
+// The intersection is a single point.
+if (!has_hit || CGAL::has_smaller_distance_to_point(source_p, *p, best_p)) {
+best_p = p;
+has_hit = true;
+}
+} else if (const S s = boost::get<S>(&*inter)) {
+// The ray and segment are collinear and overlap. The intersection is a segment.
+// We need to find which endpoint of the overlap is closer to the ray's start.
+P p1 = s->source(), p2 = s->target();
+P closer = (CGAL::has_smaller_distance_to_point(source_p, p1, p2)) ? p1 : p2;
+if (!has_hit || CGAL::has_smaller_distance_to_point(source_p, closer, best_p)) {
+best_p = closer;
+has_hit = true;
+}
+}
+}
+
+if (!has_hit) {
+std::cout << ""no\n"";
+} else {
+std::cout << (long)floor_to_double(best_p.x()) << "" ""
+<< (long)floor_to_double(best_p.y()) << ""\n"";
+}
+}
+return 0;
+}",,,,Default,https://expert.ethz.ch/solve/JkBRJwrTXcfYu4xEb
+Boats,Maximum non-overlapping intervals with anchored points (boats on rings greedy),Week 05,Greedy,Rewrite it,"There are n boats, boat i has length l and must be placed on a line so that its assigned ring position p lies somewhere on the boat (including endpoints). Boats may touch but must not overlap. Each ring position is unique. Find the maximum number of boats that can be placed simultaneously.","Sort boats by ring position p increasing. Place boats left-to-right while keeping them as far left as possible.
+For a boat (l, p) that must start after some previous end prev_end, the best (leftmost) feasible placement is:
+• left = max(prev_end, p − l)
+• right = left + l = max(prev_end + l, p)
+Greedy invariant:
+• pp_end = end position of the last boat that is already fixed in the solution
+• p_end = the smallest possible end position of the “current/last” boat for the same number of selected boats (you keep one boat “flexible” and keep tightening it)
+For each boat in increasing p:
+1. Compute best_curr = max(pp_end + l, p) (the right endpoint if this boat becomes the current flexible last boat after pp_end).
+2. If best_curr < p_end, it means this boat can replace the current last boat and end earlier → update p_end = best_curr (tighten).
+3. Else if p_end <= p, then this boat cannot improve the current last boat anymore and is far enough to start a new one: commit the current one (pp_end = p_end), increase answer, and set the new p_end = max(p_end + l, p).
+This achieves the maximum count because you always keep the chosen boats ending as early as possible, which leaves maximal room for future boats.
+",,40,,,Default,https://expert.ethz.ch/solve/ugjqDKeCT7JCLgKkf
+Asterix the Gaul,Meet-in-the-middle subset selection with a monotone “potion boost” parameter (Split&List + binary search),Week 05,"Binary Search, Split&List",Learn&ShutUp,"You have n possible movements; each can be used at most once. Movement j takes time tj and covers distance dj. If Astérix drinks i gulps of potion before starting, each selected movement gets an extra +s_i distance (same boost for every chosen move). Astérix must reach distance ≥ D in strictly less than T seconds. Find the minimum i (0..m) that makes it possible; if impossible even with m gulps, print Panoramix captured.","
+1. Binary search the number of gulps i.
+
+Feasibility is monotone: larger i means larger per-move boost s_i, so if i works then any i’ > i works.
+2. Feasibility check for a fixed i (meet-in-the-middle):
+
+Split the n movements into two halves of sizes n1 and n2 (~15 each).
+
+Enumerate all subsets in each half:
+• For a subset S, compute:
+    ◦ total_time = sum(tj)
+    ◦ total_dist = sum(dj + s_i)  (only for chosen moves)
+• Discard subsets with total_time ≥ T (strictly less required).
+• If any subset already has total_dist ≥ D, return feasible immediately.
+This produces two lists:
+• part1 = all (dist, time) from first half
+• part2 = all (dist, time) from second half
+1. Combine halves efficiently:
+
+Sort part2 by time descending. Then preprocess it so that for decreasing time thresholds you keep the maximum distance achievable (dominance compression):
+• After sorting by time, sweep from back to front:
+    ◦ part2[i].dist = max(part2[i].dist, part2[i+1].dist)
+Now for each (d1, t1) in part1:
+• remaining time is (T − t1)
+• find in part2 the best distance among subsets with time < remaining_time
+    ◦ done with upper_bound on the time-sorted structure
+• if d1 + d2 ≥ D, feasible.
+1. Output the smallest i found by binary search; else Panoramix captured.
+
+Time complexity:
+
+Let N = n, with halves N/2.
+• Subset enumeration: O(2^(N/2) * N) per half in your implementation (you recompute sums inside loops). With N ≤ 30 this is still fine.
+• Sorting part2: O(2^(N/2) log 2^(N/2))
+• Combining: O(|part1| log |part2|) = O(2^(N/2) log 2^(N/2))
+• Binary search over i: O(log m) feasibility checks, with m ≤ 1e5 ⇒ ~17 checks.
+
+Overall: O(log m · 2^(N/2) · (N + log 2^(N/2))), feasible for N=30.
+Your recorded solve time:
+• Start: 13:00
+• End: 14:00
+• Total: 60 minutesSources
+","//start 13: 00
+#include <bits/stdc++.h>
+using namespace std;
+
+
+// the number of cominatios of movements is 2^30
+// but D is to big 2^50, so we can't DP
+// 2^30 is to much for brute force but ok for split&list
+typedef vector<pair<long long, long long>> vpll;
+typedef vector<long long> vll;
+typedef pair<long long, long long> pll;
+typedef long long ll;
+
+auto comp = [](pll p1, pll p2){
+return p1.second > p2.second;
+};
+
+bool split_list(int start, int end, const vpll& movements, ll D, ll T, ll addDist, vpll& res){
+int size = end-start;
+for(int i = 0; i < (1<<size); ++i){
+long long totD = 0;
+long long totT = 0;
+for(int j = 0; j < size; ++j){
+if(i & (1 << j)){
+totD += (movements[start+j].first + addDist);
+totT += movements[start+j].second;
+}
+}
+if(totT >= T) continue;
+if(totD >= D) return true;
+res.push_back({totD, totT});
+}
+return false;
+}
+
+bool help(const vpll& movements, const vll& pots,
+long long addDist, long long D, long long T, int n){
+vpll part1, part2;
+if(split_list(0, n/2, movements, D, T, addDist, part1)) return true;
+if(split_list(n/2, n, movements, D, T, addDist, part2)) return true;
+sort(part2.begin(), part2.end(), comp);
+for(int i = (int)part2.size()-2; i >= 0; --i)
+part2[i].first = max(part2[i].first, part2[i+1].first);
+for(auto comb: part1){
+ll di = comb.first;
+ll ti = comb.second;
+pll key = {-1, T-ti};
+auto it = upper_bound(part2.begin(), part2.end(), key ,comp);
+if(it != part2.end() && (di + it->first >= D)) return true;
+}
+return false;
+}
+
+
+void solve(){
+int n, m;
+long long D, T;
+cin >> n >> m >> D >> T;
+vector<pair<long long, long long>> movements(n);
+for(int i = 0; i < n; ++i){
+long long di,ti; cin >> di >> ti;
+movements[i] = {di,ti};
+}
+vector<long long> pots(m+1,0);
+for(int i = 1; i <= m; ++i) cin >> pots[i];
+int left = 0, right = m;
+int res = m+1;
+while(left <= right){
+int mid = left + (right-left)/2;
+long long addDist = pots[mid];
+/*
+bool help(const vpll& movements, const vll& pots,
+long long addDist, long long D, long long T, int n){
+*/
+if(help(movements, pots, addDist, D, T, n)) {
+res = mid;
+right = mid-1;
+}
+else left = mid+1;
+}
+if(res > m) cout << ""Panoramix captured"";
+else cout << res;
+}
+
+int main(){
+ios_base::sync_with_stdio(0);
+int t; cin >> t;
+while(t--){ solve(); cout << ""\n"";}
+}
+// end 14:00",90,,,Default,https://expert.ethz.ch/solve/HYMnEFkSPfGL77LhX
+Attack of the Clones,Circular interval scheduling via low-congestion cut,Week 05,"Greedy, Sweep Line",HARD,"You have n circular intervals on segments 1..m (wrap-around allowed). Pick the largest subset of pairwise disjoint intervals.
+Constraints (from statement): n ≤ 5·10^4, m ≤ 10^9, t ≤ 40, and there exists a segment s covered by at most 10 intervals. 
+this (20)
+Why brute force is impossible: checking subsets is 2^n (hopeless for n=50k), and anything proportional to m is also impossible (m up to 1e9).","Key idea
+Because there exists a segment s covered by ≤ 10 Jedi intervals:
+• In any valid solution, you can pick at most one interval that covers s (two would overlap on segment s).
+• Therefore, the optimum is the best among:
+    1. pick none of the intervals covering s
+    2. pick exactly one of them (≤ 10 trials)
+Once s is fixed, you cut the circle at s and turn all intervals not covering s into standard linear intervals, then solve by the classic greedy “earliest finishing time”.
+Step-by-step method
+1) Find a segment s with minimum coverage (sweep-line)
+You build a difference map on the circle:
+• For non-wrapping [a,b] (a ≤ b): +1 at a, -1 at b+1
+• For wrapping [a,b] (a > b): split into [a,m] and [1,b]:
+    ◦ +1 at a, -1 at m+1, and +1 at 1, -1 at b+1
+Then scan events in order and track the position with smallest current load → that’s your s.
+Time: O(n log n) because of the ordered map of events.
+2) Partition intervals into:
+• covering_s: intervals that contain s (guaranteed ≤ 10)
+• others: intervals that do not contain s
+3) Linearize (“cut”) the circle at s
+Use a shift so s becomes position 0:
+Correct shift (this matters):
+
+shift(x) = (x - s + m) % m;   // result in [0, m-1]
+
+For any interval not covering s, after shifting you get a non-wrapping linear interval [a', b'] with a' <= b'.
+4) Solve maximum non-overlapping on a line (greedy)
+Sort others by increasing b', then greedily take an interval if a' > last_end.
+This is optimal for linear interval scheduling.
+5) Case split (≤ 11 runs)
+• Trial 0: choose none from covering_s → greedy on all others
+• Trial for each interval J in covering_s: pick J, then among others only intervals that fit in the remaining gap (the part not intersecting J)
+In shifted coordinates, a covering interval J becomes a wrapping one (aJ' > bJ'). The allowed region for others is exactly:
+• take intervals with a' > bJ' and b' < aJ'
+Then run greedy on those.
+Complexity
+Let n = #intervals:
+• Sweep to find s: O(n log n)
+• Build & sort linearized others: O(n log n)
+• Greedy pass: O(n)
+• Case split over ≤ 10 covering intervals: O(10n)
+Total: O(n log n) time, O(n) memory.
+
+Works comfortably for n=5·10^4.
+Important issues in your posted code (real bugs)
+Your logic is correct, but your linearization is wrong in edge cases:
+1. Shift formula is incorrect when a == s or b == s:
+
+You used:
+
+int new_a = (a > s) ? (a - s) : (a + m - s);
+
+If a == s, this returns m, but you need 0.
+✅ Fix:
+
+int new_a = (a - s + m) % m;
+int new_b = (b - s + m) % m;
+
+1. Your solve_linear(1, m, others) assumes coordinates in [1, m], but after shifting you should be in [0, m-1].
+
+So the greedy should run with start = 0 and no artificial end filter, or use [0, m) consistently.
+2. Off-by-one / inclusivity: the original problem uses segments as discrete and intervals are inclusive. Your greedy check interval.first > last_finishing_time is fine as long as you interpret “disjoint” as not sharing any segment; if endpoints are inclusive, the “compatible” condition should indeed be next_start > last_end.",,,,,Not in 2024,https://expert.ethz.ch/solve/KQfugMNiPfDK8jDhd
+Moving Books,Binary search on minimum feasible makespan with greedy feasibility check,Week 05,"Binary Search, Greedy",Completed,"You have n friends with strengths si (max weight they can lift) and m boxes with weights wi. A friend can carry one box at a time, and boxes can’t be carried jointly. Carrying a box downstairs takes 2 minutes, returning upstairs takes 1 minute. Initially all friends are upstairs; at the end, they do not need to be upstairs. Compute the minimum total time to move all boxes, or output impossible if some box is too heavy for every friend.","Sort friends’ strengths descending and boxes’ weights descending.Quick impossibility check: if heaviest box > strongest friend ⇒ impossible.Binary search the minimum number of rounds R (1..m).
+• Feasibility check for a candidate R:
+    ◦ Each friend can carry at most R boxes (one per round).
+    ◦ Greedily try to assign the heaviest remaining boxes to the strongest available friend, counting up to R boxes per friend.
+    ◦ If all m boxes can be assigned ⇒ feasible; otherwise infeasible.Convert rounds to time: time = 3*R − 1 minutes.
+• Each round costs 2 (down) + 1 (up) = 3, but after the last carried box there is no need to return upstairs, hence “−1”.","// start time: 12:40
+#include <bits/stdc++.h>
+using namespace std;
+
+void solve(){
+int n, m; cin >> n >> m;
+vector<int> friends(n);
+for(int i = 0; i < n; ++i) cin >> friends[i];
+vector<int> boxes(m);
+for(int i = 0; i < m; ++i) cin >> boxes[i];
+sort(friends.rbegin(), friends.rend());
+sort(boxes.rbegin(), boxes.rend());
+if(boxes[0] > friends[0]){
+cout << ""impossible""; return;
+}
+int left = 1, right = m;
+int res = m+1;
+while(left <= right){
+int mid = left + (right-left)/2;
+// mid :  num of round
+int bidx = 0, pidx = 0;
+int currTrip = 0;
+while(bidx < m && pidx < n){
+if(currTrip == mid) {
+++pidx; currTrip = 0;
+} else{
+if(friends[pidx] >= boxes[bidx]) {
+++bidx; ++currTrip;
+}
+else {
+++pidx; currTrip = 0;
+}
+}
+}
+if(bidx != m) left = mid+1;
+else {
+res = min(res, mid);
+right = mid-1;
+}
+}
+cout << res*3-1;
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+}
+//end time: 12:54",14,,,Default,https://expert.ethz.ch/solve/d4Ycy2PoWL8D9vGok
+Planet Express,"Multi-source Dijkstra (add new source connecting to old sources, with cost 0)
+
+Find shortest path from one of the sources to a target node + a network of teleportation",Week 05,"Dijkstra, Strongly Connected Components",Completed,"You have a directed weighted graph of n planets and m travel edges (cost in microseconds). You may start from any of the k warehouses at nodes 0..k−1. Destination is node n−1. Additionally, T planets are in a teleport network: two teleport planets u and v are “linked” if they are mutually reachable using only normal travel (no teleport), i.e., they lie in the same SCC. From teleport planet u you can teleport to any other linked teleport planet v in cost t(u), where t(u) equals the number of teleport planets linked with u (size of that teleport set). Find the shortest delivery time; if it exceeds 1,000,000 microseconds (1 second), print no, else print the time. ","
+1. Compute SCCs on the original directed graph (ignoring teleports).
+
+Two teleport nodes are linked iff they are in the same SCC. Count, for each SCC, how many teleport nodes it contains: sizeTele[SCC].
+2. Build an augmented graph for Dijkstra without quadratic teleport edges.
+
+For each SCC that contains teleport nodes, create one extra “hub” vertex H_scc.
+
+For each teleport node u in that SCC:
+• add edge u → H_scc with weight 0
+• add edge H_scc → u with weight (sizeTele[scc] − 1)
+
+Why it works: to go from u to v (u≠v) inside the same SCC via teleport, take u→H (0), then H→v (size−1). That exactly equals t(u) because t(u) is the number of linked teleport planets, and “linked” here means “teleport nodes in same SCC”.
+1. Add a super-source to handle “start from any warehouse”.
+
+Create S and connect S → i with weight 0 for i=0..k−1.
+2. Copy all original travel edges into the augmented graph with their weights.
+3. Run Dijkstra from S to target (n−1).
+
+If dist[n−1] > 1,000,000 (or unreachable), print no, else print dist.","// STL includes
+#include <iostream>
+#include <vector>
+using namespace std;
+// BGL includes
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/strong_components.hpp>
+
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS> graph;
+typedef boost::graph_traits<graph>::edge_iterator                         edge_it;
+
+
+// BGL includes
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/dijkstra_shortest_paths.hpp>
+
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS,
+boost::no_property, boost::property<boost::edge_weight_t, long> >      weighted_graph;
+typedef boost::property_map<weighted_graph, boost::edge_weight_t>::type weight_map;
+typedef boost::graph_traits<weighted_graph>::edge_descriptor            edge_desc;
+typedef boost::graph_traits<weighted_graph>::vertex_descriptor          vertex_desc;
+
+long dijkstra_dist(const weighted_graph &G, int s, int t) {
+int n = boost::num_vertices(G);
+std::vector<long> dist_map(n);
+
+boost::dijkstra_shortest_paths(G, s,
+boost::distance_map(boost::make_iterator_property_map(
+dist_map.begin(), boost::get(boost::vertex_index, G))));
+
+return dist_map[t];
+}
+
+void testcase() {
+int n, m, k, T;
+std::cin >> n >> m >> k >> T;
+vector<int> isTelep(T, false);
+for(int i = 0; i < T; ++i){
+cin >> isTelep[i];
+}
+graph G(n);
+struct edge {
+int u, v;
+long c;
+};
+vector<edge> edges(m);
+for (int i = 0; i < m; ++i) {
+int u, v;
+long c;
+std::cin >> u >> v >> c;
+edges[i] = {u,v,c};
+boost::add_edge(u, v, G);
+}
+
+// scc_map[i]: index of SCC containing i-th vertex
+std::vector<int> scc_map(n);  // exterior property map
+// nscc: total number of SCCs
+int nscc = boost::strong_components(G,
+boost::make_iterator_property_map(scc_map.begin(), boost::get(boost::vertex_index, G)));
+
+weighted_graph G_dj(n+nscc+1);
+weight_map weights = boost::get(boost::edge_weight, G_dj);
+edge_desc e;
+const int v_source = n+nscc;
+for(int i = 0; i < k; ++i){
+e = boost::add_edge(v_source, i, G_dj).first; weights[e]=0;
+}
+edge_it ebeg, eend;
+vector<int> sizes(nscc, 0);
+
+for(int node: isTelep){
+++sizes[scc_map[node]];
+}
+for(int i: isTelep){
+e = boost::add_edge(i, n+scc_map[i], G_dj).first; weights[e]=0;
+e = boost::add_edge(n+scc_map[i], i, G_dj).first; weights[e]=sizes[scc_map[i]]-1;
+}
+
+for (int i = 0; i < m; ++i) {
+int u, v;
+long long c;
+u = edges[i].u;
+v = edges[i].v;
+c = edges[i].c;
+e = boost::add_edge(u, v, G_dj).first; weights[e]=c;
+}
+
+long long res = dijkstra_dist(G_dj, v_source, n-1);
+if(res > 1000000) cout << ""no"";
+else cout << res;
+}
+
+int main()
+{
+ios_base::sync_with_stdio(false);
+int T;
+std::cin >> T;
+
+while(T--) {
+testcase(); cout << ""\n"";
+}
+
+return 0;
+}",,,"Print “no”
+Multi-source
+One target (n-1)",Not in 2024,https://expert.ethz.ch/solve/Q2qjBgStjkxoEjBX2
+Knights,Max flow with vertex capacities and unit edge capacities,Week 06,"MaxFlow, Vertex Capacity",Completed,"The cave is an m×n grid graph of intersections. Each knight starts at a given intersection (all distinct). Whenever a knight traverses a hallway segment, that segment collapses immediately, so it can be used by at most one knight. Intersections are stronger: an intersection collapses after C knights have been there, so each intersection can be used by at most C knights total. All boundary hallway ends connect to the outside (escape). Compute the maximum number of knights that can escape. ","Model the situation as a flow network where each unit of flow = one escaping knight.
+1. Node-splitting for intersection capacity C
+
+For each grid cell v, create two nodes: v_in and v_out.
+
+Add edge v_in → v_out with capacity C.
+
+This enforces: at most C knights can “use” that intersection.
+2. Hallway segment capacity 1
+
+From v_out, for each of the 4 directions:
+• If neighbor u is inside the grid: add edge v_out → u_in with capacity 1 (that corridor segment can be used by one knight).
+• If stepping outside the grid: add edge v_out → sink with capacity 1 (escaping via that boundary segment; corners correctly have two distinct exit segments, hence two sink edges).
+1. Multiple starting positions
+
+Add a super source S. For each knight start cell s: add S → s_in with capacity 1 (each start has one knight).
+2. Run max flow
+
+Compute max flow from S to sink. The flow value equals the maximum number of knights that can reach outside while respecting:
+• per-segment capacity 1 (collapse behind),
+• per-intersection capacity C.","//start: 12:21
+// Algolab BGL Tutorial 2 (Max flow, by mailto:taubnert@ethz.ch)
+// Flow example demonstrating how to use push_relabel_max_flow using a custom edge adder
+// to manage the interior graph properties required for flow algorithms
+#include <iostream>
+#include <bits/stdc++.h>
+using namespace std;
+// BGL include
+#include <boost/graph/adjacency_list.hpp>
+
+// BGL flow include NEW
+#include <boost/graph/push_relabel_max_flow.hpp>
+
+// Graph Type with nested interior edge properties for flow algorithms
+typedef boost::adjacency_list_traits<boost::vecS, boost::vecS, boost::directedS> traits;
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS, boost::no_property,
+boost::property<boost::edge_capacity_t, long,
+boost::property<boost::edge_residual_capacity_t, long,
+boost::property<boost::edge_reverse_t, traits::edge_descriptor>>>> graph;
+
+typedef traits::vertex_descriptor vertex_desc;
+typedef traits::edge_descriptor edge_desc;
+
+// Custom edge adder class, highly recommended
+class edge_adder {
+graph &G;
+
+public:
+explicit edge_adder(graph &G) : G(G) {}
+
+void add_edge(int from, int to, long capacity) {
+auto c_map = boost::get(boost::edge_capacity, G);
+auto r_map = boost::get(boost::edge_reverse, G);
+const auto e = boost::add_edge(from, to, G).first;
+const auto rev_e = boost::add_edge(to, from, G).first;
+c_map[e] = capacity;
+c_map[rev_e] = 0; // reverse edge has no capacity!
+r_map[e] = rev_e;
+r_map[rev_e] = e;
+}
+};
+int totcol;
+int totrow;
+int transform(int coli, int rowj){
+return colitotrow + rowj;
+}
+void make_it_flow() {
+int m, n, k, c; cin >> m >> n >> k >> c;
+totcol = m;
+totrow = n;
+graph G(nm2);
+edge_adder adder(G);
+const int shift = nm;
+const vertex_desc v_source = boost::add_vertex(G);
+const vertex_desc v_sink = boost::add_vertex(G);
+for(int i = 0; i < k; ++i){
+int coli, rowj; cin >> coli >> rowj;
+adder.add_edge(v_source, transform(coli,rowj), 1);
+}
+vector<pair<int,int>> moves = {{1,0},{0,1},{-1,0},{0,-1}};
+for(int i = 0; i < m; ++i){
+for(int j = 0; j < n; ++j){
+int idx = transform(i,j);
+adder.add_edge(idx, shift+idx, c);
+for(auto move: moves){
+int newi = i+move.first;
+int newj = j+move.second;
+if(newi >= 0 && newi < m && newj >= 0 && newj < n)
+adder.add_edge(shift+idx, transform(newi,newj), 1);
+else adder.add_edge(shift+idx, v_sink, 1);
+}
+}
+}
+// - edge_capacity, edge_reverse (read access),
+// - edge_residual_capacity (read and write access).
+long flow = boost::push_relabel_max_flow(G, v_source, v_sink);
+std::cout << flow;
+
+}
+
+int main() {
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+make_it_flow(); cout << ""\n"";
+}
+
+
+return 0;
+}
+//end : 12:33",12,,,Default,https://expert.ethz.ch/solve/TmFaTbNReatKYvc2y
+Tiles,Perfect matching feasibility in a bipartite grid graph,Week 06,Maximum matching,Completed,"You are given a w×h grid where . cells must be tiled and x cells must remain empty. A domino tile covers exactly two orthogonally adjacent cells (horizontal or vertical). Decide if all . cells can be covered exactly once by dominoes (unlimited supply). Output yes or no. ","Give every . cell a unique id (0..n−1). Let n be the number of free cells.If n is odd, immediately output no (dominoes cover 2 cells each).Build an undirected graph G with n vertices: add an edge between two vertices iff their corresponding cells are orthogonally adjacent and both are ..Compute a maximum cardinality matching in G (Edmonds’ algorithm via BGL).If the matching size is exactly n/2, then a perfect matching exists, which corresponds to a valid domino tiling ⇒ yes. Otherwise ⇒ no.","// STL includes
+#include <iostream>
+#include <vector>
+using namespace std;
+// BGL includes
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/max_cardinality_matching.hpp>
+
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS> graph;
+typedef boost::graph_traits<graph>::vertex_descriptor                       vertex_desc;
+
+int maximum_matching(const graph &G) {
+int n = boost::num_vertices(G);
+std::vector<vertex_desc> mate_map(n);  // exterior property map
+
+boost::edmonds_maximum_cardinality_matching(G,
+boost::make_iterator_property_map(mate_map.begin(), boost::get(boost::vertex_index, G)));
+return boost::matching_size(G,
+boost::make_iterator_property_map(mate_map.begin(), boost::get(boost::vertex_index, G)));
+}
+
+void solve(){
+int w, h; cin >> w >> h;
+vector<vector<int>> matrix(h, vector<int> (w,-1));
+int n = 0;
+for(int i = 0; i < h; ++i){
+for(int j = 0; j < w; ++j){
+char c; cin >> c;
+if(c == '.') {
+matrix[i][j] = n;
+++n;
+}
+}
+}
+if(n%2){
+cout << ""no""; return;
+}
+graph G(n);
+vector<pair<int,int>> moves = {{1,0},{0,1},{-1,0},{0,-1}};
+for(int i = 0; i < h; ++i){
+for(int j = 0; j < w; ++j){
+if(matrix[i][j] == -1) continue;
+for(auto move: moves){
+int newi = i+move.first;
+int newj = j+move.second;
+if(newi >= 0 && newi < h && newj >= 0 && newj < w && matrix[newi][newj] != -1){
+boost::add_edge(matrix[i][j], matrix[newi][newj], G);
+}
+}
+}
+}
+
+if(2*maximum_matching(G) == n) cout << ""yes"";
+else cout << ""no"";
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+}",10,,Print “yes”/”no”,Default,https://expert.ethz.ch/solve/koeZJPBREr7CdHE5v
+Coin Tossing Tournament,Feasibility of fixed marginals via max flow,Week 06,MaxFlow,Completed,"There are n players and m rounds. Each round is between players a and b. If the winner is known, that winner gets 1 point. If unknown (c=0), exactly one of the two must get 1 point. You are given a final scoreboard s0..s(n−1). Decide if there exists an assignment of outcomes for all unknown rounds so that every player ends with exactly si points. Output yes or no.","
+1. Compute current known scores.
+
+For each match:
+• c=1 → increment score[a]
+• c=2 → increment score[b]
+• c=0 → treat as an “unresolved match” that must give 1 point to either endpoint.
+1. Convert unresolved matches into a flow problem.
+
+Create a directed flow network with:
+• A node for each unresolved match (index 0..u−1 in your code, reusing i for matches with c=0)
+• A node for each player (offset by m in your code: m+i)
+• Source S and sink T
+Add edges:
+• S → matchNode with capacity 1 (each unresolved match contributes exactly 1 point total)
+• matchNode → player a with cap 1 and matchNode → player b with cap 1 (that point can go to either player)
+• player i → T with cap (si − current_score[i]) (how many additional points player i still needs)
+1. Early impossibility checks (important):
+• If si − current_score[i] < 0 for some i → already exceeded scoreboard → no.
+• Let U be #unresolved matches. Total remaining points needed is sum(si − current_score[i]). Must equal U, otherwise no (since each unresolved match contributes exactly one point).
+1. Run max flow and verify.
+
+Compute max flow from S to T.
+• If flow == total_remaining_needed → assignment exists → yes
+• Else → no
+
+This works because each unit of flow corresponds to choosing the winner of an unresolved match.","//sratt 11:23
+// Algolab BGL Tutorial 2 (Max flow, by mailto:taubnert@ethz.ch)
+// Flow example demonstrating how to use push_relabel_max_flow using a custom edge adder
+// to manage the interior graph properties required for flow algorithms
+#include <iostream>
+#include <bits/stdc++.h>
+using namespace std;
+// BGL include
+#include <boost/graph/adjacency_list.hpp>
+
+// BGL flow include NEW
+#include <boost/graph/push_relabel_max_flow.hpp>
+
+// Graph Type with nested interior edge properties for flow algorithms
+typedef boost::adjacency_list_traits<boost::vecS, boost::vecS, boost::directedS> traits;
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS, boost::no_property,
+boost::property<boost::edge_capacity_t, long,
+boost::property<boost::edge_residual_capacity_t, long,
+boost::property<boost::edge_reverse_t, traits::edge_descriptor>>>> graph;
+
+typedef traits::vertex_descriptor vertex_desc;
+typedef traits::edge_descriptor edge_desc;
+
+// Custom edge adder class, highly recommended
+class edge_adder {
+graph &G;
+
+public:
+explicit edge_adder(graph &G) : G(G) {}
+
+void add_edge(int from, int to, long capacity) {
+auto c_map = boost::get(boost::edge_capacity, G);
+auto r_map = boost::get(boost::edge_reverse, G);
+const auto e = boost::add_edge(from, to, G).first;
+const auto rev_e = boost::add_edge(to, from, G).first;
+c_map[e] = capacity;
+c_map[rev_e] = 0; // reverse edge has no capacity!
+r_map[e] = rev_e;
+r_map[rev_e] = e;
+}
+};
+
+void make_it_flow() {
+int n, m; cin >> n >> m;
+vector<long> curr_scores(n,0);
+graph G(m+n);
+edge_adder adder(G);
+const vertex_desc v_source = boost::add_vertex(G);
+const vertex_desc v_sink = boost::add_vertex(G);
+int match_rem = 0;
+for(int i = 0; i < m; ++i){
+int a, b, c; cin >> a >> b >> c;
+if(c == 1) ++curr_scores[a];
+else if(c == 2) ++curr_scores[b];
+else if(c == 0){
+adder.add_edge(v_source, i, 1);
+adder.add_edge(i, m+a, 1);
+adder.add_edge(i, m+b, 1);
+++match_rem;
+}
+}
+vector<long> lb(n);
+for(int i = 0; i < n; ++i){
+cin >> lb[i];
+}
+long tot_rem = 0;
+for(int i = 0; i < n; ++i){
+long rem =  lb[i]-curr_scores[i];
+if(rem < 0){
+cout << ""no""; return;
+} else adder.add_edge(m+i, v_sink, rem);
+tot_rem += rem;
+}
+if(match_rem != tot_rem) {
+cout << ""no""; return;
+}
+
+
+// The flow algorithm uses the interior properties (managed in the edge adder)
+// - edge_capacity, edge_reverse (read access),
+// - edge_residual_capacity (read and write access).
+long flow = boost::push_relabel_max_flow(G, v_source, v_sink);
+if(flow == tot_rem) cout << ""yes"";
+else cout << ""no"";
+}
+
+int main() {
+ios_base::sync_with_stdio(0);
+int t; cin >> t;
+while(t--){
+make_it_flow(); cout << ""\n"";
+}
+
+
+return 0;
+}
+//end 11:40",17,"if(match_rem != tot_rem) {
+cout << ""no""; return;
+}",,Default,https://expert.ethz.ch/solve/o6cyW5DLWT5AEhDRs
+Motorcycles,Two-pass dominance filtering after sorting (envelope / skyline selection),Week 06,"Sort by y0, Two-pass dominance filtering",Rewrite it,"There are n bikers starting at (0, y0) with distinct y0. Biker i rides along the ray through (x1, y1) with x1>0 (direction only). All move at the same speed. If a biker reaches a point that was already visited earlier by another biker, she stops. If two bikers reach the same point at the same time, the one coming “from the right” continues and the other stops. Output the indices of bikers that never meet anyone’s tracks (ride forever), sorted increasingly.","
+1. For each biker compute the slope of the ray: slope = (y1 − y0) / x1 as an exact rational (Gmpq).
+2. Sort bikers by starting y0 decreasing (top to bottom).
+3. Mark everyone as “forever” initially, then eliminate bikers that must collide using slope dominance.
+Intuition: when you order by y0, a biker can only be blocked by bikers starting above or below depending on whether her ray goes “up” or “down”. The surviving riders are those whose slopes form a kind of monotone “envelope” when scanned.
+Your implementation does two scans:
+• Top-down scan (i = 1..n−1): keep a running min_slope in terms of absolute value (your condition abs(slopes[i]) <= abs(min_slope) updates it). If a biker’s slope is too steep upward compared to what’s already “protecting” from above (slopes[i] > min_slope in your code), she’s marked not-forever.
+• Bottom-up scan (i = n−2..0): similarly keep the current best limiting slope from below (min_slope = slopes[n−1]) with careful tie-handling on equal absolute value. If a biker slopes too far downward compared to the limiter (slopes[i] < min_slope), she’s eliminated.
+1. Collect indices still marked forever and sort them for output.
+(Important for correctness at this scale: you use exact rationals for slope comparisons, avoiding precision bugs with near-parallel lines.)","#include <bits/stdc++.h>
+#include <CGAL/Gmpq.h>
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+using namespace std;
+
+typedef CGAL::Gmpq IT;
+
+void solve(){
+int n; cin >> n;
+struct biker{
+long y0;
+IT slope;
+int idx;
+};
+vector<biker> bikers(n);
+for(int i = 0; i < n; ++i){
+long y0, x1, y1; cin >> y0 >> x1 >> y1;
+bikers[i] = {y0,IT(y1-y0, x1),i};
+}
+sort(bikers.begin(), bikers.end(), [&](biker b1, biker b2){
+return b1.y0 > b2.y0;
+});
+vector<bool> forever(n, true);
+
+vector<IT> slopes(n);
+for(int i = 0; i < n; ++i) slopes[i] = bikers[i].slope;
+
+IT min_slope = slopes[0];
+for(int i = 1; i < n; ++i){
+if(abs(slopes[i]) <= abs(min_slope)) min_slope = slopes[i];
+else if(slopes[i] > min_slope) forever[i] = false;
+}
+
+min_slope = slopes[n-1];
+for(int i = n-2; i >= 0; --i){
+if(abs(slopes[i]) < abs(min_slope)) min_slope = slopes[i];
+else if(abs(slopes[i]) == abs(min_slope) && slopes[i] > min_slope) min_slope = slopes[i];
+else if(slopes[i] < min_slope) forever[i] = false;
+}
+
+vector<int> res;
+for(int i = 0; i < n; ++i){
+if(forever[i]) res.push_back(bikers[i].idx);
+}
+sort(res.begin(), res.end());
+for(int i: res) cout << i << "" "";
+
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+if(cin >> t) cout << ""jieufeifw\n"";
+}",90,,,Default,https://expert.ethz.ch/solve/E2zprburo9XkhJ9Rb
+London,"Feasibility of aggregated two-choice resources via max flow
+(or shorter: “Two-choice supply feasibility via max flow”)",Week 06,"Frequency counting, MaxFlow",Completed,"A newspaper page has a front and a back, each an h×w grid of capital letters. Cutting the page into 1×1 tiles gives pieces with a letter on the front and a (fixed) corresponding letter on the back (due to the physical alignment and mirroring). You may flip each piece. Given a target note string, decide if you can assemble it using some/all tiles (each tile at most once). Output Yes or No. ","
+1. Count required letters.
+
+Compute objective[L] = how many times each letter L appears in the note.
+2. Compute available tile pair counts.
+
+Read front grid normally. Read back grid with the required mirroring: back line i corresponds to front line (h−1−i), and within a line j maps to (w−1−j). Your code implements this by storing back[i][w-j-1].
+
+For each tile position, you get an unordered pair (f,b). Since you can flip, the tile can provide either f or b.
+
+Count:
+• source_to_letter[f]++ (how many tiles have front letter f; used as supply into node f)
+• to_give[f][b]++ (how many tiles have front f and back b)
+1. Flow model on 26 letters:
+• Source S → node i with capacity = number of tiles whose front is i (source_to_letter[i])
+• For every ordered pair (i,j), edge i → j with capacity = number of tiles (front=i, back=j). This represents “use one such tile and possibly flip to output j”.
+• Node i → sink T with capacity = objective[i] (need that many of letter i).
+
+Run max flow; if total flow equals note length, you can satisfy all demands.
+Intuition: Each unit of flow corresponds to picking one physical tile: it enters at its front letter node i (consuming supply), travels along i→j (choosing which back letter it can become), and exits at demanded letter j. Capacities enforce that each tile is used at most once.","//start 11:50
+// Algolab BGL Tutorial 2 (Max flow, by mailto:taubnert@ethz.ch)
+// Flow example demonstrating how to use push_relabel_max_flow using a custom edge adder
+// to manage the interior graph properties required for flow algorithms
+#include <iostream>
+#include <bits/stdc++.h>
+using namespace std;
+// BGL include
+#include <boost/graph/adjacency_list.hpp>
+
+// BGL flow include NEW
+#include <boost/graph/push_relabel_max_flow.hpp>
+
+// Graph Type with nested interior edge properties for flow algorithms
+typedef boost::adjacency_list_traits<boost::vecS, boost::vecS, boost::directedS> traits;
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS, boost::no_property,
+boost::property<boost::edge_capacity_t, long,
+boost::property<boost::edge_residual_capacity_t, long,
+boost::property<boost::edge_reverse_t, traits::edge_descriptor>>>> graph;
+
+typedef traits::vertex_descriptor vertex_desc;
+typedef traits::edge_descriptor edge_desc;
+
+// Custom edge adder class, highly recommended
+class edge_adder {
+graph &G;
+
+public:
+explicit edge_adder(graph &G) : G(G) {}
+
+void add_edge(int from, int to, long capacity) {
+auto c_map = boost::get(boost::edge_capacity, G);
+auto r_map = boost::get(boost::edge_reverse, G);
+const auto e = boost::add_edge(from, to, G).first;
+const auto rev_e = boost::add_edge(to, from, G).first;
+c_map[e] = capacity;
+c_map[rev_e] = 0; // reverse edge has no capacity!
+r_map[e] = rev_e;
+r_map[rev_e] = e;
+}
+};
+
+void make_it_flow() {
+int h, w; cin >> h >> w;
+string target; cin >> target;
+long res_target = target.size();
+int size = (int)('Z'-'A');
+++size;
+vector<int> objective(size,0);
+for(char c: target){
+int idx = (int)(c-'A');
+++objective[idx];
+}
+
+graph G(size);
+edge_adder adder(G);
+
+// Add special vertices source and sink
+const vertex_desc v_source = boost::add_vertex(G);
+const vertex_desc v_sink = boost::add_vertex(G);
+for(int i = 0; i < size; ++i){
+if(objective[i] > 0) adder.add_edge(i, v_sink, objective[i]);
+}
+
+vector<vector<char>> front(h, vector<char> (w));
+for(int i = 0; i < h; ++i){
+for(int j = 0; j < w; ++j){
+cin >> front[i][j];
+}
+}
+vector<vector<char>> back(h, vector<char> (w));
+for(int i = 0; i < h; ++i){
+for(int j = 0; j < w; ++j){
+cin >> back[i][w-j-1];
+}
+}
+vector<int> source_to_letter(size,0);
+vector<vector<int>> to_give(size, vector<int> (size,0));
+for(int i = 0; i < h; ++i){
+for(int j = 0; j < w; ++j){
+char f = front[i][j];
+char b = back[i][j];
+int fidx = f-'A';
+int bidx = b-'A';
+source_to_letter[fidx] += 1;
+to_give[fidx][bidx] += 1;
+}
+}
+for(int i = 0; i < size; ++i){
+if(source_to_letter[i] > 0) adder.add_edge(v_source, i, source_to_letter[i]);
+}
+for(int i = 0; i < size; ++i){
+for(int j = 0; j < size; ++j){
+if(to_give[i][j] > 0) adder.add_edge(i, j, to_give[i][j]);
+}
+}
+
+// Calculate flow from source to sink
+// The flow algorithm uses the interior properties (managed in the edge adder)
+// - edge_capacity, edge_reverse (read access),
+// - edge_residual_capacity (read and write access).
+long flow = boost::push_relabel_max_flow(G, v_source, v_sink);
+if(flow == res_target) cout << ""Yes"";
+else cout << ""No"";
+
+}
+
+int main() {
+ios_base::sync_with_stdio(0);
+int t; cin >> t;
+while(t--){
+make_it_flow(); cout << ""\n"";
+}
+
+
+return 0;
+}
+//end: 12:18",28,Remember to create a matrix of letter→letter edges assign instead of adding each edge,"“ETHONTHEROAD”
+“Yes” / “No”",Default,https://expert.ethz.ch/solve/SbpvKZD3wG6mEmPGN
+Bistro,Nearest-neighbor queries in 2D via Delaunay triangulation,Week 07,Delaunay triangulation,Completed,"Given n existing points (restaurant locations) and then m query points (candidate locations), output for each query the squared Euclidean distance to the closest existing point. Multiple test cases; input ends with 0. 
+","
+1. Read the n existing points and build a Delaunay triangulation over them (with vertex info storing indices if needed).
+2. For each query point q:
+    ◦ Use t.nearest_vertex(q) to get the nearest triangulation vertex (nearest existing point).
+    ◦ Compute CGAL::squared_distance(q, nearest_point) and print it.
+
+Delaunay triangulation supports nearest-neighbor queries efficiently in practice; squared distance avoids floating issues from square roots.
+","// ETH AlgoLab example code: Compute a Euclidean minimum spanning tree (EMST)
+// for n points p_0,...,p_{n-1} in O(n log n) time. Output the edges as ordered
+// pairs of vertex indices (smaller first) together with the squared length; for
+// instance, an edge between p_4=(0,0) and p_2=(1,2) is printed as ""2 4 5"".
+
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Delaunay_triangulation_2.h>
+#include <CGAL/Triangulation_vertex_base_with_info_2.h>
+#include <CGAL/Triangulation_face_base_2.h>
+#include <boost/pending/disjoint_sets.hpp>
+#include <vector>
+#include <tuple>
+#include <algorithm>
+#include <iostream>
+
+// Epic kernel is enough, no constructions needed, provided the squared distance
+// fits into a double (!)
+typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+// we want to store an index with each vertex
+typedef std::size_t                                            Index;
+typedef CGAL::Triangulation_vertex_base_with_info_2<Index,K>   Vb;
+typedef CGAL::Triangulation_face_base_2<K>                     Fb;
+typedef CGAL::Triangulation_data_structure_2<Vb,Fb>            Tds;
+typedef CGAL::Delaunay_triangulation_2<K,Tds>                  Delaunay;
+
+// As edges are not explicitly represented in the triangulation, we extract them
+// from the triangulation to be able to sort and process them. We store the
+// indices of the two endpoints, first the smaller, second the larger, and third
+// the squared length of the edge. The i-th entry, for i=0,... of a tuple t can
+// be accessed using std::get<i>(t).
+typedef std::tuple<Index,Index,K::FT> Edge;
+typedef std::vector<Edge> EdgeV;
+
+
+
+void compute_emst(std::size_t n) {
+//std::cout <<""\nNEW, t: ""<<n<<""\n\n"";
+// read points: first, we read all points and store them into a vector,
+// together with their indices
+typedef std::pair<K::Point_2,Index> IPoint;
+std::vector<IPoint> points;
+points.reserve(n);
+for (Index i = 0; i < n; ++i) {
+int x, y;
+std::cin >> x >> y;
+//std::cout << ""x: ""<<x<<"" - y: ""<<y<<""\n"";
+points.emplace_back(K::Point_2(x, y), i);
+}
+// then we build the Delaunay triangulation in one shot, so as to leave the
+// choice of an efficient insertion order to the triangulation structure. By
+// giving the points paired with the indices, these indices are used to
+// initialize the vertex info accordingly.
+// This step takes O(n log n) time (for constructing the triangulation).
+Delaunay t;
+t.insert(points.begin(), points.end());
+
+
+int m; std::cin >> m;
+for(int i = 0; i < m; ++i){
+int x, y;
+std::cin >> x >> y;
+K::Point_2 new_loc(x, y);
+K::Point_2 closest = t.nearest_vertex(new_loc)->point();
+K::FT dist = CGAL::squared_distance(new_loc, closest);
+std::cout << dist << ""\n"";
+}
+}
+
+int main()
+{
+std::ios_base::sync_with_stdio(false);
+std::cout << std::setiosflags(std::ios::fixed) << std::setprecision(0);
+std::size_t t;
+while(true){
+std::cin >> t;
+if(t == 0) return 0;
+compute_emst(t);
+}
+return 0;
+}",10,Use setprecision(0),print squared euclidean distances,Default,https://expert.ethz.ch/solve/YqyDKsHaYFBP8iZ8x
+Clues,Unit Disk Graph Bipartiteness + Connectivity Queries,Week 07,"IsBipartite, Strongly Connected Components",Learn&ShutUp,"You are given n stations as points in the plane and a communication radius r. Build the unit disk graph (UDG): an (undirected) edge exists between two stations iff their Euclidean distance is ≤ r.
+Two tasks:
+1. Feasibility (interference constraint)
+
+Check whether the UDG is bipartite (i.e., stations can be colored with 2 frequencies so that every interfering pair (distance ≤ r) gets different colors).
+
+If it is not bipartite, the network is “broken” and every query answer is n.
+2. m connectivity queries
+
+Each query gives two arbitrary points a and b (Holmes/Watson). They can communicate if:
+    ◦ either a and b are directly within r, or
+    ◦ both can reach some station within r, and those two stations lie in the same connected component of the (valid) station graph.
+Output per query: y if communication is possible, else n.
+Core underlying model: Unit disk graph bipartiteness + component connectivity with nearest-neighbor attachment queries.","1) Replace the full UDG by “enough edges” via Delaunay
+Building the full UDG is O(n2)O(n^2)O(n2). Instead:
+• Build Delaunay triangulation of the station points in O(nlog⁡n)O(n \log n)O(nlogn).
+• Only consider Delaunay edges whose squared length ≤ r2r^2r2, and add them to a BGL graph G.
+Key fact used in these problems: for disk graphs, the Delaunay edges contain all edges necessary to preserve connectivity and to detect short-range conflicts efficiently, so you can avoid the quadratic blowup.
+2) Check bipartiteness on this sparse graph
+Run boost::is_bipartite(G, ...):
+• If false: the interference constraint cannot be satisfied → print n for every query.
+• If true: you also obtain a valid 2-coloring (stored in partition).
+3) Validate the coloring really has no same-color interference
+Even if the Delaunay-edge graph is bipartite, you must ensure there is no missing short edge (non-Delaunay) connecting two vertices of the same color within distance ≤ r.
+Your code handles this by:
+• Splitting vertices into two sets by the bipartite coloring: points_1 and points_2.
+• Building a Delaunay triangulation for each set.
+• Checking if either triangulation contains an edge of length ≤ r (meaning two same-colored points are within range) → then mark without_interference = false.
+This is the “final safety check” that upgrades “bipartite on sparse proxy graph” into “bipartite on the real UDG”.
+4) Compute connected components once
+Run boost::connected_components(G, component_map) on the same sparse graph (Delaunay edges ≤ r).
+
+This gives component IDs for each station.
+5) Answer each query in O(log n)
+For each query points a and b:
+1. If !without_interference: output n.
+2. If dist(a,b) ≤ r: output y (direct communication).
+3. Find nearest stations:
+    ◦ va = nearest_vertex(a)
+    ◦ vb = nearest_vertex(b)
+4. If dist(a, va) > r or dist(b, vb) > r: output n (can’t attach to the network).
+5. Else if component_map[va] == component_map[vb]: output y, else n.
+Complexities:
+• Triangulation: O(nlog⁡n)O(n \log n)O(nlogn)
+• Graph edges: O(n)O(n)O(n)
+• Bipartite + CC: O(n)O(n)O(n)
+• Each query: nearest neighbor + a few distance checks O(log⁡n)O(\log n)O(logn)",,1000000,,,Default,https://expert.ethz.ch/solve/rmmZFJ7CkgFsifyTX
+Germs,"Growing disks, event times via Delaunay triangulation and edge sorting",Week 07,Delaunay triangulation,Completed,"You have n bacteria as points inside an axis-aligned rectangle. Each bacterium is a disk with initial radius 0.5 and growth radius rho(t) = t^2 + 0.5 (t in hours). A bacterium “dies” the instant it touches either (a) another bacterium or (b) the dish boundary. In the simplified simulation, bacteria keep growing even after death (so you only care about the first touch event per bacterium). Output three times (rounded up to the next integer hour): when the first bacterium dies, when alive drops below 50%, and when the last bacterium dies.","For each bacterium i, the death event happens when its radius reaches the smallest “blocking radius” among:
+• distance from its center to the closest dish wall, and
+• half the distance to its closest other bacterium.
+
+(Because both disks grow at the same rate and touch when 2*rho(t) equals center distance.)Candidate closest neighbors can be restricted to Delaunay edges: the nearest neighbor of a point is always among its Delaunay triangulation neighbors (so you don’t need all pairs).Build an edge list containing:
+• For each bacterium i: one “boundary edge” with weight 4 * (min wall distance)^2 (so sqrt(weight/4) equals the wall distance).
+• For each Delaunay edge (i,j): one “pair edge” with weight (center distance)^2 (so sqrt(weight/4) equals half the center distance).Sort all edges by weight increasing. Sweep them in order and assign death times:
+• When you encounter the smallest edge that involves bacterium i, that edge determines i’s first touch, so i’s death time is fixed then.
+• If the edge is between two bacteria and both are still unassigned, both die at that same time (simultaneous touch).Convert blocking radius R to time:
+• If R ≤ 0.5 → time 0
+• Else time = ceil( sqrt(R − 0.5) )
+
+This matches rho(t)=t^2+0.5 and the required “round up to next integer hour” rule. 
+this (7)Because the sweep assigns deaths in chronological order, you can output:
+• first death = times[0]
+• “alive < 50%” moment = times[n/2]
+• last death = times[n−1]","// ETH AlgoLab example code: Compute a Euclidean minimum spanning tree (EMST)
+// for n points p_0,...,p_{n-1} in O(n log n) time. Output the edges as ordered
+// pairs of vertex indices (smaller first) together with the squared length; for
+// instance, an edge between p_4=(0,0) and p_2=(1,2) is printed as ""2 4 5"".
+
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Delaunay_triangulation_2.h>
+#include <CGAL/Triangulation_vertex_base_with_info_2.h>
+#include <CGAL/Triangulation_face_base_2.h>
+#include <boost/pending/disjoint_sets.hpp>
+#include <vector>
+#include <tuple>
+#include <algorithm>
+#include <iostream>
+using namespace std;
+#include <CGAL/Exact_predicates_exact_constructions_kernel_with_sqrt.h>
+typedef CGAL::Exact_predicates_exact_constructions_kernel_with_sqrt K_sqrt;
+
+
+// Epic kernel is enough, no constructions needed, provided the squared distance
+// fits into a double (!)
+typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+// we want to store an index with each vertex
+typedef std::size_t                                            Index;
+typedef CGAL::Triangulation_vertex_base_with_info_2<Index,K>   Vb;
+typedef CGAL::Triangulation_face_base_2<K>                     Fb;
+typedef CGAL::Triangulation_data_structure_2<Vb,Fb>            Tds;
+typedef CGAL::Delaunay_triangulation_2<K,Tds>                  Delaunay;
+
+// As edges are not explicitly represented in the triangulation, we extract them
+// from the triangulation to be able to sort and process them. We store the
+// indices of the two endpoints, first the smaller, second the larger, and third
+// the squared length of the edge. The i-th entry, for i=0,... of a tuple t can
+// be accessed using std::get<i>(t).
+typedef std::tuple<Index,Index,K::FT> Edge;
+typedef std::vector<Edge> EdgeV;
+
+double ceil_to_double(const K::FT& x){
+double a = std::ceil(CGAL::to_double(x));
+while (a < x) a += 1;
+while (a-1 >= x) a -= 1;
+return a;
+}
+
+void compute_emst(Index n) {
+K::FT l, b, r, top; cin >> l >> b >> r >> top;
+
+// read points: first, we read all points and store them into a vector,
+// together with their indices
+typedef std::pair<K::Point_2,Index> IPoint;
+std::vector<IPoint> points;
+points.reserve(n);
+EdgeV edges;
+for (Index i = 0; i < n; ++i) {
+K::FT x, y;
+std::cin >> x >> y;
+K::Point_2 bact(x,y);
+points.emplace_back(K::Point_2(x, y), i);
+K::FT min_x = min(r-x,x-l);
+K::FT min_y = min(top-y,y-b);
+K::FT target_x, target_y;
+if(min_x <= min_y){
+target_y = y;
+if(r-x <= x-l) target_x = r;
+else target_x = l;
+} else {
+target_x = x;
+if(top-y <= y-b) target_y = top;
+else target_y = b;
+}
+edges.emplace_back(i, i+n, 4*CGAL::squared_distance(bact,K::Point_2(target_x,target_y)));
+}
+// then we build the Delaunay triangulation in one shot, so as to leave the
+// choice of an efficient insertion order to the triangulation structure. By
+// giving the points paired with the indices, these indices are used to
+// initialize the vertex info accordingly.
+// This step takes O(n log n) time (for constructing the triangulation).
+Delaunay t;
+t.insert(points.begin(), points.end());
+// extract edges and sort by (squared) length
+// This step takes O(n log n) time (for the sorting).
+
+for (auto e = t.finite_edges_begin(); e != t.finite_edges_end(); ++e) {
+Index i1 = e->first->vertex((e->second+1)%3)->info();
+Index i2 = e->first->vertex((e->second+2)%3)->info();
+// ensure smaller index comes first
+if (i1 > i2) std::swap(i1, i2);
+edges.emplace_back(i1, i2, t.segment(e).squared_length());
+}
+std::sort(edges.begin(), edges.end(),
+[](const Edge& e1, const Edge& e2) -> bool {
+return std::get<2>(e1) < std::get<2>(e2);
+});
+
+// Compute EMST using Kruskal's algorithm. This step takes O(n alpha(n)) time
+// in theory; for all practical purposes alpha(n) is constant, so linear time.
+
+// setup and initialize union-find data structure
+vector<K::FT> times(n,-1);
+vector<bool> isDead(n,false);
+int num_dead = 0;
+for (EdgeV::const_iterator e = edges.begin(); e != edges.end(); ++e) {
+// determine components of endpoints
+Index u = std::get<0>(*e);
+Index v = std::get<1>(*e);
+
+if(u >= n && v >= n) continue;
+if(v >= n){
+if(isDead[u]) continue;
+K::FT radius = CGAL::sqrt(std::get<2>(*e)/4.0);
+K::FT time_curr;
+if(radius <= 0.5) time_curr = 0;
+else time_curr = ceil_to_double(CGAL::sqrt(radius - 0.5));
+times[num_dead] = time_curr;
+isDead[u] = true;
+++num_dead;
+continue;
+}
+if(isDead[u] && isDead[v]) continue;
+K::FT radius = CGAL::sqrt(std::get<2>(*e)/4.0);
+K::FT time_curr;
+if(radius <= 0.5) time_curr = 0;
+else time_curr = ceil_to_double(CGAL::sqrt(radius - 0.5));
+if(isDead[v]){
+times[num_dead] = time_curr;
+isDead[u] = true;
+++num_dead;
+} else if(isDead[u]){
+times[num_dead] = time_curr;
+isDead[v] = true;
+++num_dead;
+} else {
+times[num_dead] = time_curr;
+isDead[u] = true;
+++num_dead;
+times[num_dead] = time_curr;
+isDead[v] = true;
+++num_dead;
+}
+
+if(times[n-1] != -1) break;
+}
+cout << times[0] << "" ""<<times[n/2] << "" ""<<times[n-1];
+cout << ""\n"";
+}
+
+int main()
+{
+std::ios_base::sync_with_stdio(false);
+std::cout << std::setiosflags(std::ios::fixed) << std::setprecision(0);
+Index n; cin >> n;
+while(n != 0){
+compute_emst(n);
+cin >> n;
+}
+if(cin >> n) cout << ""HFBHFIFBI\n"";
+return 0;
+}",30,,,Default,https://expert.ethz.ch/solve/ZH8nwxwvT9ANjNDMn
+H1N1,Maximum bottleneck path to a boundary (widest-path / max–min reachability),Week 07,"Delaunay triangulation, Voronoi diagram",Completed,"You are given n infected people as points in the plane. For each user query (x, y, d), decide whether the user can go arbitrarily far away (escape to infinity) while never getting closer than sqrt(d) to any infected person (distance exactly sqrt(d) is allowed). Each query is independent. Output a string of ‘y’/‘n’. Constraints: n up to 6·10^4, m up to 4·10^4. 
+","Core idea: interpret “keep distance sqrt(d)” as moving in the plane outside disks around infected points. The relevant “channels” between disks are captured by the Delaunay triangulation: moving between two neighboring Voronoi cells is blocked by the Delaunay edge between the two sites, and the clearance of that passage depends on that edge length.
+1. Build Delaunay triangulation of infected points.
+2. Work on the dual graph of faces (triangulation faces as nodes). Two faces are adjacent if they share a Delaunay edge.
+    ◦ Assign each adjacency an “edge capacity” = squared length of the shared Delaunay edge.
+    ◦ A path can pass through that face adjacency while keeping distance sqrt(d) iff the shared Delaunay edge has length ≥ 2*sqrt(d), i.e. squared length ≥ 4d.
+3. Precompute for every face f a value f.info = best bottleneck capacity to infinity:
+    ◦ Initialize all infinite faces with capacity = +infinity (you are already at the outside).
+    ◦ Run a priority-queue widest-path algorithm on faces:
+        ▪ Pop face with currently highest capacity.
+        ▪ For each neighbor across shared edge with squared length L: candidate = min(current_capacity, L).
+        ▪ If candidate improves neighbor, update it.
+
+This yields, for each face, the maximum possible minimum-edge capacity along any route from that face to infinity.
+4. Answer each query (x, y, d):
+    ◦ Immediate fail check: if the query point is too close to the nearest infected person, you already violate the distance rule at time 0.
+        ▪ Compute squared distance to nearest_vertex(q); if it is < d, output n.
+    ◦ Otherwise locate the face containing q with t.locate(q).
+        ▪ If it’s an infinite face: output y.
+        ▪ Else: output y iff face.info >= 4d, else n.
+
+This matches your code exactly: nearest check first, then use precomputed face “escape capacity”.","//start 17:15
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Delaunay_triangulation_2.h>
+#include <CGAL/Triangulation_vertex_base_with_info_2.h>
+#include <CGAL/Triangulation_face_base_with_info_2.h>
+#include <boost/pending/disjoint_sets.hpp>
+#include <vector>
+#include <tuple>
+#include <algorithm>
+#include <iostream>
+#include <bits/stdc++.h>
+using namespace std;
+
+// Epic kernel is enough, no constructions needed, provided the squared distance
+// fits into a double (!)
+typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+// we want to store an index with each vertex
+typedef std::size_t                                            Index;
+typedef CGAL::Triangulation_vertex_base_with_info_2<Index,K>   Vb;
+typedef CGAL::Triangulation_face_base_with_info_2<K::FT,K>     Fb;
+typedef CGAL::Triangulation_data_structure_2<Vb,Fb>            Tds;
+typedef CGAL::Delaunay_triangulation_2<K,Tds>                  Delaunay;
+typedef Delaunay::Face_handle FaceHandle;
+
+// As edges are not explicitly represented in the triangulation, we extract them
+// from the triangulation to be able to sort and process them. We store the
+// indices of the two endpoints, first the smaller, second the larger, and third
+// the squared length of the edge. The i-th entry, for i=0,... of a tuple t can
+// be accessed using std::get<i>(t).
+typedef std::tuple<Index,Index,K::FT> Edge;
+typedef std::vector<Edge> EdgeV;
+
+
+void compute_emst(Index n) {
+// read points: first, we read all points and store them into a vector,
+// together with their indices
+typedef std::pair<K::Point_2,Index> IPoint;
+std::vector<IPoint> points;
+points.reserve(n);
+for (Index i = 0; i < n; ++i) {
+int x, y;
+std::cin >> x >> y;
+points.emplace_back(K::Point_2(x, y), i);
+}
+// then we build the Delaunay triangulation in one shot, so as to leave the
+// choice of an efficient insertion order to the triangulation structure. By
+// giving the points paired with the indices, these indices are used to
+// initialize the vertex info accordingly.
+// This step takes O(n log n) time (for constructing the triangulation).
+Delaunay t;
+t.insert(points.begin(), points.end());
+
+priority_queue<pair<K::FT,FaceHandle>> pq;
+for(auto face = t.all_faces_begin(); face != t.all_faces_end(); ++face){
+if(t.is_infinite(face)){
+pq.push({LLONG_MAX, face});
+face->info() = LLONG_MAX;
+} else {
+face->info() = -1;
+}
+}
+while(!pq.empty()){
+auto top = pq.top(); pq.pop();
+K::FT dad_max = top.first;
+auto f = top.second;
+for(int i = 0; i < 3; ++i){
+auto next = f->neighbor(i);
+if(t.is_infinite(next)) continue;
+auto v1 = f->vertex((i+1)%3);
+auto v2 = f->vertex((i+2)%3);
+K::FT curr_dist = CGAL::squared_distance(v1->point(), v2->point());
+K::FT curr_max = min(dad_max, curr_dist);
+if(curr_max > next->info()){
+next->info() = curr_max;
+pq.push({curr_max, next});
+}
+}
+}
+
+Index m; cin >> m;
+for (Index i = 0; i < m; ++i) {
+int x, y; K::FT d;
+std::cin >> x >> y >> d;
+K::Point_2 q(x,y);
+if(CGAL::squared_distance(q, t.nearest_vertex(q)->point()) < d){
+cout << ""n""; continue;
+}
+auto face = t.locate(q);
+if(t.is_infinite(face)) {
+cout << ""y""; continue;
+}
+if(face->info() >= 4*d){
+cout << ""y"";
+} else {
+cout << ""n"";
+}
+}
+}
+
+int main()
+{
+std::ios_base::sync_with_stdio(false);
+std::cout << std::setiosflags(std::ios::fixed) << std::setprecision(0);
+std::size_t t; cin >> t;
+while(t != 0){
+compute_emst(t); cout << ""\n"";
+cin >> t;
+}
+if(cin >> t)cout << ""UFIUFUIFNU\n"";
+return 0;
+}
+//end 17:40",25,,"n points, m queries",Default,https://expert.ethz.ch/solve/C3hPvWkdCnjCrmygW
+Worm Kingdom,Balanced partition via subset-sum with one allowable split,Week 07,"SubsetSum, Tree DP",ASK SOLUTION,"There are k burrows. Each burrow is a tree of rooms with sizes sr. You must partition all rooms into two groups W and G such that: (1) both groups are non-empty, (2) each group is connected, and (3) there is exactly one tunnel between W and G. You may build new tunnels at cost p each. Minimize:
+absolute(total_size(W) − total_size(G)) + p · (#new tunnels built).","
+1. Observation about tunnel cost: Any valid “nice partition” needs exactly k−1 new tunnels overall (to connect components inside W and inside G, plus ensure exactly one cross-connection), so the term p*(k−1) is constant; optimization reduces to minimizing the size difference. 
+this (5)
+2. What choices exist inside each burrow (tree):
+
+Because each burrow is a tree, if a burrow is “split” between W and G while keeping both sides connected and allowing only one cross-tunnel overall, then the split must be along one tree edge, producing two connected parts with sums sum(subtree) and total-sum(subtree). All other burrows can be assigned wholly to one side.
+3. Subset-sum DP over achievable W-sums:
+
+Let S = total sum of all room sizes. Target is to find a W-sum as close as possible to S/2.
+Maintain two boolean DP arrays up to S/2:
+• dp_whole[x]: achievable W-sum x using only whole burrows so far.
+• dp_split[x]: achievable W-sum x where we may have used (or may still use) one split in some burrow.
+For each burrow i with total total[i]:
+• Add the option “take the whole burrow into W” to both DP layers.
+• Run a DFS to compute every subtree sum sum in that burrow. For each edge-cut producing parts (sum, total[i]-sum), add both options into dp_split (since this represents choosing which side of the cut goes to W). This is exactly what the dfs() + add_to_dp(dp_split, dp_whole, sum/other_sum) does.
+1. Pick best achievable sum:
+
+Scan dp_split[j] for j from floor(S/2) down to 0 and take the best (closest to half). The minimal difference is S − 2*j. Final answer is (S − 2*j) + p*(k−1).","#include <bits/stdc++.h>
+
+void solve() {
+int k, p; std::cin >> k >> p;
+std::vector<std::vector<std::vector<int>>> burrows(k);
+std::vector<std::vector<int>> rooms(k);
+std::vector<int> total(k);
+int sumsum = 0;
+for (int i = 0; i < k; i++) {
+int n; std::cin >> n;
+burrows[i].resize(n);
+rooms[i].resize(n);
+for (int j = 0; j < (int)rooms[i].size()-1; j++) {
+int u, v; std::cin >> u >> v;
+burrows[i][u].push_back(v); // don't need back edge
+}
+total[i] = 0;
+for (int j = 0; j < (int)rooms[i].size(); j++) {
+std::cin >> rooms[i][j];
+total[i] += rooms[i][j];
+}
+sumsum += total[i];
+}
+
+int sz = sumsum/2+1;
+std::vector<bool> dp_whole(sz, 0);
+std::vector<bool> dp_split(sz, 0);
+dp_whole[0] = dp_split[0] = 1;
+
+auto add_to_dp = [&](std::vector<bool> &dp1, std::vector<bool> &dp2, int val)  {
+for (int j = sz-val-1; j >= 0; j--) {
+dp1[j+val] = dp1[j+val] || dp2[j];
+}
+};
+
+std::function<int(int,int)> dfs = [&](int i, int v) -> int {
+int sum = rooms[i][v];
+for (auto u: burrows[i][v]) {
+sum += dfs(i, u);
+}
+int other_sum = total[i]-sum;
+if (other_sum) {
+add_to_dp(dp_split, dp_whole, sum);
+add_to_dp(dp_split, dp_whole, other_sum);
+}
+return sum;
+};
+
+for (int i = 0; i < k; i++) {
+add_to_dp(dp_split, dp_split, total[i]);
+dfs(i, 0);
+add_to_dp(dp_whole, dp_whole, total[i]);
+}
+
+for (int j = sz-1; j >= 0; j--) {
+if (dp_split[j]) {
+std::cout << (sumsum - 2j) + p(k-1) << ""\n"";
+return;
+}
+}
+
+}
+
+int main() {
+std::ios::sync_with_stdio(0);
+int t; std::cin >> t;
+while (t--) solve();
+return 0;
+}",100000,Too difficult,,Not in 2024,https://expert.ethz.ch/solve/YoBdn38gMPdHN2J8z
+Casterly Rock,LP feasibility + minimax optimization with shared slope coupling,Week 08,"Line Separation, Linear Programming",Completed,"You must place two infinite straight “canals” that cross at 90°. Each house connects to the sewer canal with a horizontal pipe and to the water canal with a vertical pipe. Constraints:
+1. Sewer line must separate points: all nobles on one side (or on the line) and all commoners on the other side.
+2. Total length of all sewer pipes (horizontal distances to sewer line) ≤ s (or s = ∞ if input −1).
+
+Goal: among all valid layouts, minimize the maximum length of a water pipe (vertical distance to water line), output rounded up.","Use a coupled parameter b to enforce the right angle between lines:
+• Sewer canal: x + b*y + c = 0
+
+Horizontal sewer pipe length from house (x,y) is |x + b*y + c|.
+
+Cersei constraint becomes linear if you force the sign:
+    ◦ nobles: x + b*y + c ≤ 0
+    ◦ commons: x + b*y + c ≥ 0
+
+Your code writes these as b*y + c ≤ -x and -b*y - c ≤ x.
+1. Check Cersei separability (variables b,c only).
+
+If infeasible → output “Y”.
+2. Add Tywin budget (if s != −1).
+
+Because the signs are fixed, the absolute values drop and the total sewer length becomes:
+(sum_common(x + b*y + c)) - (sum_noble(x + b*y + c)) ≤ s
+
+which is exactly the linear constraint you add using the precomputed sums.
+
+If infeasible → output “B”.
+• Water canal (perpendicular to sewer): y = b*x + K
+
+Vertical water pipe length is |y - (b*x + K)|.
+
+Introduce variable L and enforce for every house:
+y - L ≤ b*x + K ≤ y + L
+
+(your two inequalities with K and L).
+
+Minimize L with L ≥ 0. Output ceil(L) (your floor_to_double helper actually computes a safe ceiling).",,,,,Default,https://expert.ethz.ch/solve/xZ3HkmRgcMPuQFj47
+Maximize it!,Parametric linear programming with feasibility/unboundedness detection,Week 08,Linear Programming,Completed,"For each test case you get p a b with p ∈ {1,2} and parameters a,b. You must output the optimal value of one of two small LPs, or no if infeasible, or unbounded if the objective can grow without bound (or decrease without bound for minimization). For type 1, round the optimum down; for type 2, round it up. 
+this (11)
+• (1) Maximization: maximize b*y − a*x
+
+subject to x,y ≥ 0, x+y ≤ 4, 4x+2y ≤ a*b, −x+y ≤ 1. 
+this (11)
+• (2) Minimization: minimize a*x + b*y + z
+
+subject to x,y,z ≤ 0, x+y ≥ −4, 4x+2y+z ≥ −a*b, −x+y ≥ −1.","CGAL’s solver minimizes with constraints of the form A x ≤ b, so both problems are rewritten into that standard form.
+","// example: how to solve a simple explicit LP
+#include <CGAL/QP_models.h>
+#include <CGAL/QP_functions.h>
+#include <CGAL/Gmpz.h>
+#include <bits/stdc++.h>
+using namespace std;
+
+// choose input type (input coefficients must fit)
+typedef int IT;
+// choose exact type for solver (CGAL::Gmpz or CGAL::Gmpq)
+typedef CGAL::Gmpz ET;
+
+// program and solution types
+typedef CGAL::Quadratic_program<IT> Program;
+typedef CGAL::Quadratic_program_solution<ET> Solution;
+
+void solve(int p){
+int a, b; cin >> a >> b;
+if(p == 1){
+Program lp (CGAL::SMALLER, true, 0, false, 0);
+
+// set the coefficients of A and b
+const int X = 0;
+const int Y = 1;
+lp.set_a(X, 0,  1); lp.set_a(Y, 0, 1); lp.set_b(0, 4);  //  x + y  <= 7
+lp.set_a(X, 1, 4); lp.set_a(Y, 1, 2); lp.set_b(1, ab);  // -x + 2y <= 4
+lp.set_a(X, 2, -1); lp.set_a(Y, 2, 1); lp.set_b(2, 1);
+// set upper bound
+// objective function
+lp.set_c(Y, -b);
+lp.set_c(X, a);
+
+// solve the program, using ET as the exact type
+Solution s = CGAL::solve_linear_program(lp, ET());
+assert(s.solves_linear_program(lp));
+
+if(s.is_infeasible()) cout << ""no"";
+else if(s.is_unbounded()) cout << ""unbounded"";
+else{
+double res = floor(CGAL::to_double(-s.objective_value()));
+cout << res;
+}
+} else {
+Program lp (CGAL::SMALLER, false, 0, true, 0);
+
+// set the coefficients of A and b
+const int X = 0;
+const int Y = 1;
+const int Z = 2;
+lp.set_a(X, 0,  -1); lp.set_a(Y, 0, -1); lp.set_b(0, 4);  //  x + y  <= 7
+lp.set_a(X, 1, -4); lp.set_a(Y, 1, -2); lp.set_a(Z, 1, -1); lp.set_b(1, ab);  // -x + 2y <= 4
+lp.set_a(X, 2, 1); lp.set_a(Y, 2, -1); lp.set_b(2, 1);
+// set upper bound
+// objective function
+lp.set_c(Y, b);
+lp.set_c(X, a);
+lp.set_c(Z, 1);
+
+// solve the program, using ET as the exact type
+Solution s = CGAL::solve_linear_program(lp, ET());
+assert(s.solves_linear_program(lp));
+
+if(s.is_infeasible()) cout << ""no"";
+else if(s.is_unbounded()) cout << ""unbounded"";
+else{
+int res = ceil(CGAL::to_double(s.objective_value()));
+cout << res;
+}
+}
+// create an LP with Ax <= b, lower bound 0 and no upper bounds
+
+}
+
+int main(){
+ios_base::sync_with_stdio(0);
+int p; cin >> p;
+while(p != 0){
+solve(p); cout << ""\n"";
+cin >> p;
+}
+if(cin >> p) cout << ""IJFIFB\n"";
+return 0;
+}
+",10,,,Default,https://expert.ethz.ch/solve/6r6xAmSD2XwK7TgpE
+Diet,Linear programming with interval constraints (min-cost feasible vector),Week 08,Linear Programming,Completed,"Given n nutrients, each must be consumed between mini and maxi per day. There are m foods; food j costs pj per unit and provides Cj,i units of nutrient i per unit. Choose nonnegative (fractional) amounts of foods to minimize total cost while meeting all nutrient intervals. Output the minimum cost rounded down, or No such diet. if infeasible.","Let decision variables be xj ≥ 0 = amount of food j.
+For each nutrient i you need:
+• sum_j Cj,i * xj ≥ mini
+• sum_j Cj,i * xj ≤ maxi
+CGAL expects constraints as A x ≤ b, so:
+• Lower bound becomes: -sum_j Cj,i * xj ≤ -mini
+• Upper bound stays: sum_j Cj,i * xj ≤ maxi
+Objective:
+• minimize sum_j pj * xj
+Solve LP with CGAL.
+• If infeasible or unbounded: print No such diet. (unbounded won’t really occur here because costs are minimized with x ≥ 0, but the check is fine).
+• Else print floor(optimal_cost).","//start 20:07
+//floor res
+// example: how to solve a simple explicit LP
+#include <CGAL/QP_models.h>
+#include <CGAL/QP_functions.h>
+#include <CGAL/Gmpq.h>
+#include <bits/stdc++.h>
+using namespace std;
+// choose input type (input coefficients must fit)
+typedef double IT;
+// choose exact type for solver (CGAL::Gmpz or CGAL::Gmpq)
+typedef CGAL::Gmpq ET;
+
+// program and solution types
+typedef CGAL::Quadratic_program<IT> Program;
+typedef CGAL::Quadratic_program_solution<ET> Solution;
+
+void solve(int n, int m){
+// create an LP with Ax <= b, lower bound 0 and no upper bounds
+Program lp (CGAL::SMALLER, true, 0, false, 0);
+for(int i = 0; i < n; ++i){
+double mini, maxi; cin >> mini >> maxi;
+lp.set_b(i, -mini);
+lp.set_b(i+n, maxi);
+}
+for(int i = 0; i < m; ++i){
+double pi; cin >> pi;
+lp.set_c(i, pi);
+for(int j = 0; j < n; ++j){
+double nutj; cin >> nutj;
+lp.set_a(i, j, -nutj);
+lp.set_a(i, j+n, nutj);
+}
+}                                 // +64
+
+// solve the program, using ET as the exact type
+Solution s = CGAL::solve_linear_program(lp, ET());
+assert(s.solves_linear_program(lp));
+if(s.is_infeasible() || s.is_unbounded()) cout << ""No such diet."";
+else {
+auto res = floor(CGAL::to_double(s.objective_value()));
+cout << res;
+}
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int n, m; cin >> n >> m;
+while(!(n == 0 && m == 0)){
+solve(n,m); cout << ""\n"";
+cin >> n >> m;
+}
+if(cin >> n) cout << ""jifwif\n"";
+}
+//end 20:24",17,,,Default,https://expert.ethz.ch/solve/xghhJjmyE7SGqWvCe
+Inball,Maximum-margin feasibility LP (largest inscribed ball in a polyhedron),Week 08,Linear Programming,Completed,"A cave is a convex polyhedron in d dimensions given by n linear inequalities a_i^T x ≤ b_i. Find the maximum integer radius r of a d-dimensional ball that fits entirely inside the cave. Output none if the cave is empty, inf if the ball can be arbitrarily large, else the maximum integer r.","A ball of radius r centered at x fits in the cave iff it stays inside every halfspace.
+
+For one inequality a^T x ≤ b, the worst point of the ball in direction a is at distance r * ||a|| along a, so the constraint becomes:
+a^T x + r * ||a|| ≤ b
+Decision variables: the center coordinates x1..xd (free) and the radius r (with r ≥ 0).
+
+Objective: maximize r.
+CGAL solves minimization with ≤, so you set:
+• Variables 0..d−1 = x-coordinates (unbounded)
+• Variable d = r, with lower bound 0
+• For each constraint i: set coefficients a_ij on xj, and ||a_i|| on r, RHS b_i.
+• Set objective c_r = -1 (minimize −r == maximize r).
+Then:
+• If infeasible → none (cave empty)
+• If unbounded → inf (radius can grow arbitrarily)
+• Else optimal r* exists; output floor(r*) because you need the maximum integer radius.","//start 20:33
+// example: how to solve a simple explicit LP
+#include <CGAL/QP_models.h>
+#include <CGAL/QP_functions.h>
+#include <CGAL/Gmpz.h>
+#include <bits/stdc++.h>
+using namespace std;
+
+// choose input type (input coefficients must fit)
+typedef long IT;
+// choose exact type for solver (CGAL::Gmpz or CGAL::Gmpq)
+typedef CGAL::Gmpz ET;
+
+// program and solution types
+typedef CGAL::Quadratic_program<IT> Program;
+typedef CGAL::Quadratic_program_solution<ET> Solution;
+
+void solve(int n){
+int d; cin >> d;
+// create an LP with Ax <= b, lower bound 0 and no upper bounds
+Program lp (CGAL::SMALLER, false, 0, false, 0);
+for(int i = 0; i < n; ++i){
+long long norm = 0;
+for(int j = 0; j < d; ++j){
+long  ai; cin >> ai;
+norm += ai*ai;
+lp.set_a(j, i, ai);
+}
+lp.set_a(d, i, sqrt(norm));
+long  bi; cin >> bi;
+lp.set_b(i, bi);
+}
+lp.set_l(d,true,0);
+lp.set_c(d, -1);
+
+// solve the program, using ET as the exact type
+Solution s = CGAL::solve_linear_program(lp, ET());
+assert(s.solves_linear_program(lp));
+
+if(s.is_infeasible()) cout << ""none"";
+else if(s.is_unbounded()) cout << ""inf"";
+else {
+double res = floor(CGAL::to_double(-s.objective_value()));
+cout << res;
+}
+
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int n; cin >> n;
+while(n != 0){
+solve(n); cout << ""\n"";
+cin >> n;
+}
+if(cin >> n) cout << ""RJIUUIR\n"";
+}
+//end 20:52",19,,n-dimensions equation,Default,https://expert.ethz.ch/solve/or7p8ot669xWDfphZ
+Kingdom Defense,Feasible circulation with lower/upper bounds via max flow,Week 08,"Circulation Problem, MaxFlow",Completed,"You have a directed network of locations. Location i starts with gi soldiers and must end with at least di soldiers. Each directed path j = (f→t) must be traversed between cj and Cj times (a traversal corresponds to sending 1 unit of “soldier flow” along that arc; soldiers may traverse multiple times). Decide if there exists a movement plan satisfying all node defense requirements and all edge min/max traversal constraints. Output yes/no. 
+","
+1. Convert node requirements into balances.
+
+Start with balance[i] = gi − di.
+
+Positive means net supply can leave; negative means net inflow is needed.
+2. Remove lower bounds on edges.
+
+For each directed edge u→v with lower cmin and upper cmax:
+• Force the lower bound by “pre-sending” cmin units:
+    ◦ balance[u] -= cmin
+    ◦ balance[v] += cmin
+• Add a residual-capacity edge u→v with capacity (cmax − cmin).
+1. Build a standard max-flow feasibility check.
+
+Add super source S and super sink T:
+• If balance[i] > 0 (net supply), add S → i with capacity balance[i].
+• If balance[i] < 0 (net demand), add i → T with capacity −balance[i] and accumulate tot_req += −balance[i].
+
+Run max flow from S to T. Feasible iff flow == tot_req.
+Why equality matters: after lower-bound adjustment, total supply must exactly cover total demand through the directed residual network; otherwise some node requirement or min-traversal constraint cannot be satisfied.","// start: 19:45
+
+// Algolab BGL Tutorial 2 (Max flow, by mailto:taubnert@ethz.ch)
+// Flow example demonstrating how to use push_relabel_max_flow using a custom edge adder
+// to manage the interior graph properties required for flow algorithms
+#include <iostream>
+#include <bits/stdc++.h>
+using namespace std;
+// BGL include
+#include <boost/graph/adjacency_list.hpp>
+
+// BGL flow include NEW
+#include <boost/graph/push_relabel_max_flow.hpp>
+
+// Graph Type with nested interior edge properties for flow algorithms
+typedef boost::adjacency_list_traits<boost::vecS, boost::vecS, boost::directedS> traits;
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS, boost::no_property,
+boost::property<boost::edge_capacity_t, long,
+boost::property<boost::edge_residual_capacity_t, long,
+boost::property<boost::edge_reverse_t, traits::edge_descriptor>>>> graph;
+
+typedef traits::vertex_descriptor vertex_desc;
+typedef traits::edge_descriptor edge_desc;
+
+// Custom edge adder class, highly recommended
+class edge_adder {
+graph &G;
+
+public:
+explicit edge_adder(graph &G) : G(G) {}
+
+void add_edge(int from, int to, long capacity) {
+auto c_map = boost::get(boost::edge_capacity, G);
+auto r_map = boost::get(boost::edge_reverse, G);
+const auto e = boost::add_edge(from, to, G).first;
+const auto rev_e = boost::add_edge(to, from, G).first;
+c_map[e] = capacity;
+c_map[rev_e] = 0; // reverse edge has no capacity!
+r_map[e] = rev_e;
+r_map[rev_e] = e;
+}
+};
+
+void make_it_flow() {
+int l, p; cin >> l >> p;
+vector<long> soldiers(l,0);
+for(int i = 0; i < l; ++i){
+long gi, di; cin >> gi >> di;
+soldiers[i] = gi-di;
+}
+graph G(l);
+edge_adder adder(G);
+for(int i = 0; i < p;  ++i){
+int u, v; long cmin, cmax;
+cin >> u >> v >> cmin >> cmax;
+soldiers[u] -= cmin;
+soldiers[v] += cmin;
+adder.add_edge(u, v, cmax-cmin);
+}
+
+const vertex_desc v_source = boost::add_vertex(G);
+const vertex_desc v_sink = boost::add_vertex(G);
+long tot_req = 0;
+for(int i = 0; i < l; ++i){
+if(soldiers[i] > 0) adder.add_edge(v_source, i, soldiers[i]);
+else if(soldiers[i] < 0) {
+adder.add_edge(i, v_sink, -soldiers[i]);
+tot_req += -soldiers[i];
+}
+}
+
+
+long flow = boost::push_relabel_max_flow(G, v_source, v_sink);
+if(flow == tot_req) cout << ""yes"";
+else cout << ""no"";
+
+}
+
+int main() {
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+make_it_flow(); cout << ""\n"";
+}
+if(cin >> t) cout << ""DBIFBIF\n"";
+
+
+return 0;
+}
+//end 19:52",7,,"n nodes, p edge with min and max capacity",Default,https://expert.ethz.ch/solve/8CzNn6Y4KYHSNAANY
+Real Estate Market,,Week 09,MinCostMaxFlow,Completed,"N buyers making one offer for each of the M houses
+M houses disposed in S different sets
+Each set has a max # of sellable houses
+
+Computer max # of house sold to maximize profit  ","3 layered graph
+0) Source → buyers, cap:1, cost:0
+1) N buyers connecting to each house with cap:1, cost:(MO-offer)
+2) M houses connecting to S sets with cap:1, cost: 0
+3) S sets connecting to sink with cap: Limit_i, cost:0
+
+tot_cost = MO*flow_tot - cost",,,,print flow cost,Default,https://expert.ethz.ch/solve/vBDRyxYKEfxiZ8HRG
+Placing Knights,Maximum Independent Set of a Bipartite Graph,Week 09,"Bipartite Graphs, Maximum Independent Set",Completed,In a grid nxn find the max number of knights not attaching each other,"Maximum Independent Set (NP)
+But the grid is a bipartite graph (black/white cell) so:
+1) Edge in Maximum Matching == Minimum Vertex Cover
+2) Max Indp. Set = V / MVC
+
+p.s. Max flow == max matching in bipartite graphs",,,,,Default,https://expert.ethz.ch/solve/G3QrEzWEByurx8PBC
+Canteen,MinCostMaxFlow + MaxCostMaxFlow,Week 09,MinCostMaxFlow,Completed,"N produces buying quantity qi at cost ci
+N consumer buy from each producer, each for a quantity si and prize pi
+
+If one consumer has more product than required, it could give to the producer to its right for a max quantity fi and a cost ei so that the next producer can decide to buy from it instead of the market","MinCostMaxFlow
+One layer of N nodes, connected to source and sink adding the relative buy and sell, and n-1 each node to its right node
+
+The problem is how to not write negative cost, put the price for selling MAX-pi, and the cost: ci
+
+HOW TO AVOID NEGATIVE COST:
+1) if a quantity is to minimize: leave it unchanged
+2) else if is to maximize, put MAX_of_it - qi
+
+if you have different things to maximize, use the MAX of all of them
+
+P.S. This technique works only iff in all paths we apply this shift the same number of times.
+
+Like here we apply it only at the end, one final edge, it’s impossible to cross more edges with that shift.
+
+For example we could not use that shift between producers, because the flow could follow different paths, if not use the one with negative costs","// ALGOLAB BGL Tutorial 3
+// Code demonstrating
+// - MinCostMaxFlow with arbitrary edge costs using cycle_canceling
+// - MinCostMaxFlow with non-negative edge costs using successive_shortest_path_nonnegative_weights
+
+#include <iostream>
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/cycle_canceling.hpp>
+#include <boost/graph/push_relabel_max_flow.hpp>
+#include <boost/graph/successive_shortest_path_nonnegative_weights.hpp>
+#include <boost/graph/find_flow_cost.hpp>
+using namespace std;
+
+// graph Type with nested interior edge properties for Cost Flow Algorithms
+typedef boost::adjacency_list_traits<boost::vecS, boost::vecS, boost::directedS> traits;
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS, boost::no_property,
+boost::property<boost::edge_capacity_t, long,
+boost::property<boost::edge_residual_capacity_t, long,
+boost::property<boost::edge_reverse_t, traits::edge_descriptor,
+boost::property <boost::edge_weight_t, long> > > > > graph; // new! weightmap corresponds to costs
+
+typedef boost::graph_traits<graph>::edge_descriptor             edge_desc;
+typedef boost::graph_traits<graph>::out_edge_iterator           out_edge_it; // Iterator
+
+// custom edge adder class
+class edge_adder {
+graph &G;
+
+public:
+explicit edge_adder(graph &G) : G(G) {}
+void add_edge(int from, int to, long capacity, long cost) {
+auto c_map = boost::get(boost::edge_capacity, G);
+auto r_map = boost::get(boost::edge_reverse, G);
+auto w_map = boost::get(boost::edge_weight, G); // new!
+const edge_desc e = boost::add_edge(from, to, G).first;
+const edge_desc rev_e = boost::add_edge(to, from, G).first;
+c_map[e] = capacity;
+c_map[rev_e] = 0; // reverse edge has no capacity!
+r_map[e] = rev_e;
+r_map[rev_e] = e;
+w_map[e] = cost;   // new assign cost
+w_map[rev_e] = -cost;   // new negative cost
+}
+};
+
+void solve(){
+int n; cin >> n;
+graph G(n + 2); // n + 2
+edge_adder adder(G);
+const int v_source = n;
+const int v_target = n+1;
+for(int i = 0; i < n; ++i){
+int a, c; cin >> a >> c;
+adder.add_edge(v_source, i, a, c);
+}
+const int MAX_COST = 20;
+long long totStudents = 0;
+for(int i = 0; i < n; ++i){
+int s, p; cin >> s >> p;
+totStudents += s;
+adder.add_edge(i, v_target, s, MAX_COST - p);
+}
+for(int i = 0; i+1 < n; ++i){
+int v, e; cin >> v >> e;
+adder.add_edge(i, i+1, v, e);
+}
+
+
+auto c_map = boost::get(boost::edge_capacity, G);
+auto rc_map = boost::get(boost::edge_residual_capacity, G);
+
+// run the algorithm
+
+// Option 2: Min Cost Max Flow with successive_shortest_path_nonnegative_weights
+boost::successive_shortest_path_nonnegative_weights(G, v_source, v_target);
+long long cost2 = boost::find_flow_cost(G);
+// iterate over all edges leaving the source to sum up the flow values
+
+// or, equivalently, sum at the sink with reversed edges
+long long t_flow = 0;
+out_edge_it e, eend;
+for (boost::tie(e, eend) = boost::out_edges(boost::vertex(v_target,G), G); e != eend; ++e) {
+long long selled = rc_map[*e] - c_map[e];
+t_flow += selled;
+}
+
+if(t_flow < totStudents){
+cout << ""impossible"";
+} else cout <<""possible"";
+cout << "" "";
+cout << t_flow << "" "" << t_flowMAX_COST - cost2;
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+if(cin >> t) cout<<""ERORR\n"";
+}",,,"print “possible”/”impossible”
+
+n nodes + (n-1) edges like linked list",Default,https://expert.ethz.ch/solve/WqAAoh9eCqGpxvkJ4
+Algocoon,We want to cut the graph with the min cost,Week 09,Minimum Cut,Completed,"We have n nodes and m undirected edges.
+Each edge has an associated cost that need to be payed to cut it.
+
+we want the find the min cost to cut the graph in 2 arbitrary parts (having at least 1 node each)","Fix a node, then run maxflow (mincut) from that node (0) to the other n-1 nodes.
+Run also the max flow from 0→x, x→0 and take the min.
+
+Why we need also the viceversa? Because the edges are directed, if they were undirected then we would have to split the cost in 2 edge and run just one maxflow","#include <iostream>
+#include <climits>
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/push_relabel_max_flow.hpp>
+
+typedef boost::adjacency_list_traits<boost::vecS, boost::vecS, boost::directedS> traits;
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS, boost::no_property,
+boost::property<boost::edge_capacity_t, long,
+boost::property<boost::edge_residual_capacity_t, long,
+boost::property<boost::edge_reverse_t, traits::edge_descriptor>>>> graph;
+
+typedef traits::vertex_descriptor vertex_desc;
+typedef traits::edge_descriptor edge_desc;
+
+class edge_adder {
+graph &G;
+
+public:
+explicit edge_adder(graph &G) : G(G) {}
+
+void add_edge(int from, int to, long capacity) {
+auto c_map = boost::get(boost::edge_capacity, G);
+auto r_map = boost::get(boost::edge_reverse, G);
+const auto e = boost::add_edge(from, to, G).first;
+const auto rev_e = boost::add_edge(to, from, G).first;
+c_map[e] = capacity;
+c_map[rev_e] = 0;
+r_map[e] = rev_e;
+r_map[rev_e] = e;
+}
+};
+
+void solve(){
+int n, m; std::cin >> n >> m;
+graph G(n); edge_adder adder(G);
+for (int i = 0; i < m; i++){
+int a, b, c; std::cin >> a >> b >> c;
+adder.add_edge(a, b, c);
+}
+long min_cut = LONG_MAX;
+for (int i = 1; i < n; i++){
+long ff = boost::push_relabel_max_flow(G, 0, i);
+long fb = boost::push_relabel_max_flow(G, i, 0);
+min_cut = std::min({min_cut, ff, fb});
+}
+std::cout << min_cut << '\n';
+}
+
+int main(){
+std::ios_base::sync_with_stdio(false);
+int t; std::cin >> t;
+while(t--) solve();
+}",,,"cut graph in 2, NO source/sink",Default,https://expert.ethz.ch/solve/HQoQis2MLWtvNKt44
+Idefix,Connectivity-threshold sweep in geometric disk graphs (Delaunay + union-find),Week 09,"Delaunay triangulation, EMST, Union Find",Rewrite it,"You have n center points (trees) and m item points (bones). A walk is allowed only inside the union of equal-radius disks centered at the n points.
+
+You must output:
+1. a = the maximum number of item points that can be visited in a single walk (i.e., within one connected component of the union) using the given radius r (input provides s = 4r²).
+2. q = 4b² where b is the smallest radius that makes it possible to visit at least k item points in one walk. ","Model the union-of-disks connectivity as a disk graph: two trees are connected when their disks overlap, i.e. when squared center distance dist² ≤ (2r)², which equals dist² ≤ s because s = 4r².
+1. Build Delaunay triangulation on tree centers.
+
+Disk-graph edges that matter for connectivity changes appear among Delaunay edges (sparse O(n)).
+2. Create an edge list and sort by “required radius” (as squared threshold):
+• For every Delaunay edge (u,v): add edge with weight dist²(u,v) (this is the threshold on 4r² for disks to overlap).
+• For every bone point x: connect it to the nearest tree u and add edge (u, bone) with weight 4*dist²(u,x).
+
+This works because if a bone is within radius r of any tree, then it’s within radius r of its nearest tree; and if multiple trees are within r, they must be in the same connected disk component anyway.
+1. Sweep edges in increasing weight with DSU on tree nodes, carrying “bone count per component”:
+• If the current edge is tree–tree, union the components and sum their bone counts.
+• If the current edge is tree–bone, increment the bone count of that tree’s current component.
+1. Answer (a):
+
+While edge weight ≤ s (given radius), track the maximum bone count across components → that’s a.
+2. Answer (q = 4b²):
+
+During the same sweep, the first time any component reaches bone count ≥ k, record the current edge weight as q (minimal threshold where it becomes possible).","#include <bits/stdc++.h>
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Delaunay_triangulation_2.h>
+#include <CGAL/Triangulation_vertex_base_with_info_2.h>
+#include <CGAL/Triangulation_face_base_2.h>
+#include <boost/pending/disjoint_sets.hpp>
+
+typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+typedef CGAL::Triangulation_vertex_base_with_info_2<int,K>   Vb;
+typedef CGAL::Triangulation_face_base_2<K>                     Fb;
+typedef CGAL::Triangulation_data_structure_2<Vb,Fb>            Tds;
+typedef CGAL::Delaunay_triangulation_2<K,Tds>                  Delaunay;
+typedef K::Point_2 P;
+typedef std::tuple<int,int,K::FT> Edge;
+typedef std::vector<Edge> EdgeV;
+typedef std::pair<K::Point_2,int> IPoint;
+
+void solve() {
+int n, m, k; long s; std::cin >> n >> m >> s >> k;
+std::vector<IPoint> points;
+points.reserve(n);
+for (int i = 0; i < n; ++i) {
+int x, y; std::cin >> x >> y;
+points.emplace_back(P(x, y), i);
+}
+Delaunay t;
+t.insert(points.begin(), points.end());
+EdgeV edges_ext;
+edges_ext.reserve(m);
+std::vector<int> sizes(n, 0);
+for (int i = 0; i < m; i++) {
+int x, y; std::cin >> x >> y;
+auto v = t.nearest_vertex(P(x, y));
+K::FT dis  = 4CGAL::squared_distance(v->point(), P(x, y));
+if (dis <= s) sizes[v->info()]++;
+edges_ext.emplace_back(v->info(), n + i, dis);
+}
+EdgeV edges;
+edges.reserve(3n);
+for (auto e = t.finite_edges_begin(); e != t.finite_edges_end(); ++e) {
+int i1 = e->first->vertex((e->second+1)%3)->info();
+int i2 = e->first->vertex((e->second+2)%3)->info();
+if (i1 > i2) std::swap(i1, i2);
+edges.emplace_back(i1, i2, t.segment(e).squared_length());
+}
+std::sort(edges.begin(), edges.end(),
+[](const Edge& e1, const Edge& e2) -> bool {
+return std::get<2>(e1) < std::get<2>(e2);
+});
+boost::disjoint_sets_with_storage<> uf(n);
+int n_components = n;
+for (EdgeV::const_iterator e = edges.begin(); e != edges.end(); ++e) {
+int c1 = uf.find_set(std::get<0>(*e));
+int c2 = uf.find_set(std::get<1>(*e));
+K::FT dis = std::get<2>(*e);
+if (dis <= s && c1 != c2) {
+int s1 = sizes[c1], s2 = sizes[c2];
+uf.link(c1, c2);
+int c3 = uf.find_set(c1);
+sizes[c3] = s1 + s2;
+if (--n_components == 1) break;
+}
+if (dis > s) break;
+}
+long a = *std::max_element(sizes.begin(), sizes.end());
+
+std::vector<long> sizes_q(n + m, 0);
+for (int i = 0; i < m; i++){
+edges.push_back(edges_ext[i]);
+sizes_q[n + i] = 1;
+}
+std::sort(edges.begin(), edges.end(),
+[](const Edge& e1, const Edge& e2) -> bool {
+return std::get<2>(e1) < std::get<2>(e2);
+});
+boost::disjoint_sets_with_storage<> uf_ext(n + m);
+n_components = n + m;
+K::FT q;
+for (EdgeV::const_iterator e = edges.begin(); e != edges.end(); ++e) {
+int c1 = uf_ext.find_set(std::get<0>(*e));
+int c2 = uf_ext.find_set(std::get<1>(*e));
+if (c1 != c2) {
+int s1 = sizes_q[c1], s2 = sizes_q[c2];
+uf_ext.link(c1, c2);
+int c3 = uf_ext.find_set(c1);
+sizes_q[c3] = s1 + s2;
+if (sizes_q[c3] >= k){
+q = std::get<2>(*e);
+break;
+}
+}
+}
+std::cout << a << ' ' << q << '\n';
+}
+
+int main() {
+std::ios_base::sync_with_stdio(false);
+std::cout << std::setiosflags(std::ios::fixed) << std::setprecision(0);
+std::size_t t;
+for (std::cin >> t; t > 0; --t) solve();
+}",,,,Default,https://expert.ethz.ch/solve/SwnHxpCjxd8AoTWvE
+DHL,Two-sequence partition DP with paired moves and separable batch cost,Week 10,"Dynamic Programming, Prefix sum",Rewrite it,"You have two stacks A and B, each with n parcels (values given bottom→top). In each round you must take at least 1 from A and at least 1 from B, and both stacks must become empty in the same round.
+If in a round you take ka parcels from the top of A (sum Sa) and kb parcels from the top of B (sum Sb), the round cost is:(Sa − ka) * (Sb − kb).
+Goal: minimize total cost over all rounds.","
+1. Precompute suffix prefix-sums (top-access in O(1))
+
+You store cumulative sums from the top so that the sum of the next takeA parcels when remA remain is:
+sumA = prefA[remA - takeA] - prefA[remA] (same for B).
+
+Then (Sa−ka) and (Sb−kb) are computed in O(1).
+2. DP state
+dp[i][j] = minimum total cost to empty the stacks when i parcels remain in A and j remain in B (i,j measured from the top as “remaining”).
+
+Answer is dp[n][n].
+3. Transitions (structural restriction)
+
+The code only considers moves where one side takes exactly 1 parcel, and the other side takes any positive amount:
+• takeA = 1, takeB = 1..j−1
+• takeB = 1, takeA = 1..i−1
+
+Update:
+dp[i][j] = min( (costBatchA * costBatchB) + dp[i-takeA][j-takeB] )
+This relies on the known property for this task: there exists an optimal schedule where every round takes 1 from at least one stack (so you don’t need to consider takeA≥2 AND takeB≥2 at the same time).
+1. Initialization
+
+You prefill the “border” cases dp[1][x] and dp[x][1] by forcing the last round to empty both stacks together (because you must take from both each round, so you can’t leave one stack empty early). dp[0][0]=0.","#include <iostream>
+#include <vector>
+#include <climits>
+
+int main(){
+std::ios_base::sync_with_stdio(false);
+
+int t;
+std::cin>>t;
+while(t--){
+int n;  //n = parcels
+std::cin>>n;
+
+//Values are represented from the bottom, but it's necessary to take from the top
+std::vector<int> values_A(n+1);
+for(int i = 0; i < n; i++){
+int a;
+std::cin>>a;
+
+values_A[i] = a;
+}
+values_A[n] = 0;  //Easier calculations later
+
+std::vector<int> values_B(n+1);
+for(int i = 0; i < n; i++){
+int b;
+std::cin>>b;
+
+values_B[i] = b;
+}
+values_B[n] = 0;
+
+//In order to avoid doing sums for every iteration, the sums are already stored in the array
+//To get the boxes from i to j included, with i on the top of j (so i >= j), it's necessary to take
+//values[j] - values[i+1]
+for(int i = n-1; i >= 0; i--){
+values_A[i] = values_A[i] + values_A[i+1];
+values_B[i] = values_B[i] + values_B[i+1];
+}
+
+//dp[i][j] contains the minimum value when there are still i boxes A and j boxes B
+//This means that the answer is dp[n][n], that is the case when all boxes are still present
+std::vector<std::vector<long>> dp(n+1, std::vector<long>(n+1, LONG_MAX));
+
+//Initialise the DP table considering that it's necessary to get all the last boxes at the same time
+for(int i = n-1; i >= 1; i--){
+//1 box A (boxes with index from 0 to 0), i boxes B (boxes with index from 0 to i-1)
+//There can be a maximum of n-1 box B remaining because, to reach the case where only one box
+//Remains in A, it was necessary to take at least one box from B
+//Remember that 0 is the last box at the bottom
+long cost_A = values_A[0]-values_A[1]-1;
+long cost_B = values_B[0]-values_B[i]-i;
+
+dp[1][i] = cost_A * cost_B;
+
+//1 box B (boxes with index from 0 to 0), i boxes A (boxes with index from 0 to i-1)
+//There can be a maximum of n-1 box A remaining because, to reach the case where only one box
+//Remains in B, it was necessary to take at least one box from A
+//Remember that 0 is the last box at the bottom
+cost_A = values_A[0]-values_A[i]-i;
+cost_B = values_B[0]-values_B[1]-1;
+
+//Using min to avoid problems in the case dp[1][1] where both cases want to set a value
+dp[i][1] = std::min(dp[i][1], cost_A * cost_B);
+}
+
+//No boxes remaining to take, no value
+dp[0][0] = 0;
+
+for(int rem_A = 2; rem_A <= n; rem_A++){
+for(int rem_B = 2; rem_B <= n; rem_B++){
+int take_A, take_B;
+
+//The best strategy considers only taking 1 box from a pile and any amount from the other
+take_A = 1;
+for(int take_B = 1; take_B < rem_B; take_B++){
+long cost_A = values_A[rem_A-take_A]-values_A[rem_A]-take_A;
+long cost_B = values_B[rem_B-take_B]-values_B[rem_B]-take_B;
+
+dp[rem_A][rem_B] = std::min(dp[rem_A][rem_B], cost_Acost_B + dp[rem_A-take_A][rem_B-take_B]);
+}
+
+take_B = 1;
+for(int take_A = 1; take_A < rem_A; take_A++){
+long cost_A = values_A[rem_A-take_A]-values_A[rem_A]-take_A;
+long cost_B = values_B[rem_B-take_B]-values_B[rem_B]-take_B;
+
+dp[rem_A][rem_B] = std::min(dp[rem_A][rem_B], cost_Acost_B + dp[rem_A-take_A][rem_B-take_B]);
+}
+}
+}
+
+std::cout<<dp[n][n]<<""\n"";
+}
+}",,,fuck,Default,https://expert.ethz.ch/solve/ph23TeYZ5yzWtPstg
+Hong Kong,Bottleneck reachability in a planar geometric dual graph (max–min path),Week 10,Delaunay triangulation,Learn&ShutUp,"Trees are disks of radius r in the plane. Each balloon starts at a point (x,y) with radius s. After inflation, the balloon is an open disk; it may move continuously without ever overlapping any tree disk (touching is allowed). A balloon is “successful” if it can be moved to some position where it has takeoff clearance: its center is at distance at least r+s from every tree. For each balloon, output y/n. Constraints are large: n up to 4e4, m up to 9e4, t up to 30.","
+1. Model the motion as moving the balloon center in “free space” of inflated obstacles
+
+For a balloon of radius s, inflate every tree disk by r+s. Then the balloon center must stay outside all these inflated disks. A path to a valid takeoff spot exists iff the center can reach “far away” (infinity) through corridors that are wide enough, and the starting point is not already inside an inflated disk. 
+this (18)
+2. Build Delaunay triangulation on tree centers
+
+Delaunay gives the relevant “narrow passages”: the limiting corridors are always between neighboring trees in the triangulation.
+3. Build a dual graph on faces (plus an outside node 0)
+• Each finite face becomes a node; the outside is node 0.
+• Between adjacent faces across a Delaunay edge (u,v), add an undirected edge with weight dist(u,v)^2 (this represents corridor width squared between those two trees).
+• Also connect each finite face to node 0 with weight equal to the squared circumradius of that triangle (this represents how much clearance that face provides relative to “open space”).
+1. Compute, for every face, the best possible bottleneck clearance to reach outside
+
+Run a “widest path” search from node 0:
+• distances[f] = maximum over all paths from 0 to f of (minimum edge weight along the path)
+
+This is exactly Dijkstra with a max-heap, and relaxation new = min(curr, edgeWeight).
+1. Answer each balloon query in O(log n)
+
+For balloon center p and radius s:
+• Let R = r+s, compare squared values.
+• If nearest tree center is closer than R, balloon already intersects an inflated tree ⇒ n.
+• Otherwise locate the Delaunay face containing p. If that face’s stored bottleneck value is at least 4*R^2, then there is a path to outside through edges with length ≥ 2R (since corridor condition is dist(u,v) ≥ 2R) ⇒ y, else n.",,,,,Default,https://expert.ethz.ch/solve/gZ88cQbMfExHN9nZF
+Targaryen,max matching with 2 layers,Week 10,"Dijkstra, Maximum matching",Completed,"N intersections and M roads of le, we need to count the max number of road to save.
+
+a road is saved if i put a barricade from both starting and ending node.
+So each node is an intersection, but at each normal intersection we can put MAX 1 barricade for all the roads.
+Except for the plazas, where i can put 2.
+
+To put a barricate ad a certain intersection we need to reach it from at least one of B special intersections within a distance d.","Dijkstra to find all reachable intersections (PAY ATTENTION TO THE ROADS → undirected weighted graph).
+
+",,,,,Default,https://expert.ethz.ch/solve/ww7CHJrKgSAHNhzFA
+Fleetrace,Min-Cost Max-Flow with Bypass,Week 10,MinCostMaxFlow,Rewrite it,"N boats, M sailors
+
+how to match all or a subset of them so that we get the maximum excitement (the excitement of a pair boat/sailor is given with an edge bi,si,excitemet_i)","We need a way to skip connection to avoid the objective of max flow, because we prefer min cost
+
+so from each boat add an edge directly to the sink with the MAX cost so that it skips if using it’s worse than skipping it",,,,"NOT NEED MAX FLOW, BUT MAX REWARD.",Not in 2024,https://expert.ethz.ch/solve/EdbGzSmXMQq4juvw7
+Augean Stables,Monotone parameter search over LP feasibility (bounded-variable LP),Week 10,"Linear Programming, Sliding Window, Two Pointers",Completed,"There are n stalls. Stall i starts with filth fi and must end with filth ≤ ci. Hercules chooses three hole sizes h1,h2,h3 (real numbers in [0,1]). With redirected river flows a and p, the removed filth in stall i is:
+h1*(ki + a^2) + h2*(li + p^2) + h3*(mi + a*p)
+A stall is clean if removed filth ≥ fi − ci. Hercules can spend 0..24 whole hours digging each trench; each hour adds some flow increment, so a and p are prefix sums of 24 given integers. Find the minimum total hours (hoursA + hoursB) that makes all stalls clean; else print Impossible!. ","
+1. Precompute redirected flows as prefix sums
+waterA[h] = sum_{i=1..h} ai, waterB[h] = sum_{i=1..h} pi for h=0..24. 
+this (16)
+2. For a fixed (workA, workB), build an LP feasibility test
+
+Variables: h1,h2,h3 ∈ [0,1].
+
+For each stall i define updated coefficients:
+• k' = ki + a^2
+• l' = li + p^2
+• m' = mi + a*p
+Cleanliness requirement:
+h1*k' + h2*l' + h3*m' ≥ fi − ci
+CGAL uses A x ≤ b, so you multiply by −1:
+−k' h1 − l' h2 − m' h3 ≤ ci − fi
+That is exactly what your code sets:
+• coefficients (-k, -l, -m)
+• RHS (ci - fi)
+
+Feasible ⇔ all stalls can be cleaned with some hole sizes in [0,1].
+1. Search minimal hours using a monotone frontier (two pointers)
+
+Start at (workA=0, workB=24) and maintain:
+• If infeasible: increase workA (more A-water makes constraints easier because k′, m′ increase).
+• If feasible: try decreasing workB (less B-work reduces total hours; may break feasibility).
+
+Track the minimum workA + workB found.
+This works because you only move in one direction on each axis, so you visit O(25+25) states instead of all 625.","#include <iostream>
+#include <vector>
+#include <algorithm>
+
+#include <CGAL/QP_models.h>
+#include <CGAL/QP_functions.h>
+#include <CGAL/Gmpz.h>
+
+// CRITICAL FIX: Use long long to handle values up to 2^50 (a^2)
+// 'int' overflows and causes TLE/Wrong Answer.
+typedef long IT;
+typedef CGAL::Gmpz ET;
+
+typedef CGAL::Quadratic_program<IT> Program;
+typedef CGAL::Quadratic_program_solution<ET> Solution;
+
+struct stall_t {
+int f;
+int c;
+long long k; // Use long long
+long long l;
+long long m;
+};
+
+void solve() {
+int n;
+if (!(std::cin >> n)) return;
+
+std::vector<stall_t> stalls(n);
+for(int i = 0; i < n; i++){
+int f, c;
+long long k, l, m;
+std::cin >> f >> c >> k >> l >> m;
+stalls[i] = {f, c, k, l, m};
+}
+
+// Cumulative water A
+std::vector<long long> waterA(25, 0);
+for(int i = 1; i < 25; i++){
+int a; std::cin >> a;
+waterA[i] = waterA[i-1] + a;
+}
+
+// Cumulative water P
+std::vector<long long> waterB(25, 0);
+for(int i = 1; i < 25; i++){
+int b; std::cin >> b;
+waterB[i] = waterB[i-1] + b;
+}
+
+// Constants for the LP variables
+const int h1 = 0;
+const int h2 = 1;
+const int h3 = 2;
+
+// Initialize LP outside the loop to save allocation time
+// Variables h1, h2, h3 are in [0, 1]
+Program lp(CGAL::SMALLER, true, 0, true, 1);
+
+// Pre-set the constant RHS (b) part of the constraints
+// Constraint: h1*... + h2*... + h3*... >= f - c
+// LP (SMALLER): -h1*... - h2*... - h3*... <= c - f
+for(int i = 0; i < n; i++){
+lp.set_b(i, stalls[i].c - stalls[i].f);
+}
+
+int workA = 0;
+int workB = 24;
+int min_hours = -1; // -1 indicates impossible so far
+
+// ""Sliding Window"" / ""Two Pointer"" search
+// We start at (0, 24).
+// If feasible: try to reduce sum (workB--)
+// If infeasible: try to add resources (workA++)
+while(workA <= 24 && workB >= 0){
+
+// Optimization: If the current sum is already worse than or equal to
+// a known solution, we don't need to solve the LP. We just need to reduce cost.
+if(min_hours != -1 && workA + workB >= min_hours){
+workB--;
+continue;
+}
+
+long long a = waterA[workA];
+long long p = waterB[workB];
+long long a2 = a * a;
+long long p2 = p * p;
+long long ap = a * p;
+
+// Update only the coefficients (A matrix)
+for(int i = 0; i < n; i++){
+// Calculate coefficients using long long to avoid overflow
+long long k_coeff = stalls[i].k + a2;
+long long l_coeff = stalls[i].l + p2;
+long long m_coeff = stalls[i].m + ap;
+
+// Negate because we transformed >= to <=
+lp.set_a(h1, i, -k_coeff);
+lp.set_a(h2, i, -l_coeff);
+lp.set_a(h3, i, -m_coeff);
+}
+
+Solution s = CGAL::solve_linear_program(lp, ET());
+
+if(s.is_infeasible()){
+// Need more water -> increase workA
+workA++;
+} else {
+// Feasible! Record solution and try to reduce workB
+min_hours = workA + workB;
+workB--;
+}
+}
+
+if(min_hours == -1){
+std::cout << ""Impossible!\n"";
+} else {
+std::cout << min_hours << ""\n"";
+}
+}
+
+int main(){
+std::ios_base::sync_with_stdio(false);
+int t; std::cin >> t;
+while(t--){
+solve();
+}
+return 0;
+}",,,"very strange input format, lol
+
+print(”Impossible!”)",Not in 2024,https://expert.ethz.ch/solve/X8Mwp8XF8WCb67ZNB
+Lions vs Hyenas,Cut graph (MinCut),Week 11,Minimum Cut,Rewrite it,"N nodes, 2 groups.
+
+each node has an affinity to one of the groups (positive and negative).
+Each unordered pair of nodes has an affinity ≥ 0.
+
+Two nodes in particular must be in 2 different groups.
+
+Find minimum dissatisfaction (you get dissatisfaction = affinity if you put a node in the opposite group or if you put two friends in opposite group)
+
+and finde max happines","Basically we need the MinCut (MaxFlow) from two groups.
+
+We get dissatisfaction by removing edges with affinity, so we put only the edges that represent  a positive affinity, if we cut it we will sum to dissatisfaction.
+
+To force one element in one group you connect to source/sink with max edge capacity.
+
+you trie both combinations",,,,2 different outputs depending if b  == 0 or b == 1,Default,https://expert.ethz.ch/solve/nYpBy99WMHGW86WDA
+Asterix and the Chariot Race,Minimum Weight Dominating Set on a tree,Week 11,Dynamic Programming,Completed,"We have a tree ad we need to cover each node.
+You cover a node is “repaired” of one of its neighbour is repaired.
+
+At each node is assigned a cost for repairing.
+
+Find minimum cost","DP:
+base case:
+- we have a leaf node, if the parent is repaired return 0, if not repaired return the cost[leaf], else if the parent needed one of the leaf child to repair it, return INFINITY
+
+then, for each node we have 3 state:
+1. repair it
+2. you father is repaired
+3. at least one of your children need to repair itself
+
+So, if you are in state 0, repair + let free choice to all children (take min of all 3 states)
+
+if state == 1,
+you can either repair it and let children do anything
+else NOT repair but children must repair or ask to their children
+
+if state == 2,
+look for the best child to force to repair, for the others let them do what they want.
+How to find the node to sacrifice?
+Check how much they pay if they repair, and how much they pay if another children do their job.
+
+Take the one with the minimun difference.",,,,,Default,https://expert.ethz.ch/solve/TvJRhGQsXzzuGdZxS
+Return of the Jedi,2nd MST,Week 11,Minimum Spanning Tree,Rewrite it,Compute 2nd MST,"How?
+For sure we need to add an edge not in the MST, and remove one edge from the MST to avoid adding a cycle.
+The main idea is that, if we add a new edge (u,v), and remove any other edge on the UNIQUE path from u → v, we obtain again a tree.
+But we want the 2nd MST so we remove the edge with the highest cost (local optimum).
+
+Now we do it for each other edge (global optimum).",,,,2nd test case: star configuration,Default,https://expert.ethz.ch/solve/CeXm4CiLMgGQzyy5R
+Sith,"Max size of a component in a graph with all indices ≥ x ",Week 11,"Binary Search, Delaunay triangulation, Union Find",Rewrite it,"You are given $N$ points in a 2D plane, indexed from $0$ to $N-1$.
+At each time step $k$ (starting from $k=0$), the node with index $k$ is removed (or becomes ""infected/untouchable""). Two nodes can be connected if their Euclidean distance is at most $R$.
+Goal: Find the maximum integer $k$ such that there exists a connected component of size at least $k$ consisting entirely of nodes with indices $\ge k$.
+
+In other words: How long can a group of size $k$ survive if nodes $0, 1, \dots, k-1$ are destroyed?","The problem asks for the maximum $k$ satisfying a condition. Since the condition is monotonic (if a solution works for $k$, it definitely works for $k-1$ because the required size is smaller and more nodes are available), we can use Binary Search on the Answer.
+
+So we do binary search on the max number to look for the max time after that one of our nodes get touched.
+
+so for each binarysearch step, we select only nodes with index ≥ mid and we find max size component via union find.
+
+Then if max size ≥ mid it means we can do better: avoid using the most left nodes so we can have more time to connect.
+so
+if(best ≥ mid) left = mid+1
+else right = mid-1
+
+
+return left-1","// ETH AlgoLab example code: Compute a Euclidean minimum spanning tree (EMST)
+// for n points p_0,...,p_{n-1} in O(n log n) time. Output the edges as ordered
+// pairs of vertex indices (smaller first) together with the squared length; for
+// instance, an edge between p_4=(0,0) and p_2=(1,2) is printed as ""2 4 5"".
+
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Delaunay_triangulation_2.h>
+#include <CGAL/Triangulation_vertex_base_with_info_2.h>
+#include <CGAL/Triangulation_face_base_2.h>
+#include <boost/pending/disjoint_sets.hpp>
+#include <vector>
+#include <tuple>
+#include <algorithm>
+#include <iostream>
+#include <bits/stdc++.h>
+using namespace std;
+
+// Epic kernel is enough, no constructions needed, provided the squared distance
+// fits into a double (!)
+typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+// we want to store an index with each vertex
+typedef std::size_t                                            Index;
+typedef CGAL::Triangulation_vertex_base_with_info_2<Index,K>   Vb;
+typedef CGAL::Triangulation_face_base_2<K>                     Fb;
+typedef CGAL::Triangulation_data_structure_2<Vb,Fb>            Tds;
+typedef CGAL::Delaunay_triangulation_2<K,Tds>                  Delaunay;
+
+// As edges are not explicitly represented in the triangulation, we extract them
+// from the triangulation to be able to sort and process them. We store the
+// indices of the two endpoints, first the smaller, second the larger, and third
+// the squared length of the edge. The i-th entry, for i=0,... of a tuple t can
+// be accessed using std::get<i>(t).
+typedef std::tuple<Index,Index,K::FT> Edge;
+typedef std::vector<Edge> EdgeV;
+
+
+
+void compute_emst() {
+Index n;
+std::cin >> n;
+Index r; cin >> r;
+
+// read points: first, we read all points and store them into a vector,
+// together with their indices
+typedef std::pair<K::Point_2,Index> IPoint;
+std::vector<IPoint> points;
+points.reserve(n);
+for (Index i = 0; i < n; ++i) {
+int x, y;
+std::cin >> x >> y;
+points.emplace_back(K::Point_2(x, y), i);
+}
+
+
+Index left = 2, right = n/2;
+while(left <= right){
+Index mid = left + (right-left)/2;
+Delaunay t;
+t.insert(points.begin()+mid, points.end());
+
+EdgeV edges;
+edges.reserve(3n); // there can be no more in a planar graph
+for (auto e = t.finite_edges_begin(); e != t.finite_edges_end(); ++e) {
+Index i1 = e->first->vertex((e->second+1)%3)->info();
+Index i2 = e->first->vertex((e->second+2)%3)->info();
+// ensure smaller index comes first
+if (i1 > i2) std::swap(i1, i2);
+if(t.segment(e).squared_length() <= rr) edges.emplace_back(i1, i2, t.segment(e).squared_length());
+}
+
+
+// setup and initialize union-find data structure
+boost::disjoint_sets_with_storage<> uf(n);
+vector<Index> sizes(n,1);
+Index curr_best = 0;
+for (EdgeV::const_iterator e = edges.begin(); e != edges.end(); ++e) {
+// determine components of endpoints
+Index c1 = uf.find_set(std::get<0>(*e));
+Index c2 = uf.find_set(std::get<1>(*e));
+if (c1 != c2) {
+Index old1 = sizes[c1], old2 = sizes[c2];
+uf.link(c1, c2);
+Index c3 = uf.find_set(std::get<0>(*e));
+sizes[c3] = old1 + old2;
+curr_best = max(curr_best, sizes[c3]);
+}
+}
+
+if(curr_best >= mid) {
+left = mid + 1;
+}
+else {
+right = mid - 1;
+}
+}
+cout << left-1 << ""\n"";
+
+
+}
+
+int main()
+{
+std::ios_base::sync_with_stdio(false);
+std::size_t t;
+for (std::cin >> t; t > 0; --t) compute_emst();
+return 0;
+}",,,,Default,https://expert.ethz.ch/solve/QGBqTJuHvwrD6PmeF
+Legions,LP of v = s/t,Week 11,Linear Programming,Completed,"We have a point inside a convex hull defined by n lines.
+
+each line is moving pointing the dot each with different speed.
+
+Find the max time before one line reaches it","Simply equation of time
+
+the variable time to maximize is less than the distance to any other line / speed of line",,,,,Default,https://expert.ethz.ch/solve/CB3uJChdaXBc7PyPp
+Alice and the Hurried Rabbit Clan,Shortest path with cumulative cost,Week 12,"Dynamic Programming, Prefix sum",Rewrite it,"You are given an $N \times M$ grid where each cell $(i, j)$ contains a number of rabbits, denoted as $r_{i,j}$1. Alice starts at $(0,0)$ and must reach the caterpillar at $(N-1, M-1)$ by moving only East (Right) or South (Down)2.+1
+
+The rabbits also move only East or South. A rabbit at $(i, j)$ travels the minimum distance to reach any cell occupied by Alice's path3.
+
+
+Goal: Find a path $P$ for Alice that minimizes the total distance traveled by all rabbits in the grid4.","Instead of simulating individual rabbit paths, we calculate the ""penalty cost"" incurred by Alice's movements. We model this as finding the shortest path (minimum cost) on a DAG from $(0,0)$ to $(N-1, M-1)$.
+If Alice is at cell $(i, j)$, she has two choices:
+1. Go Right ($j \to j+1$):
+    ◦ Effect: Alice moves away horizontally.
+    ◦ Cost: All rabbits located in the Bottom-Left relative to Alice (Rows $i+1 \dots N-1$, Columns $0 \dots j$) must now travel at least one extra step East to intercept the path later.
+    ◦ Calculation: Sum of rabbits in the rectangle defined by top-left $(i+1, 0)$ and bottom-right $(N-1, j)$.
+2. Go Down ($i \to i+1$):
+    ◦ Effect: Alice moves away vertically.
+    ◦ Cost: All rabbits located in the Top-Right relative to Alice (Rows $0 \dots i$, Columns $j+1 \dots M-1$) are left ""waiting"" above. They must travel extra distance to catch the path as it descends.
+    ◦ Calculation: Sum of rabbits in the rectangle defined by top-left $(0, j+1)$ and bottom-right $(i, M-1)$.
+Algorithm:
+• Precomputation: Build a 2D Prefix Sum array to calculate the rectangular sums in $O(1)$ time.
+• Dynamic Programming:
+Let $DP[i][j]$ be the minimum cost to reach $(N-1, M-1)$ from $(i, j)$.
+$$DP[i][j] = \min \begin{cases} DP[i][j+1] + \text{Sum}(\text{Bottom-Left}) & (\text{Right Move}) \\ DP[i+1][j] + \text{Sum}(\text{Top-Right}) & (\text{Down Move}) \end{cases}$$
+• Result: The value at $DP[0][0]$.",,,,,Default,https://expert.ethz.ch/solve/nDExBRMeNFhbyZNac
+Harry Potter,,Week 12,"Binary Search, Linear Programming",Rewrite it,"Harry Potter must deliver a truth potion to Slughorn ($p_1$) from himself ($p_2$) via a network of friends ($p_3 \dots p_n$)1.
+
+• 
+Flow: Transfers ($i \to j$) have efficiency $e_{ij}$ (loss of volume) and generate suspicion $d_{ij}$ per unit2.
+
+• Constraints: Harry starts with $a$ units; Slughorn needs $\ge b$ units; total suspicion of all transfers must be $\le c$3.
+
+• Goal:
+    1. Find the smallest index $k$ (subset of friends $p_1 \dots p_k$) that makes the delivery possible4.
+
+    2. For that $k$, minimize the maximum suspicion $s$ generated by any single link5.","This is a Linear Programming (LP) problem.
+1. Find Min $k$: Iterate or binary search $k$ ($2 \to n$). Construct an LP using only nodes $1 \dots k$ with flow conservation, efficiency losses, and the total suspicion constraint ($\sum d_{ij}x_{ij} \le c$). The first feasible $k$ is the answer.
+2. Find Min $s$: Fix $k$. Add constraints $d_{ij} x_{ij} \le S$ for every edge. Set the objective to Minimize $S$.
+3. 
+Output: If infeasible for all $k$, output ""Busted!""6. Otherwise, print $k$ and $\lceil S \rceil$ using exact arithmetic types7.",,,,Output “Busted!”,Default,https://expert.ethz.ch/solve/Z73T7urzu99sZZQ2t
+Evolution,Binary Lifting,Week 12,Binary Lifting,Rewrite it,"We have a tree with n nodes, each node represent a specie with a string name and age.
+
+You are given n-1 connection specie → direct ancestor.
+
+Answer to q queries: given a name of a specie and an age, find the highest ancestor with age ≤ age_given",Binary Lifting,,,,,Not in 2024,https://expert.ethz.ch/solve/NmivTM3xmEv4cxHjG
+Marathon,MaxFlow in ONLY all shortest path of a graph,Week 12,"Dijkstra, MaxFlow",Completed,"We have n nodes and m undirected streets, one node represent the start of the race and another the end.
+
+Each street has a max capacity and a length.
+
+Find the max number of runners that can join the race by running only in a shortest path of the graph.","Basically we would like to do max flow but we need to discard the streets not in a shortest path.
+
+So how to know if a street is in a shortest path?
+If dist_from_start(u) + length(u,b) + distace_from_end(v) == LEGTH_SHORTEST_PATH.
+
+But be careful: dist_from_start(u) ≤ dist_from_start(v), so swap them if not.",,,,,Default,https://expert.ethz.ch/solve/Rx5ixdhmDAtKsX7v9
+The Stymphalian Birds,Scheduling tasks with deadlines respecting a tree order,Week 12,"Constraint Propagation, Greedy",Completed,"We have $n$ birds ($b_0 \dots b_{n-1}$), each with a specific deadline $t_i$ before they attack2222.
+They form a hierarchical formation where bird $b_i$ is physically behind $b_{2i+1}$ and $b_{2i+2}$, meaning the two ""children"" must be shot before the ""parent"" $b_i$3.
+Hercules shoots 1 bird per second4. Can he clear them all in time? | This is a Single Machine Scheduling problem with precedence constraints.","We can encode the dependencies ($children \to parent$) into the deadlines: a child must be shot at least 1 second before its parent.
+1. Propagate Deadlines: Iterate from $0$ to $n$ (top-down). Update $t_{child} = \min(t_{child}, t_{parent} - 1)$.
+2. Greedy (EDF): Sort all birds by their new deadlines. Check if the $i$-th bird in the sorted list satisfies $i < t_{new}$ (strictly before deadline).",,,,,Default,https://expert.ethz.ch/solve/Q69M3M2YSnWJP3Kfv
+Surveillance Photograph,Maximum flow on a directed graph with node-splitting (2-layer graph),Week 13,"2-layer Graph, MaxFlow",Completed,"You have a directed road network with n intersections and m one-way streets. There are k police stations (each provides one policeman + one safe) and ℓ photographs at intersections (multiple can be at the same intersection).
+Each policeman can collect at most one photograph: travel from a station to a photo location (empty-handed), then travel (carrying the photo) to some station to store it.
+Security rule: each street can be used by at most one policeman while carrying a photograph, but streets can be reused arbitrarily by policemen who are not carrying a photo.
+Goal: compute the maximum number of photographs that can be safely collected.","The code models this as a max-flow problem using node-splitting:
+• Build a flow graph with 2 copies of each intersection: u_in = u, u_out = u+n.
+• Add a super source S and sink T.
+• For each police-station location x (k entries, duplicates allowed):
+    ◦ Add S -> x_in capacity 1 (each policeman can start once).
+    ◦ Add x_out -> T capacity 1 (each safe can store one photo).
+• For each photograph location x (ℓ entries, duplicates allowed):
+    ◦ Add x_in -> x_out capacity 1 (at most one collected photo can “pass through” that photo token).
+• For each street x -> y:
+    ◦ Add x_in -> y_in capacity (k+ℓ) (moving without a photo: effectively unlimited).
+    ◦ Add x_out -> y_out capacity 1 (moving while carrying a photo: limited to one, enforcing the security rule).
+Then it runs push_relabel_max_flow(G, S, T).
+
+Each unit of flow corresponds to one policeman successfully routing:
+S -> (start station)_in -> ... -> (photo)_in -> (photo)_out -> ... -> (end station)_out -> T
+
+The max flow value is exactly the maximum number of photos that can be collected under the constraints.",,,,,Default,https://expert.ethz.ch/solve/MAvJkfxkq23FRBYND
+Queen of Hearts,MinCut with node capacity,Week 13,"Dijkstra, Minimum Cut, NodeCapacity",Completed,"Remove (steal) the fewest carrots (and on grumpy days pay the fewest rabbits) so the Queen cannot traverse the garden from entrance (0) to exit (r+1), given that every additional path step after the first requires eating one carrot available at rabbit openings.","For each rabbit compute deliverable carrots res = c_i − dist(0, n_i−1) via Dijkstra on its burrow, build a node-split flow network with split-edge capacity res (or 1 for coin mode) and infinite-capacity garden arcs, then output the min-cut value via push_relabel_max_flow (twice if d=1).",,,,,Default,https://expert.ethz.ch/solve/sa79JHPf7Mjc4BntP
+Rapunzel,Return all nodes in a tree where starts a branch of size m with max(branch) - min(branch) ≤ k,Week 13,"Backtracking, Tree Traversal",Completed,"You are given a rooted directed tree (hair ties), where for every node u there is exactly one path (rope) from the root 0 to u. Each node i has a brightness value hᵢ. For a fixed length m, you must find all start nodes s such that the path segment of length m starting at s (i.e., m consecutive nodes on some root→leaf path) has contrast ≤ k, where contrast is max(h) − min(h) over those m nodes. If none exist, print “Abort mission”.","The code runs a DFS from the root while maintaining the current root→node path in a stack. Along this path it keeps a multiset of brightness values for the last m nodes (a sliding window).
+At each visited node:
+• Insert its brightness into the multiset and push the node onto the path stack.
+• Once the path length reaches m, compute min and max from the multiset in O(1) (begin/rbegin).
+• The window corresponds to the last m nodes; the start of that length-m segment is the node at index path_size - m. If max - min ≤ k, that start node is added to the answer set.
+• Then it “slides” the window by temporarily removing the start node’s brightness before going deeper, and restores it when backtracking.","#include <bits/stdc++.h>
+using namespace std;
+
+int m, k;
+void dfs(const vector<vector<int>>& tree,
+const vector<int>& br, int u,
+multiset<int>& ms,
+vector<int>& vStack,
+set<int>& res){
+vStack.push_back(u);
+ms.insert(br[u]);
+//cout << ""in node: ""<<u<<""\n"";
+int removed_elem = -1;
+if(int(ms.size()) == m){
+int min_val = *ms.begin();
+int max_val = *ms.rbegin();
+//cout <<min_val <<"" - ""<<max_val<<""\n"";
+int first_node = vStack[vStack.size()-m];
+//cout << ""first_node: ""<<first_node<<""\n"";
+if(max_val - min_val <= k) res.insert(first_node);
+ms.erase(ms.find(br[first_node]));
+removed_elem = br[first_node];
+}
+for(int v: tree[u]){
+dfs(tree, br, v, ms, vStack, res);
+}
+if(removed_elem != -1) ms.insert(removed_elem);
+ms.erase(ms.find(br[u]));
+vStack.pop_back();
+}
+
+void solve(){
+int n;
+cin >> n >> m >> k;
+vector<int> br(n);
+for(int i = 0; i < n; ++i){
+cin >> br[i];
+}
+vector<vector<int>> tree(n);
+for(int i = 0; i < n-1; ++i){
+int u, v; cin >> u >> v;
+tree[u].push_back(v);
+}
+multiset<int> ms;
+vector<int> vStack;
+set<int> res;
+dfs(tree, br, 0, ms, vStack, res);
+for(int num: res) cout << num << "" "";
+if((int)res.size() == 0) cout << ""Abort mission"";
+}
+
+int main(){
+ios_base::sync_with_stdio(false);
+int t; cin >> t;
+while(t--){
+solve(); cout << ""\n"";
+}
+if(cin >> t) cout << ""j<nci\n"";
+}",,,Output: “Abort Mission”,Default,https://expert.ethz.ch/solve/aScTGF8THFXDPZ86o
+Croquet,Hop-limited reachability in a unit-disk graph using proximity structure,Week 13,Delaunay triangulation,Learn&ShutUp,"There are n safe locations (points), and the last one is the target t. A shot can move the ball by distance at most d (q = d^2). Alice may start from any of m starting points (not necessarily safe for the first placement), but after that every landing point must be a safe location. For each start point s_i, decide if Alice can reach t in at most k shots. 
+","
+1. Build Delaunay triangulation of the safe points
+
+This gives a sparse proximity structure to search neighbors and (in one regime) to preserve connectivity.
+2. Mark which safe points can reach the target within the allowed hops
+
+A safe-to-safe shot is allowed if squared distance ≤ q.
+• Regime A: k ≥ n (hop limit effectively irrelevant)
+
+If you can take at least n shots, then “reachable within k shots” collapses to “in the same connected component as t” (you can’t need more than n−1 hops on a connected n-vertex graph if you allow revisits).
+
+Your code builds a graph using only Delaunay edges with length² ≤ q, and marks all vertices connected to t as reachable.
+• Regime B: k < n (hop-limited)
+
+You run a BFS from t over the implicit UDG, stopping expansion once distance (in hops) reaches k−1 (because the first shot is from the start point to some safe location).
+
+For expanding a node u, you try to discover all safe points v with dist²(u,v) ≤ q by doing a local traversal over Delaunay adjacency starting from u’s vertex handle, only continuing locally through vertices that are within radius d from u.
+1. Answer each query start point s_i
+
+If there exists any reachable safe point within distance d of the start point, then s_i is “y”, else “n”. You build a second triangulation containing only reachable safe points and do a nearest-neighbor query; if nearest reachable point is within d, print “y”.",,,,,Default,https://expert.ethz.ch/solve/gtPibhk3aRkzxbuMR
+The Empire Strikes Back,Distributing radiation intensity from constrained sources to targets while respecting proximity limits,Week 13,"Delaunay triangulation, Linear Programming",Rewrite it,You have 'a' radioactive particles (sources) with limited capacity and 's' shooting points (targets) that require radiation. There are also 'n' healthy cells (obstacles). Radiation intensity decays with the inverse squared distance. A particle can only irradiate a target if the target is closer to that particle than to any healthy cell. We need to determine if it is possible to power the targets.,"1. Visibility Check (Delaunay): Construct a Delaunay Triangulation of the 'n' healthy cells. For each shooting point, find the distance to the nearest healthy cell. A particle only contributes to a shooting point if the distance between them is smaller than this ""nearest healthy cell"" distance.
+2. Linear Program (LP): Formulate the flow constraints.
+• Variables: Intensity output for each particle.
+• Constraints: Sum of (Intensity / distance^2) for valid pairs must meet demand; Individual particle intensity <= capacity.
+• Solve using an exact LP solver (Rational arithmetic) to handle the precision of inverse squared distances correctly.",,,,,Default,https://expert.ethz.ch/solve/7wDAGGyqGpkfH32ne
+Rumpelstitskin,2source → Single-flow pairing via reversed right source,Week 14,"Flow Conservation, MaxFlow",Rewrite it,"There are two independent supplies (West/Wheat and East/Barley) that must be paired 1-to-1 at islands to produce gold; each island can be used at most once and has a score, and the goal is to maximize the number of gold units and, among those, the total score.","We have a problem with the flow conservation, because we have 2 flows combined in 1 sink that count 1+1 → 1.
+
+Transform the two-source problem into a single-source–single-sink flow by reversing the East network so its supply becomes demand; route flow asSource → West → Islands → East (reversed) → Sink, where flow conservation enforces the 1-to-1 pairing, island capacity-1 edges limit usage, and min-cost max-flow with cost (BIG − score) selects the highest-score islands while maximizing flow.",,,,,Default,https://expert.ethz.ch/solve/zFi8hdy7t2oLaGFke
+James Bond's sovereign,,,,Not Started,,,,,,,Not in 2025,https://github.com/tommasocerruti/algolab-2024/blob/main/src/week03/james_bonds_sovereign
+Nemean Lion,,,,Not Started,,,,,,,Not in 2025,https://github.com/tommasocerruti/algolab-2024/blob/main/src/week12/nemean_lion
+Alastor Moody,,,,Not Started,,,,,,,Not in 2025,https://github.com/tommasocerruti/algolab-2024/blob/main/src/week12/alastor_moody
+Hermione Granger,,,,Not Started,,,,,,,Not in 2025,https://github.com/tommasocerruti/algolab-2024/blob/main/src/week10/hermione_granger
+Pied Piper,,,,Not Started,,,,,,,Not in 2025,https://github.com/tommasocerruti/algolab-2024/blob/main/src/week12/pied_piper
+Lernaean Hydra,,,,Not Started,,,,,,,Not in 2025,https://github.com/tommasocerruti/algolab-2024/blob/main/src/week11/lernaean_hydra
+Schneewittchen,,,,Not Started,,,,,,,Not in 2025,https://github.com/tommasocerruti/algolab-2024/blob/main/src/week13/schneewittchen
+Ceryneian Hind,,,,Not Started,,,,,,,Not in 2025,https://github.com/tommasocerruti/algolab-2024/blob/main/src/week11/ceryneian_hind
+Hand,,,,Not Started,,,,,,,Not in 2025,https://github.com/simon-hrabec/Algolab2020/tree/main/problems/Week%2011%20-%20Hand
+Surveillance Photograph,,,,Not Started,,,,,,,Not in 2025,https://github.com/simon-hrabec/Algolab2020/tree/main/problems/Week%2008%20PotW%20-%20Surveillance%20Photograph
+What is the Maximum,,,,Not Started,,,,,,,Not in 2025,https://github.com/simon-hrabec/Algolab2020/tree/main/problems/Week%2007%20-%20What%20is%20the%20Maximum
+Build the sum,,,,Not Started,,,,,,,Not in 2025,https://github.com/haeggee/algolab/blob/main/problems/week01-build_the_sum
+Defensive Line,,,,Not Started,,,,,,,Not in 2025,https://github.com/haeggee/algolab/blob/main/problems/week02-defensive_line
+Tracking,,,,Not Started,,,,,,,Not in 2025,https://github.com/simon-hrabec/Algolab2020/tree/main/problems/Week%2006%20PotW%20-%20Tracking
+Radiation,,,,Not Started,,,,,,,Not in 2025,https://github.com/simon-hrabec/Algolab2020/tree/main/problems/Week%2007%20-%20Radiation
+GoldenEye,,,,Not Started,,,,,,,Not in 2025,https://github.com/haeggee/algolab/blob/main/problems/week10-potw-goldeneye
+Bonus Level,,,,Not Started,,,,,,,Not in 2025,https://github.com/haeggee/algolab/blob/main/problems/week12-bonus_level
+The Great Game,,,,Not Started,,,,,,,Not in 2025,https://github.com/haeggee/algolab/blob/main/problems/week02-the_great_game
+Deck of Cards,,,,Not Started,,,,,,,Not in 2025,https://github.com/haeggee/algolab/blob/main/problems/week02-potw-deck_of_cards
+The Iron Islands,,,,Not Started,,,,,,,Not in 2025,https://github.com/haeggee/algolab/blob/main/problems/week11-the_iron_islands
+From Russia with Love,,,,Not Started,,,,,,,Not in 2025,https://github.com/haeggee/algolab/blob/main/problems/week03-potw-from_russia_with_love
+Beach Bars,,,,Not Started,,,,,,,Not in 2025,https://github.com/haeggee/algolab/blob/main/problems/week02-beach_bars
+India,,,,Not Started,,,,,,,Not in 2025,https://github.com/haeggee/algolab/blob/main/problems/week14-potw-india
+Lannister,,,,Not Started,,,,,,,Not in 2025,https://github.com/haeggee/algolab/blob/main/problems/week06-lannister
+Phantom Menace,,,,Not Started,,,,,,,Not in 2025,https://github.com/haeggee/algolab/blob/main/problems/week11-potw-phantom_menace
+Strikesback,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week13/strikesback.pdf
+Ludo Bagman,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week14/ludo_bagman.pdf
+Rubeus Hagrid,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week12/rubeus_hagrid.pdf
+Nemean Lion,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week12/nemean_lion.pdf
+Marathon,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week13/marathon.pdf
+Worldcup,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week11/worldcup.pdf
+Car Sharing,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week12/car_sharing.pdf
+Punch,,,,Not Started,,,,,,,Not in 2025,https://github.com/haeggee/algolab/blob/main/problems/week13-punch
+On Her Majesty's Secret Service,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week12/majestys_service.pdf
+Hagrid,,,,Not Started,,,,,,,Not in 2025,https://github.com/haeggee/algolab/blob/main/problems/week13-hagrid
+Suez,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week06/suez.pdf
+The Hand's Tourney,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week10/hand.pdf
+New York,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week10/new_york.pdf
+Light the Stage,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week08/light_the_stage.pdf
+Extra Exercise: New Tiles,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week10/new_tiles.pdf
+Asterix in Switzerland,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week11/asterix_in_switzerland.pdf
+Shopping Trip,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week07/shopping_trip.pdf
+Octopussy,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week07/octopussy.pdf
+Ceryneian Hind,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week11/ceryneian_hind.pdf
+Casino Royale,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week09/casino_royale.pdf
+Deck of cards,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week02/deck_of_cards.pdf
+The Great Game,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week02/the_great_game.pdf
+Defensive Line,“Lord Voldemort” → max sum of length of non-overlapping subarrays with each subarray having a sum of exactly K.,,,Not Started,,,,,,,Not in 2025,https://github.com/giacomocamposampiero/algolab/tree/main/problems/defensive-line
+Beach Bars,,,,Not Started,,,,,,,Not in 2025,https://github.com/jlscheerer/AlgoLab2022/blob/main/statements/week02/beach_bars.pdf

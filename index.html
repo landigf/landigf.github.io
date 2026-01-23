@@ -114,6 +114,30 @@
         <h3>Data Processing on Modern Hardware Group</h3>
         <p><strong>Led by Prof. Gustavo Alonso.</strong> This <a href="https://systems.ethz.ch/research/data-processing-on-modern-hardware.html" target="_blank">group</a> explores the implications of rapidly evolving hardware and heterogeneous architectures on data systems, from databases on GPUs and FPGAs to cloud-native processing engines. I am particularly drawn to their long-term vision of building innovative systems that exploit new hardware capabilities while ensuring scalability and efficiency in cloud deployments.</p>
       </section>
+
+      <section class="algolab-section">
+        <h2>Algolab Exercises</h2>
+        <p class="section-description">Browse and practice algorithm problems from ETH Zurich's Algolab course. <a href="algolab/index.html" target="_blank">Open full version →</a></p>
+        
+        <div class="algolab-controls">
+          <input type="text" id="algolab-search" placeholder="Search exercises..." class="search-input">
+          <select id="algolab-week" class="filter-select">
+            <option value="">All Weeks</option>
+          </select>
+          <select id="algolab-method" class="filter-select">
+            <option value="">All Methods</option>
+          </select>
+        </div>
+
+        <div id="algolab-stats" class="algolab-stats">
+          <span class="stat-badge">Total: <strong id="total-count">0</strong></span>
+          <span class="stat-badge">Showing: <strong id="showing-count">0</strong></span>
+        </div>
+
+        <div id="algolab-list" class="algolab-list">
+          <!-- Exercises will be loaded here -->
+        </div>
+      </section>
     </main>
   </div>
   
@@ -146,5 +170,117 @@
     });
   </script>
   <script src="script.js"></script>
+  <script src="exercises-data.js"></script>
+  <script>
+    // Algolab exercises functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof EXERCISES === 'undefined') return;
+
+      const searchInput = document.getElementById('algolab-search');
+      const weekFilter = document.getElementById('algolab-week');
+      const methodFilter = document.getElementById('algolab-method');
+      const listContainer = document.getElementById('algolab-list');
+      const totalCount = document.getElementById('total-count');
+      const showingCount = document.getElementById('showing-count');
+
+      // Populate filters
+      const weeks = [...new Set(EXERCISES.map(ex => ex.week).filter(w => w))].sort();
+      weeks.forEach(week => {
+        const option = document.createElement('option');
+        option.value = week;
+        option.textContent = `Week ${week}`;
+        weekFilter.appendChild(option);
+      });
+
+      const methods = [...new Set(EXERCISES.flatMap(ex => 
+        ex.methods ? ex.methods.split(',').map(m => m.trim()) : []
+      ))].sort();
+      methods.forEach(method => {
+        const option = document.createElement('option');
+        option.value = method;
+        option.textContent = method;
+        methodFilter.appendChild(option);
+      });
+
+      totalCount.textContent = EXERCISES.length;
+
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      function truncate(text, maxLength = 200) {
+        if (!text || text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+      }
+
+      function renderExercises(exercises) {
+        showingCount.textContent = exercises.length;
+
+        if (exercises.length === 0) {
+          listContainer.innerHTML = '<div class="no-results">No exercises found matching your filters.</div>';
+          return;
+        }
+
+        const html = exercises.map((ex, index) => `
+          <div class="exercise-item">
+            <div class="exercise-header">
+              <div class="exercise-number">#${index + 1}</div>
+              <div class="exercise-content">
+                <h3 class="exercise-title">${ex.name || 'Untitled Exercise'}</h3>
+                ${ex.aka ? `<div class="exercise-aka">${ex.aka}</div>` : ''}
+                ${ex.week || ex.methods ? `
+                <div class="exercise-tags">
+                  ${ex.week ? `<span class="tag">Week ${ex.week}</span>` : ''}
+                  ${ex.methods ? ex.methods.split(',').map(m => `<span class="tag">${m.trim()}</span>`).join('') : ''}
+                </div>
+                ` : ''}
+              </div>
+            </div>
+            ${ex.problemModel ? `
+            <div class="exercise-problem">
+              <strong>Problem:</strong>
+              <p>${truncate(ex.problemModel, 300)}</p>
+            </div>
+            ` : ''}
+            <div class="exercise-actions">
+              <a href="algolab/practice.html?ex=${index}" class="action-btn">Practice</a>
+              ${ex.link ? `<a href="${ex.link}" target="_blank" class="action-btn secondary">View on Expert</a>` : ''}
+            </div>
+          </div>
+        `).join('');
+
+        listContainer.innerHTML = html;
+      }
+
+      function filterExercises() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const weekValue = weekFilter.value;
+        const methodValue = methodFilter.value;
+
+        const filtered = EXERCISES.filter(ex => {
+          const matchesSearch = !searchTerm || 
+            (ex.name && ex.name.toLowerCase().includes(searchTerm)) ||
+            (ex.aka && ex.aka.toLowerCase().includes(searchTerm)) ||
+            (ex.problemModel && ex.problemModel.toLowerCase().includes(searchTerm));
+
+          const matchesWeek = !weekValue || ex.week === weekValue;
+          const matchesMethod = !methodValue || (ex.methods && ex.methods.includes(methodValue));
+
+          return matchesSearch && matchesWeek && matchesMethod;
+        });
+
+        renderExercises(filtered);
+      }
+
+      searchInput.addEventListener('input', filterExercises);
+      weekFilter.addEventListener('change', filterExercises);
+      methodFilter.addEventListener('change', filterExercises);
+
+      // Initial render (show first 20)
+      renderExercises(EXERCISES.slice(0, 20));
+    });
+  </script>
 </body>
 </html>

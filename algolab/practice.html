@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algolab Practice</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+      background: #000;
+      color: #fff;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      flex: 1;
+    }
+
+    header {
+      border-bottom: 2px solid #fff;
+      padding-bottom: 30px;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      color: #aaa;
+      font-size: 1rem;
+    }
+
+    .nav {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+    }
+
+    .nav a {
+      color: #fff;
+      text-decoration: none;
+      padding: 8px 16px;
+      border: 1px solid #fff;
+      transition: all 0.2s;
+    }
+
+    .nav a:hover {
+      background: #fff;
+      color: #000;
+    }
+
+    .exercise-card {
+      background: #111;
+      border: 2px solid #333;
+      padding: 40px;
+      margin-bottom: 30px;
+      transition: border-color 0.3s;
+    }
+
+    .exercise-card:hover {
+      border-color: #666;
+    }
+
+    .exercise-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 30px;
+      gap: 20px;
+    }
+
+    .exercise-title {
+      flex: 1;
+    }
+
+    .exercise-title h2 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .exercise-meta {
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .exercise-number {
+      color: #666;
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .tag {
+      background: #000;
+      border: 1px solid #444;
+      padding: 5px 12px;
+      font-size: 0.85rem;
+      color: #aaa;
+    }
+
+    .problem-section {
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      color: #888;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
+    }
+
+    .problem-text {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #fff;
+      white-space: pre-wrap;
+    }
+
+    .solution-section {
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 1px solid #333;
+      display: none;
+    }
+
+    .solution-section.visible {
+      display: block;
+    }
+
+    .solution-short {
+      background: #0a0a0a;
+      border-left: 3px solid #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      font-size: 1rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .solution-code {
+      background: #0a0a0a;
+      border: 1px solid #222;
+      padding: 20px;
+      overflow-x: auto;
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .solution-code pre {
+      margin: 0;
+      white-space: pre;
+      color: #ddd;
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: #fff;
+      color: #000;
+      border: 2px solid #fff;
+      padding: 12px 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    button:hover {
+      background: #000;
+      color: #fff;
+    }
+
+    button:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    button.secondary {
+      background: #000;
+      color: #fff;
+      border: 2px solid #444;
+    }
+
+    button.secondary:hover {
+      border-color: #fff;
+    }
+
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: #222;
+      z-index: 1000;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: #fff;
+      transition: width 0.3s;
+    }
+
+    .external-link {
+      display: inline-block;
+      margin-top: 10px;
+      color: #888;
+      text-decoration: none;
+      font-size: 0.9rem;
+      border-bottom: 1px solid #444;
+      transition: all 0.2s;
+    }
+
+    .external-link:hover {
+      color: #fff;
+      border-color: #fff;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 15px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .exercise-header {
+        flex-direction: column-reverse;
+      }
+
+      .exercise-number {
+        font-size: 2rem;
+      }
+
+      .exercise-card {
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="container">
+    <header>
+      <h1>Algolab Practice</h1>
+      <p class="subtitle">Master one problem at a time</p>
+      <div class="nav">
+        <a href="index.html">← Back</a>
+        <a href="list.html">View All</a>
+      </div>
+    </header>
+
+    <main id="exerciseContainer">
+      <!-- Exercise will be loaded here -->
+    </main>
+  </div>
+
+  <script src="exercises-data.js"></script>
+  <script>
+    let currentIndex = 0;
+    let solutionVisible = false;
+
+    function updateProgress() {
+      const progress = ((currentIndex + 1) / EXERCISES.length) * 100;
+      document.getElementById('progressBar').style.width = progress + '%';
+    }
+
+    function renderExercise() {
+      const ex = EXERCISES[currentIndex];
+      solutionVisible = false;
+
+      const html = `
+        <div class="exercise-card">
+          <div class="exercise-header">
+            <div class="exercise-title">
+              <h2>${ex.name || 'Untitled Exercise'}</h2>
+              <div class="exercise-meta">
+                ${ex.aka ? `<div><strong>Also known as:</strong> ${ex.aka}</div>` : ''}
+                ${ex.week ? `<div>Week ${ex.week}</div>` : ''}
+              </div>
+            </div>
+            <div class="exercise-number">#${currentIndex + 1}</div>
+          </div>
+
+          ${ex.methods ? `
+          <div class="tags">
+            ${ex.methods.split(',').map(m => `<span class="tag">${m.trim()}</span>`).join('')}
+          </div>
+          ` : ''}
+
+          <div class="problem-section">
+            <div class="section-title">Problem</div>
+            <div class="problem-text">${ex.problemModel || 'No problem description available.'}</div>
+          </div>
+
+          ${ex.link ? `<a href="${ex.link}" target="_blank" class="external-link">View on Expert →</a>` : ''}
+
+          <div class="solution-section" id="solutionSection">
+            <div class="section-title">Solution</div>
+            
+            ${ex.solutionShort ? `
+            <div class="solution-short">${ex.solutionShort}</div>
+            ` : ''}
+            
+            ${ex.solution ? `
+            <div class="solution-code">
+              <pre>${escapeHtml(ex.solution)}</pre>
+            </div>
+            ` : ''}
+          </div>
+
+          <div class="controls">
+            <button onclick="toggleSolution()" id="revealBtn">Show Solution</button>
+            <button onclick="previousExercise()" ${currentIndex === 0 ? 'disabled' : ''} class="secondary">← Previous</button>
+            <button onclick="nextExercise()" ${currentIndex === EXERCISES.length - 1 ? 'disabled' : ''} class="secondary">Next →</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('exerciseContainer').innerHTML = html;
+      updateProgress();
+      window.scrollTo(0, 0);
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function toggleSolution() {
+      const section = document.getElementById('solutionSection');
+      const btn = document.getElementById('revealBtn');
+      
+      if (solutionVisible) {
+        section.classList.remove('visible');
+        btn.textContent = 'Show Solution';
+        solutionVisible = false;
+      } else {
+        section.classList.add('visible');
+        btn.textContent = 'Hide Solution';
+        solutionVisible = true;
+      }
+    }
+
+    function nextExercise() {
+      if (currentIndex < EXERCISES.length - 1) {
+        currentIndex++;
+        renderExercise();
+      }
+    }
+
+    function previousExercise() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderExercise();
+      }
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') nextExercise();
+      if (e.key === 'ArrowLeft') previousExercise();
+      if (e.key === ' ' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        toggleSolution();
+      }
+    });
+
+    // Initialize
+    if (EXERCISES && EXERCISES.length > 0) {
+      // Check for URL parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const exParam = urlParams.get('ex');
+      if (exParam !== null) {
+        const exIndex = parseInt(exParam);
+        if (!isNaN(exIndex) && exIndex >= 0 && exIndex < EXERCISES.length) {
+          currentIndex = exIndex;
+        }
+      }
+      renderExercise();
+    } else {
+      document.getElementById('exerciseContainer').innerHTML = '<p>No exercises found.</p>';
+    }
+  </script>
+</body>
+</html>

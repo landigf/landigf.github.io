@@ -1,0 +1,2490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Algolab Problem Map</title>
+  <style>
+    :root {
+      --bg: #000000;
+      --panel: #0a0a0a;
+      --card: #1a1a1a;
+      --accent: #ffffff;
+      --accent-soft: #f5f5f7;
+      --text-main: #f5f5f7;
+      --text-secondary: #86868b;
+      --text-muted: #6e6e73;
+      --tag-bg: #1d1d1f;
+      --border: #2c2c2e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+        "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: #000000;
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    #app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+    }
+
+    header p {
+      margin: 8px 0 0;
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .quiz-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .quiz-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .stats-summary {
+      display: flex;
+      gap: 20px;
+      padding: 12px 20px;
+      background: var(--card);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .stat-value {
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    main.layout {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .tree-panel {
+      width: 32%;
+      min-width: 280px;
+      max-width: 440px;
+      border-right: 1px solid var(--border);
+      background: var(--panel);
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .list-panel {
+      flex: 1;
+      padding: 24px 32px;
+      overflow-y: auto;
+      background: var(--bg);
+    }
+
+    .tree-panel h2,
+    .list-panel h2 {
+      margin: 0 0 16px;
+      font-size: 1.1rem;
+      letter-spacing: -0.01em;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .tree-description {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    /* Tree nodes */
+
+    #tree {
+      margin-top: 8px;
+    }
+
+    .tree-node {
+      position: relative;
+      margin: 8px 0;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+    }
+
+    .tree-node-inner {
+      border-radius: 12px;
+      padding: 12px 16px;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .tree-node .node-title {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .tree-node .node-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .tree-node .node-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .tree-node:hover {
+      background: var(--tag-bg);
+      border-color: #3a3a3c;
+      transform: translateX(2px);
+    }
+
+    .tree-node.selected {
+      background: var(--accent);
+      border-color: var(--accent);
+      transform: translateX(2px);
+    }
+
+    .tree-node.selected .node-title,
+    .tree-node.selected .node-subtitle,
+    .tree-node.selected .node-meta {
+      color: #000;
+    }
+
+    .tree-node::before {
+      content: "";
+      position: absolute;
+      left: -14px;
+      top: 50%;
+      width: 10px;
+      height: 1px;
+      background: var(--border);
+      opacity: 0.5;
+    }
+
+    .tree-node.depth-0::before {
+      display: none;
+    }
+
+    /* Filters */
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+      align-items: center;
+    }
+
+    .filters input[type="search"] {
+      flex: 1 1 220px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .filters input[type="search"]:focus {
+      border-color: var(--text-secondary);
+      background: var(--panel);
+    }
+
+    .filters select {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text-main);
+      font-size: 0.9rem;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filters select:hover {
+      border-color: var(--text-secondary);
+    }
+
+    .tech-filter-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .global-flip-btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text-main);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-left: auto;
+    }
+
+    .global-flip-btn:hover {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    .global-flip-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    #tech-filter {
+      width: 100%;
+      max-height: 100px;
+      overflow-y: auto;
+      margin-top: 8px;
+      border-radius: 10px;
+      padding: 8px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+    }
+
+    #tech-filter label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      margin: 4px 6px 4px 0;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: var(--card);
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid var(--border);
+    }
+
+    #tech-filter label:hover {
+      background: var(--tag-bg);
+    }
+
+    #tech-filter input[type="checkbox"] {
+      accent-color: var(--accent);
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Problem list */
+
+    #problem-list {
+      margin-top: 8px;
+    }
+
+    .problem-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .problem-card:hover {
+      border-color: var(--text-secondary);
+      transform: translateY(-2px);
+    }
+
+    .problem-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .problem-title {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .problem-model {
+      margin-top: 4px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .problem-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .tag-row {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--tag-bg);
+      color: var(--text-main);
+      white-space: nowrap;
+      border: 1px solid var(--border);
+    }
+
+    .tag-week {
+      background: #1a1a1a;
+      border-color: #2c2c2e;
+    }
+
+    .tag-size {
+      background: #1a1a1a;
+      border-color: #2c2c2e;
+    }
+
+    .tag-complexity {
+      background: #1a1a1a;
+      border-color: #2c2c2e;
+    }
+
+    .problem-links {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .problem-links a {
+      color: var(--text-main);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .problem-links a:hover {
+      opacity: 0.7;
+    }
+
+    .notes {
+      margin-top: 12px;
+      font-size: 0.85rem;
+    }
+
+    .notes textarea {
+      width: 100%;
+      min-height: 70px;
+      max-height: 200px;
+      border-radius: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text-main);
+      font-size: 0.85rem;
+      resize: vertical;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .notes textarea:focus {
+      outline: none;
+      border-color: var(--text-secondary);
+    }
+
+    .empty-state {
+      margin-top: 16px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 900px) {
+      main.layout {
+        flex-direction: column;
+      }
+      .tree-panel {
+        width: 100%;
+        max-width: none;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+    }
+
+    /* Tab Navigation Styles */
+    .tab-navigation {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 12px 24px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+    }
+
+    .tab-btn:hover {
+      background: var(--card);
+      border-color: var(--text-secondary);
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: flex;
+    }
+
+    /* Graph View Styles */
+    #graph-view {
+      flex-direction: column;
+      padding: 32px;
+      min-height: calc(100vh - 200px);
+      background: var(--bg);
+    }
+
+    #graph-container {
+      flex: 1;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+      min-height: 700px;
+    }
+
+    #graph-canvas {
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+
+    #graph-canvas:active {
+      cursor: grabbing;
+    }
+
+    .graph-legend {
+      display: flex;
+      gap: 24px;
+      padding: 20px;
+      background: var(--card);
+      border-radius: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      border: 1px solid var(--border);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    .graph-controls {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .graph-control-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+    .graph-control-btn:hover {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      transform: scale(1.05);
+    }
+    
+    /* Modal Popup Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      max-width: 700px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 32px;
+      position: relative;
+      animation: slideUp 0.3s ease;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes slideUp {
+      from { 
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 2rem;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: var(--tag-bg);
+      color: var(--text-main);
+    }
+
+    .modal-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      padding-right: 40px;
+    }
+
+    .modal-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .modal-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .modal-section {
+      margin-bottom: 24px;
+    }
+
+    .modal-section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.7;
+    }
+
+    .modal-section-content {
+      font-size: 1rem;
+      color: var(--text-main);
+      line-height: 1.6;
+      background: var(--panel);
+      padding: 16px;
+      border-radius: 10px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .modal-section-content.missing {
+      color: var(--text-muted);
+      font-style: italic;
+      border-left-color: var(--text-muted);
+    }
+
+    .modal-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: var(--accent);
+      color: #000;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.2s;
+      margin-top: 16px;
+    }
+
+    .modal-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+    }
+
+    .modal-link.disabled {
+      background: var(--tag-bg);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- Modal Popup -->
+    <div class="modal-overlay" id="problemModal">
+      <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <div class="modal-subtitle" id="modalSubtitle"></div>
+        <div class="modal-meta" id="modalMeta"></div>
+        
+        <div class="modal-section">
+          <div class="modal-section-title">Problem Description</div>
+          <div class="modal-section-content" id="modalDescription"></div>
+        </div>
+        
+        <div class="modal-section">
+          <div class="modal-section-title">Solution Approach</div>
+          <div class="modal-section-content" id="modalSolution"></div>
+        </div>
+        
+        <a href="#" class="modal-link" id="modalLink" target="_blank">
+          🔗 Open in Code Expert
+        </a>
+      </div>
+    </div>
+    
+    <header>
+      <h1>Algolab Problem Map</h1>
+      <p>
+        Pattern-match problems to techniques. Use global flip to switch between story names and underlying models.
+      </p>
+      
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <a href="algolab-quiz.html" class="quiz-btn">
+          🎯 Start Practice Quiz
+        </a>
+        <div class="stats-summary" id="exercise-stats">
+          <div class="stat-item">
+            <span>📝</span>
+            <span><span class="stat-value" id="total-exercises">24</span> exercises</span>
+          </div>
+          <div class="stat-item">
+            <span>✅</span>
+            <span><span class="stat-value" id="completed-exercises">0</span> mastered</span>
+          </div>
+          <div class="stat-item">
+            <span>🔥</span>
+            <span><span class="stat-value" id="quiz-streak">0</span> streak</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Tab Navigation -->
+      <div class="tab-navigation">
+        <button class="tab-btn active" data-tab="list-view">
+          📋 List View
+        </button>
+        <button class="tab-btn" data-tab="graph-view">
+          🗺️ Graph View
+        </button>
+      </div>
+    </header>
+
+    <!-- List View Tab (Current Implementation) -->
+    <main class="layout tab-content active" id="list-view">
+      <section class="tree-panel">
+        <h2>Technique map</h2>
+        <div class="tree-description">
+          Rough decision tree: start from the top, follow what the input &amp; constraints suggest
+          (arrays, intervals, graphs, flows, geometry, DP, …).
+        </div>
+        <div id="tree"></div>
+      </section>
+
+      <section class="list-panel">
+        <h2>Problems</h2>
+        <div class="filters">
+          <input
+            type="search"
+            id="search-input"
+            placeholder="Search by story name or model (e.g. 'interval scheduling')"
+          />
+          <select id="week-filter"></select>
+          <select id="size-filter"></select>
+          <button class="global-flip-btn" id="global-flip">
+            Show Models
+          </button>
+          <div class="tech-filter-label">
+            Extra technique filters (ANDed with node):
+          </div>
+          <div id="tech-filter"></div>
+        </div>
+
+        <div id="problem-list"></div>
+      </section>
+    </main>
+
+    <!-- Graph View Tab (New) -->
+    <main class="tab-content" id="graph-view">
+      <div class="graph-legend">
+        <div class="legend-item">
+          <div class="legend-color" style="background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%;"></div>
+          <span>Methods & Techniques</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: linear-gradient(135deg, #f093fb, #f5576c); border-radius: 50%;"></div>
+          <span>Problems</span>
+        </div>
+        <div class="legend-item">
+          <span style="font-size: 0.85rem; color: var(--text-secondary);">💡 Click nodes to see details • Drag to move • Scroll to zoom</span>
+        </div>
+      </div>
+      <div id="graph-container">
+        <svg id="graph-canvas"></svg>
+        <div class="graph-controls">
+          <button class="graph-control-btn" id="zoom-in" title="Zoom In">+</button>
+          <button class="graph-control-btn" id="zoom-out" title="Zoom Out">−</button>
+          <button class="graph-control-btn" id="reset-view" title="Reset View">⟲</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // === 1. Tags / enums ====================================================
+
+    const TECHNIQUE_TAGS = [
+      "brute force",
+      "greedy",
+      "split & list",
+      "backtracking",
+      "dp",
+      "sliding window",
+      "two pointers",
+      "binary search",
+      "intervals",
+      "priority queue",
+      "graph components",
+      "mst",
+      "bfs",
+      "dfs",
+      "shortest path",
+      "maximum matching",
+      "network flows",
+      "min-cost flows",
+      "delaunay triangulation",
+      "minimum enclosing circle",
+      "linear programming",
+      "geometry"
+    ];
+
+    const SIZE_OPTIONS = [
+      { value: "all", label: "Any input size" },
+      { value: "tiny", label: "Up to ~10³" },
+      { value: "small", label: "Up to ~10⁴" },
+      { value: "medium", label: "Up to ~10⁵" },
+      { value: "large", label: "Up to ~10⁶ or more" }
+    ];
+
+    // === 2. Problem data =====================================================
+
+    // Fill / extend this with all Algolab problems.
+    // Keep tags in lower case to match TECHNIQUE_TAGS.
+    const PROBLEMS = [
+      {
+        id: "deck-of-cards",
+        storyTitle: "Deck of Cards (simplified)",
+        modelTitle: "Sliding window for subarray with sum exactly k",
+        week: 2,
+        methods: ["sliding window", "two pointers"],
+        sizeBand: "medium",
+        inputHint: "n up to 10^5, non-negative values",
+        complexity: "O(n)",
+        description: "[missing]",
+        solution: "[missing]",
+        link: "",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "lord-voldemort",
+        storyTitle: "Lord Voldemort",
+        modelTitle: "Weighted interval scheduling with cardinality constraint",
+        week: 5,
+        methods: ["dp", "intervals", "binary search", "greedy"],
+        sizeBand: "medium",
+        inputHint: "n up to 2·10^5, k small (e.g. ≤ 10)",
+        complexity: "O(n log n · k)",
+        description: "Max length of non-overlapping intervals with cardinality constraint k",
+        solution: "Sort intervals and use DP or greedy approach to select maximum non-overlapping set",
+        link: "https://expert.ethz.ch/ide2/67fF4wzx4jHAsyArS",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "clues",
+        storyTitle: "Clues",
+        modelTitle: "Delaunay triangulation + graph components / 2-coloring",
+        week: 7,
+        methods: ["geometry", "delaunay triangulation", "graph components", "bfs"],
+        sizeBand: "large",
+        inputHint: "n, m up to 9·10^4, coordinates up to 2^24",
+        complexity: "O((n + m) log n)",
+        description: "Given radio stations with range r, determine if network can be 2-colored and if clients can communicate",
+        solution: "Use Delaunay Triangulation to construct network, DFS to assign colors and verify no interfering same-colored stations",
+        link: "https://expert.ethz.ch/solve/BpwLqmXhCfPfXQ4hF",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "the-sultan-trail",
+        storyTitle: "The Sultan Trail",
+        modelTitle: "MAX # of overlapping intervals",
+        week: 1,
+        methods: ["sweep line", "greedy"],
+        sizeBand: "medium",
+        inputHint: "n ~ 10^6",
+        complexity: "O(n log n)",
+        description: "Find max number of overlapping intervals at any point",
+        solution: "Sweep line: +1 at start, -1 at end, sort events (starts before ends), track maximum count",
+        link: "https://expert.ethz.ch/solve/cZJ5MF75rZ5N6RngJ",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "even-pairs",
+        storyTitle: "Even Pairs",
+        modelTitle: "# of subarrays with even sum",
+        week: 1,
+        methods: ["prefix sum", "combinatorics"],
+        sizeBand: "small",
+        inputHint: "n ~ 10^5",
+        complexity: "O(n)",
+        description: "Count number of subarrays with even sum",
+        solution: "Use prefix sums: count pairs where both cumulative sums are even or both odd using n*(n-1)/2",
+        link: "https://expert.ethz.ch/solve/icuMesQwsrB762q6Q",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "dominoes",
+        storyTitle: "Dominoes",
+        modelTitle: "Domino falling simulation",
+        week: 1,
+        methods: ["greedy"],
+        sizeBand: "small",
+        inputHint: "n ~ 10^5",
+        complexity: "O(n)",
+        description: "Determine how far dominoes fall starting from left",
+        solution: "Greedy: track fuel (remaining height), decrement each step, stop when ≤0, else take max(current, new height)",
+        link: "https://expert.ethz.ch/solve/BHCoFa7QqgnvfWJQN",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "search-snippets",
+        storyTitle: "Search Snippets",
+        modelTitle: "MIN interval containing all categories",
+        week: 2,
+        methods: ["greedy", "sliding window"],
+        sizeBand: "medium",
+        inputHint: "n ~ 10^5",
+        complexity: "O(n log n)",
+        description: "Find minimum interval containing all different categories at distinct positions",
+        solution: "Use greedy with min-heap to track minimum window containing all categories",
+        link: "https://expert.ethz.ch/solve/Rrd9wMDGxHn5mvBkr",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "severus-snape",
+        storyTitle: "Severus Snape",
+        modelTitle: "Min number of potions",
+        week: 2,
+        methods: ["dp", "greedy", "prefix sum"],
+        sizeBand: "medium",
+        inputHint: "n ~ 100",
+        complexity: "O(n^2)",
+        description: "Reach 3 values P, H, W by taking minimum number of potions of two types",
+        solution: "Combine DP for one potion type with greedy for another, using prefix sums and binary search",
+        link: "https://expert.ethz.ch/solve/eyZXcn6TZZHWNGZSe",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "san-francisco",
+        storyTitle: "San Francisco",
+        modelTitle: "Max score in directed graph within k moves",
+        week: 2,
+        methods: ["dp"],
+        sizeBand: "medium",
+        inputHint: "n ~ 10^3",
+        complexity: "O(n^2)",
+        description: "Get max score by traversing directed graph in max K moves with edge values",
+        solution: "DP with states dp[moves][node] to track maximum score reachable at each node within k moves",
+        link: "https://expert.ethz.ch/solve/NqPzfHTTW7wuruuiJ",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "greyjoy",
+        storyTitle: "Greyjoy",
+        modelTitle: "Max consecutive nodes sum = k in tree",
+        week: 2,
+        methods: ["prefix sum", "two sum"],
+        sizeBand: "medium",
+        inputHint: "n ~ 10^4",
+        complexity: "O(n^2)",
+        description: "Max length of consecutive nodes with sum equal to K in tree with root branches",
+        solution: "Use prefix sums with Two Sum for each branch, then combine branches adjusting for root",
+        link: "https://expert.ethz.ch/solve/rsADmS6rf3h3o3ZXC",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "burning-coins",
+        storyTitle: "Burning Coins",
+        modelTitle: "2-player game optimization",
+        week: 2,
+        methods: ["dp", "game theory"],
+        sizeBand: "medium",
+        inputHint: "n ~ 10^3",
+        complexity: "O(n^2)",
+        description: "Two player game: take first or last element, maximize value independently of opponent",
+        solution: "Game theory DP with memoization: recursively compute optimal moves assuming opponent plays optimally",
+        link: "https://expert.ethz.ch/solve/ppZM8mSxuQ3W2WWzZ",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "first-steps-bgl",
+        storyTitle: "First steps with BGL",
+        modelTitle: "Dijkstra + MST",
+        week: 3,
+        methods: ["shortest path", "mst"],
+        sizeBand: "small",
+        inputHint: "n ~ 100",
+        complexity: "O(n log n)",
+        description: "Basic graph algorithms using Boost Graph Library",
+        solution: "Apply Dijkstra's algorithm for shortest paths and Kruskal's for MST",
+        link: "https://expert.ethz.ch/solve/3abMHQP4DFYRnis2H",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "important-bridges",
+        storyTitle: "Important Bridges",
+        modelTitle: "Biconnected components",
+        week: 3,
+        methods: ["graph components", "biconnected"],
+        sizeBand: "medium",
+        inputHint: "n ~ 10^4",
+        complexity: "O(n log n)",
+        description: "Find edges that when removed disconnect at least 2 nodes",
+        solution: "Find biconnected components; edge is critical (bridge) if it's the only edge in its component",
+        link: "https://expert.ethz.ch/solve/4WGoT8H9DYhB4uk6v",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "ant-challenge",
+        storyTitle: "Ant Challenge",
+        modelTitle: "Multiple MST + Dijkstra",
+        week: 3,
+        methods: ["shortest path", "mst"],
+        sizeBand: "medium",
+        inputHint: "n ~ 100",
+        complexity: "O(n log n)",
+        description: "Combine multiple MSTs to find optimal path",
+        solution: "Compute MST for each network to find minimum edge weights, combine into single graph, run Dijkstra",
+        link: "https://expert.ethz.ch/solve/k2FMzXKo7QYwr2mNG",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "buddy-selection",
+        storyTitle: "Buddy Selection",
+        modelTitle: "Maximum matching with constraints",
+        week: 3,
+        methods: ["matching", "graph"],
+        sizeBand: "small",
+        inputHint: "n ~ 100",
+        complexity: "O(n^2)",
+        description: "Pair students such that every pair shares >f interests",
+        solution: "Build graph with edges for pairs with >k common interests, check if maximum matching covers all vertices using Edmonds' algorithm",
+        link: "https://expert.ethz.ch/solve/7mrSJzRR6oZT6H8Ri",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "hit",
+        storyTitle: "Hit",
+        modelTitle: "Ray-segment intersection",
+        week: 4,
+        methods: ["geometry"],
+        sizeBand: "small",
+        complexity: "O(n)",
+        description: "Ray-segment intersection tests",
+        solution: "Use CGAL geometric predicates to test ray-segment intersections efficiently",
+        link: "https://expert.ethz.ch/solve/MHNvZQgvkchbaAnmC",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "first-hit",
+        storyTitle: "First Hit",
+        modelTitle: "First ray-segment intersection",
+        week: 4,
+        methods: ["geometry"],
+        sizeBand: "medium",
+        complexity: "O(n) expected",
+        description: "Find first point where ray intersects a segment among n segments",
+        solution: "Randomized algorithm: shuffle segments, maintain closest intersection, clip ray. Expected O(log n) constructions",
+        link: "https://expert.ethz.ch/solve/JkBRJwrTXcfYu4xEb",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "antenna",
+        storyTitle: "Antenna",
+        modelTitle: "Minimum enclosing circle",
+        week: 4,
+        methods: ["geometry"],
+        sizeBand: "small",
+        complexity: "O(n)",
+        description: "[missing]",
+        solution: "[missing]",
+        link: "https://expert.ethz.ch/solve/xZRJCxKxuumWM2Qb8",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "hiking-maps",
+        storyTitle: "Hiking Maps",
+        modelTitle: "Minimum covering triangles",
+        week: 4,
+        methods: ["geometry", "sliding window"],
+        sizeBand: "medium",
+        complexity: "O(n × m)",
+        description: "Find minimum subsequence of triangles that fully covers hiking path",
+        solution: "Sliding window: expand to cover all segments, shrink to minimize. Use geometric predicates for containment",
+        link: "https://expert.ethz.ch/solve/3Pa2nyMpSAHA39qsR",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "germs",
+        storyTitle: "Germs",
+        modelTitle: "Growing circles",
+        week: 4,
+        methods: ["geometry", "delaunay triangulation"],
+        sizeBand: "medium",
+        complexity: "O(n log n)",
+        description: "Circular germs grow quadratically. Determine death times (first, median, last)",
+        solution: "Death time = distance to nearest neighbor. Use Delaunay Triangulation to find nearest neighbor in O(n log n)",
+        link: "https://expert.ethz.ch/solve/rvq3JfkXKNkjEmdDX",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "inball",
+        storyTitle: "Inball",
+        modelTitle: "Maximum ball in cave",
+        week: 4,
+        methods: ["linear programming", "geometry"],
+        sizeBand: "small",
+        complexity: "O(d × n)",
+        description: "Find maximum radius of d-dimensional ball fitting inside cave defined by linear inequalities",
+        solution: "LP problem: maximize r subject to a^T c + ||a||_2 r ≤ b for each half-space, solve with CGAL",
+        link: "https://expert.ethz.ch/solve/yABHvbN8F4J5HHxLT",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "asterix-the-gaul",
+        storyTitle: "Asterix the Gaul",
+        modelTitle: "DP optimization",
+        week: 5,
+        methods: ["dp"],
+        sizeBand: "medium",
+        complexity: "O(n^2)",
+        description: "[missing]",
+        solution: "[missing]",
+        link: "https://expert.ethz.ch/solve/HYMnEFkSPfGL77LhX",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "boats",
+        storyTitle: "Boats",
+        modelTitle: "Greedy interval scheduling",
+        week: 5,
+        methods: ["greedy", "intervals"],
+        sizeBand: "medium",
+        complexity: "O(n log n)",
+        description: "[missing]",
+        solution: "[missing]",
+        link: "https://expert.ethz.ch/solve/ugjqDKeCT7JCLgKkf",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "moving-books",
+        storyTitle: "Moving Books",
+        modelTitle: "Minimize rounds with constraints",
+        week: 5,
+        methods: ["greedy", "binary search"],
+        sizeBand: "medium",
+        inputHint: "n ~ 10^5",
+        complexity: "O(n log n)",
+        description: "People with strength s_i move boxes with weight w_j. Find minimum rounds",
+        solution: "Greedy: strongest people carry heaviest boxes they can. Use std::multiset for O(N log N) implementation",
+        link: "https://expert.ethz.ch/solve/d4Ycy2PoWL8D9vGok",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "planet-express",
+        storyTitle: "Planet Express",
+        modelTitle: "Multi-source Dijkstra with teleportation",
+        week: 5,
+        methods: ["shortest path", "graph components"],
+        sizeBand: "large",
+        inputHint: "n ~ 10^6",
+        complexity: "O(n log n)",
+        description: "Find shortest path from multiple sources to target with teleportation network",
+        solution: "Group teleport nodes by strongly connected components, add virtual source with cost 0, run Dijkstra",
+        link: "https://expert.ethz.ch/solve/Q2qjBgStjkxoEjBX2",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "knights",
+        storyTitle: "Knights",
+        modelTitle: "Max flow with vertex capacity",
+        week: 6,
+        methods: ["network flows"],
+        sizeBand: "medium",
+        complexity: "O(V^2 × E)",
+        description: "Max knights traversing grid from start to boundary with vertex capacity C",
+        solution: "Split each vertex into v_in and v_out connected by edge with capacity C. Source to starts, boundary to sink",
+        link: "https://expert.ethz.ch/solve/TmFaTbNReatKYvc2y",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "tiles",
+        storyTitle: "Tiles",
+        modelTitle: "Perfect matching in grid graph",
+        week: 6,
+        methods: ["matching"],
+        sizeBand: "small",
+        inputHint: "n ~ 100",
+        complexity: "O(n^2)",
+        description: "Check if each vertex can be covered with maximum matching",
+        solution: "Use Edmonds' algorithm; check if matching size × 2 equals number of vertices",
+        link: "https://expert.ethz.ch/solve/koeZJPBREr7CdHE5v",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "coin-tossing",
+        storyTitle: "Coin Tossing Tournament",
+        modelTitle: "Max flow game verification",
+        week: 6,
+        methods: ["network flows"],
+        sizeBand: "medium",
+        complexity: "O(V × E^2)",
+        description: "Verify tournament results with max flow (1 point per win)",
+        solution: "Model as max flow: matches as intermediate nodes, check if flow equals expected total points",
+        link: "https://expert.ethz.ch/solve/o6cyW5DLWT5AEhDRs",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "motorcycles",
+        storyTitle: "Motorcycles",
+        modelTitle: "Non-hitting positive plane rays",
+        week: 6,
+        methods: ["geometry"],
+        sizeBand: "medium",
+        complexity: "O(n log n)",
+        description: "Determine which motorcycle rays don't hit any other ray",
+        solution: "Sort by slope and position, use sweep line to determine which rays are never blocked",
+        link: "https://expert.ethz.ch/solve/E2zprburo9XkhJ9Rb",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "london",
+        storyTitle: "London",
+        modelTitle: "Ransom note from newspaper pieces",
+        week: 6,
+        methods: ["network flows"],
+        sizeBand: "medium",
+        complexity: "O(n^3)",
+        description: "Create ransom note from newspaper pieces (front/back letters)",
+        solution: "Max flow: source to letter pair nodes (pieces), to required letter nodes (note). Flow = note length means success",
+        link: "https://expert.ethz.ch/solve/SbpvKZD3wG6mEmPGN",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "kingdom-defense",
+        storyTitle: "Kingdom Defense",
+        modelTitle: "Circulation with demands and bounds",
+        week: 6,
+        methods: ["network flows"],
+        sizeBand: "medium",
+        complexity: "O(V × E^2)",
+        description: "Assign soldier movements satisfying vertex demands and edge min/max capacity",
+        solution: "Transform to max flow: adjust capacities to (max-min), add source/sink edges for minimum flow, check saturation",
+        link: "https://expert.ethz.ch/solve/jTYd5L8q7yWf5nQ9W",
+        video: "",
+        pdf: ""
+      },
+      {
+        id: "bistro",
+        storyTitle: "Bistro",
+        modelTitle: "Post office problem - nearest neighbor queries",
+        week: 7,
+        methods: ["geometry", "delaunay triangulation"],
+        sizeBand: "large",
+        inputHint: "n ~ 10^3",
+        complexity: "O(n log n + m log n)",
+        description: "Find closest point among n 2D points for m query points",
+        solution: "Build Delaunay triangulation, use nearest neighbor queries in O(log n) per query",
+        link: "https://expert.ethz.ch/solve/d5aPgvEuFywZSQxjK",
+        video: "",
+        pdf: ""
+      }
+    ];
+
+    // === 3. Technique tree ===================================================
+
+    const NODES = [
+      {
+        id: "root",
+        label: "All Algolab problems",
+        subtitle: "No restriction, just all stories",
+        techniques: [],
+        parent: null
+      },
+      {
+        id: "arrays-basic",
+        label: "Arrays / prefix sums",
+        subtitle: "Brute force → prefix sums → two pointers",
+        techniques: ["brute force"],
+        parent: "root"
+      },
+      {
+        id: "sliding-window",
+        label: "Sliding window",
+        subtitle: "Two pointers on contiguous subarrays",
+        techniques: ["sliding window"],
+        parent: "arrays-basic"
+      },
+      {
+        id: "greedy",
+        label: "Greedy",
+        subtitle: "Sort + local choices",
+        techniques: ["greedy"],
+        parent: "root"
+      },
+      {
+        id: "intervals",
+        label: "Intervals & scheduling",
+        subtitle: "Sorting endpoints, sweepline, DP",
+        techniques: ["intervals"],
+        parent: "greedy"
+      },
+      {
+        id: "dp",
+        label: "Dynamic programming",
+        subtitle: "States, transitions, objective",
+        techniques: ["dp"],
+        parent: "root"
+      },
+      {
+        id: "dp-intervals",
+        label: "DP + intervals",
+        subtitle: "Weighted interval scheduling & friends",
+        techniques: ["dp", "intervals"],
+        parent: "dp"
+      },
+      {
+        id: "graphs",
+        label: "Graphs",
+        subtitle: "Components, BFS/DFS, MST, etc.",
+        techniques: ["graph components"],
+        parent: "root"
+      },
+      {
+        id: "shortest-path",
+        label: "Shortest paths",
+        subtitle: "Dijkstra & variants",
+        techniques: ["shortest path"],
+        parent: "graphs"
+      },
+      {
+        id: "flows",
+        label: "Flows / matchings",
+        subtitle: "Max flow, min cut, matchings",
+        techniques: ["network flows"],
+        parent: "graphs"
+      },
+      {
+        id: "geometry",
+        label: "Geometry / CGAL",
+        subtitle: "Delaunay, MEC, LP on steroids",
+        techniques: ["geometry"],
+        parent: "root"
+      }
+    ];
+
+    const NODE_MAP = {};
+    NODES.forEach((n) => (NODE_MAP[n.id] = n));
+    NODES.forEach((n) => (n.children = []));
+    NODES.forEach((n) => {
+      if (n.parent) NODE_MAP[n.parent].children.push(n.id);
+    });
+
+    let selectedNodeId = "root";
+
+    const filters = {
+      search: "",
+      week: "all",
+      size: "all",
+      techniques: new Set()
+    };
+
+    // === 4. Helpers ==========================================================
+
+    function prettyTag(tag) {
+      if (tag === "dp") return "DP";
+      if (tag === "mst") return "MST";
+      if (tag === "bfs") return "BFS";
+      if (tag === "dfs") return "DFS";
+      if (tag === "shortest path") return "Shortest path (Dijkstra)";
+      if (tag === "min-cost flows") return "Min-cost flows";
+      return tag
+        .split(" ")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ");
+    }
+
+    function getDepth(node) {
+      let d = 0;
+      let cur = node;
+      while (cur.parent) {
+        d++;
+        cur = NODE_MAP[cur.parent];
+      }
+      return d;
+    }
+
+    function problemMatchesNode(problem, node) {
+      if (!node.techniques || node.techniques.length === 0) return true;
+      // Node means: problem must contain all these technique tags
+      return node.techniques.every((t) => problem.methods.includes(t));
+    }
+
+    function problemMatchesFilters(problem) {
+      if (filters.week !== "all" && problem.week !== Number(filters.week)) {
+        return false;
+      }
+      if (filters.size !== "all" && problem.sizeBand !== filters.size) {
+        return false;
+      }
+      if (filters.techniques.size) {
+        for (const t of filters.techniques) {
+          if (!problem.methods.includes(t)) return false;
+        }
+      }
+      if (filters.search) {
+        const hay = (
+          problem.storyTitle +
+          " " +
+          problem.modelTitle
+        ).toLowerCase();
+        if (!hay.includes(filters.search)) return false;
+      }
+      return true;
+    }
+
+    function getFilteredProblems() {
+      const node = NODE_MAP[selectedNodeId];
+      return PROBLEMS.filter(
+        (p) => problemMatchesNode(p, node) && problemMatchesFilters(p)
+      );
+    }
+
+    function selectNode(id) {
+      selectedNodeId = id;
+      renderTree();
+      renderProblemList();
+    }
+
+    // === 5. Rendering ========================================================
+
+    function renderTree() {
+      const treeEl = document.getElementById("tree");
+      treeEl.innerHTML = "";
+
+      NODES.forEach((node) => {
+        const depth = getDepth(node);
+        const wrap = document.createElement("div");
+        wrap.className =
+          "tree-node depth-" + depth + (node.id === selectedNodeId ? " selected" : "");
+        wrap.style.marginLeft = depth * 26 + "px";
+
+        const inner = document.createElement("div");
+        inner.className = "tree-node-inner";
+
+        const title = document.createElement("div");
+        title.className = "node-title";
+        title.textContent = node.label;
+
+        const subtitle = document.createElement("div");
+        subtitle.className = "node-subtitle";
+        subtitle.textContent = node.subtitle || "";
+
+        const meta = document.createElement("div");
+        meta.className = "node-meta";
+        const techText =
+          node.techniques && node.techniques.length
+            ? node.techniques.map(prettyTag).join(" · ")
+            : "All techniques";
+        const count = PROBLEMS.filter((p) =>
+          problemMatchesNode(p, node)
+        ).length;
+        meta.textContent =
+          techText + "  •  " + count + " problem" + (count === 1 ? "" : "s");
+
+        inner.appendChild(title);
+        if (node.subtitle) inner.appendChild(subtitle);
+        inner.appendChild(meta);
+        wrap.appendChild(inner);
+
+        wrap.addEventListener("click", () => {
+          selectNode(node.id);
+        });
+
+        treeEl.appendChild(wrap);
+      });
+    }
+
+    function renderProblemList() {
+      const container = document.getElementById("problem-list");
+      container.innerHTML = "";
+
+      let problems = getFilteredProblems();
+      problems = problems
+        .slice()
+        .sort(
+          (a, b) =>
+            a.week - b.week ||
+            a.storyTitle.localeCompare(b.storyTitle)
+        );
+
+      if (!problems.length) {
+        const p = document.createElement("p");
+        p.className = "empty-state";
+        p.textContent =
+          "No problems match this combination of node + filters. Either that technique combo doesn't exist yet or you still have to add those problems.";
+        container.appendChild(p);
+        return;
+      }
+
+      problems.forEach((pInfo) => {
+        const card = document.createElement("article");
+        card.className = "problem-card";
+        card.dataset.mode = globalFlipState ? "model" : "story";
+        card.dataset.story = pInfo.storyTitle;
+        card.dataset.model = pInfo.modelTitle;
+
+        const header = document.createElement("div");
+        header.className = "problem-header";
+
+        const titleBox = document.createElement("div");
+
+        const title = document.createElement("h3");
+        title.className = "problem-title";
+        title.textContent = globalFlipState ? pInfo.modelTitle : pInfo.storyTitle;
+
+        const model = document.createElement("div");
+        model.className = "problem-model";
+        model.textContent = globalFlipState ? pInfo.storyTitle : pInfo.modelTitle;
+
+        titleBox.appendChild(title);
+        titleBox.appendChild(model);
+
+        header.appendChild(titleBox);
+        card.appendChild(header);
+
+        const meta = document.createElement("div");
+        meta.className = "problem-meta";
+        meta.textContent = `Week ${pInfo.week} · Input: ${pInfo.inputHint} · Complexity: ${pInfo.complexity}`;
+        card.appendChild(meta);
+
+        const tagRow = document.createElement("div");
+        tagRow.className = "tag-row";
+
+        const weekTag = document.createElement("span");
+        weekTag.className = "tag tag-week";
+        weekTag.textContent = "Week " + pInfo.week;
+        tagRow.appendChild(weekTag);
+
+        const sizeTag = document.createElement("span");
+        sizeTag.className = "tag tag-size";
+        const sizeLabel = SIZE_OPTIONS.find((o) => o.value === pInfo.sizeBand);
+        sizeTag.textContent = sizeLabel
+          ? sizeLabel.label
+          : pInfo.sizeBand;
+        tagRow.appendChild(sizeTag);
+
+        const compTag = document.createElement("span");
+        compTag.className = "tag tag-complexity";
+        compTag.textContent = pInfo.complexity;
+        tagRow.appendChild(compTag);
+
+        pInfo.methods.forEach((tag) => {
+          const tSpan = document.createElement("span");
+          tSpan.className = "tag";
+          tSpan.textContent = prettyTag(tag);
+          tagRow.appendChild(tSpan);
+        });
+
+        card.appendChild(tagRow);
+
+        // Add click handler to open modal
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', (e) => {
+          // Don't open modal if clicking on links or textarea
+          if (e.target.tagName === 'A' || e.target.tagName === 'TEXTAREA') {
+            return;
+          }
+          openProblemModal(pInfo);
+        });
+
+        const linkRow = document.createElement("div");
+        linkRow.className = "problem-links";
+
+        if (pInfo.link) {
+          const a = document.createElement("a");
+          a.href = pInfo.link;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.textContent = "Code Expert";
+          linkRow.appendChild(a);
+        }
+        if (pInfo.video) {
+          const a = document.createElement("a");
+          a.href = pInfo.video;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.textContent = "Video";
+          linkRow.appendChild(a);
+        }
+        if (pInfo.pdf) {
+          const a = document.createElement("a");
+          a.href = pInfo.pdf;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.textContent = "PDF notes";
+          linkRow.appendChild(a);
+        }
+        if (linkRow.children.length > 0) {
+          card.appendChild(linkRow);
+        }
+
+        const notes = document.createElement("div");
+        notes.className = "notes";
+        const notesLabel = document.createElement("div");
+        notesLabel.textContent = "Your notes (intuition, reduction, tricks):";
+        const textarea = document.createElement("textarea");
+        const storageKey = "algolab_notes_" + pInfo.id;
+
+        try {
+          const saved = window.localStorage.getItem(storageKey);
+          if (saved) textarea.value = saved;
+        } catch (e) {
+          // localStorage might be blocked; ignore
+        }
+
+        textarea.addEventListener("input", () => {
+          try {
+            window.localStorage.setItem(storageKey, textarea.value);
+          } catch (e) {
+            // ignore
+          }
+        });
+
+        notes.appendChild(notesLabel);
+        notes.appendChild(textarea);
+        card.appendChild(notes);
+
+        container.appendChild(card);
+      });
+    }
+
+    // === 6. Filters UI =======================================================
+
+    let globalFlipState = false; // false = show story, true = show model
+
+    function initFilters() {
+      const searchInput = document.getElementById("search-input");
+      const weekSelect = document.getElementById("week-filter");
+      const sizeSelect = document.getElementById("size-filter");
+      const techContainer = document.getElementById("tech-filter");
+      const globalFlipBtn = document.getElementById("global-flip");
+
+      // Global flip button
+      globalFlipBtn.addEventListener("click", () => {
+        globalFlipState = !globalFlipState;
+        globalFlipBtn.textContent = globalFlipState ? "Show Stories" : "Show Models";
+        globalFlipBtn.classList.toggle("active", globalFlipState);
+        renderProblemList();
+      });
+
+      // Week options from existing problems
+      const weeks = Array.from(new Set(PROBLEMS.map((p) => p.week))).sort(
+        (a, b) => a - b
+      );
+      const optAll = document.createElement("option");
+      optAll.value = "all";
+      optAll.textContent = "All weeks";
+      weekSelect.appendChild(optAll);
+      weeks.forEach((w) => {
+        const opt = document.createElement("option");
+        opt.value = String(w);
+        opt.textContent = "Week " + w;
+        weekSelect.appendChild(opt);
+      });
+
+      // Size options
+      SIZE_OPTIONS.forEach((info) => {
+        const opt = document.createElement("option");
+        opt.value = info.value;
+        opt.textContent = info.label;
+        sizeSelect.appendChild(opt);
+      });
+
+      // Technique checkboxes
+      TECHNIQUE_TAGS.forEach((tag) => {
+        const label = document.createElement("label");
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.value = tag;
+        const span = document.createElement("span");
+        span.textContent = prettyTag(tag);
+        label.appendChild(cb);
+        label.appendChild(span);
+        techContainer.appendChild(label);
+
+        cb.addEventListener("change", () => {
+          if (cb.checked) filters.techniques.add(tag);
+          else filters.techniques.delete(tag);
+          renderProblemList();
+        });
+      });
+
+      searchInput.addEventListener("input", () => {
+        filters.search = searchInput.value.trim().toLowerCase();
+        renderProblemList();
+      });
+
+      weekSelect.addEventListener("change", () => {
+        filters.week = weekSelect.value;
+        renderProblemList();
+      });
+
+      sizeSelect.addEventListener("change", () => {
+        filters.size = sizeSelect.value;
+        renderProblemList();
+      });
+    }
+
+    // === 7. Tab Switching ====================================================
+
+    function initTabs() {
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetTab = btn.dataset.tab;
+          
+          // Remove active class from all tabs and buttons
+          tabBtns.forEach(b => b.classList.remove('active'));
+          tabContents.forEach(content => content.classList.remove('active'));
+          
+          // Add active class to clicked button and target content
+          btn.classList.add('active');
+          const targetContent = document.getElementById(targetTab);
+          targetContent.classList.add('active');
+          
+          // If switching to graph view, render the graph and scroll to it
+          if (targetTab === 'graph-view') {
+            renderGraph();
+            // Smooth scroll to graph view
+            setTimeout(() => {
+              targetContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 50);
+          }
+        });
+      });
+    }
+
+    // === 8. Graph Visualization ==============================================
+
+    let graphState = {
+      scale: 1,
+      translateX: 0,
+      translateY: 0,
+      isDragging: false,
+      dragStart: { x: 0, y: 0 },
+      simulation: null
+    };
+
+    function renderGraph() {
+      const svg = document.getElementById('graph-canvas');
+      const container = document.getElementById('graph-container');
+      
+      // Set SVG dimensions
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      svg.setAttribute('width', width);
+      svg.setAttribute('height', height);
+      svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+      
+      // Clear existing content
+      svg.innerHTML = '';
+      
+      // Create defs for gradients and effects
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      
+      // Gradient for method nodes
+      const gradMethod = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient');
+      gradMethod.setAttribute('id', 'grad-method');
+      gradMethod.innerHTML = `
+        <stop offset="0%" style="stop-color:#764ba2;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#667eea;stop-opacity:1" />
+      `;
+      defs.appendChild(gradMethod);
+      
+      // Gradient for problem nodes
+      const gradProblem = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient');
+      gradProblem.setAttribute('id', 'grad-problem');
+      gradProblem.innerHTML = `
+        <stop offset="0%" style="stop-color:#f5576c;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#f093fb;stop-opacity:1" />
+      `;
+      defs.appendChild(gradProblem);
+      
+      // Glow filter for nodes
+      const filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+      filter.setAttribute('id', 'glow');
+      filter.innerHTML = `
+        <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+        <feMerge>
+          <feMergeNode in="coloredBlur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      `;
+      defs.appendChild(filter);
+      
+      svg.appendChild(defs);
+      
+      // Create main group for zoom/pan
+      const mainGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      mainGroup.id = 'main-graph-group';
+      svg.appendChild(mainGroup);
+      
+      // Build graph data structure with force-directed layout
+      const graphData = buildForceGraphData();
+      
+      // Create force simulation
+      createForceSimulation(mainGroup, graphData, width, height);
+      
+      // Setup zoom/pan controls
+      setupGraphControls(svg, mainGroup);
+    }
+
+    function buildForceGraphData() {
+      const nodes = [];
+      const links = [];
+      const methodMap = new Map();
+      
+      // Create method nodes from unique problem methods
+      const methodsSet = new Set();
+      PROBLEMS.forEach(problem => {
+        problem.methods.forEach(method => methodsSet.add(method));
+      });
+      
+      // Add method nodes as large bubbles
+      Array.from(methodsSet).forEach(method => {
+        const methodNode = {
+          id: 'method-' + method,
+          label: prettyTag(method),
+          type: 'method',
+          method: method,
+          radius: 45 // Large bubble for methods
+        };
+        nodes.push(methodNode);
+        methodMap.set(method, methodNode);
+      });
+      
+      // Add problem nodes as smaller bubbles
+      PROBLEMS.forEach((problem, idx) => {
+        const problemNode = {
+          id: 'problem-' + idx,
+          label: problem.storyTitle,
+          modelTitle: problem.modelTitle,
+          type: 'problem',
+          problem: problem,
+          radius: 25, // Smaller bubble for problems
+          methods: problem.methods
+        };
+        nodes.push(problemNode);
+        
+        // Create links from problems to methods
+        problem.methods.forEach(method => {
+          if (methodMap.has(method)) {
+            links.push({
+              source: problemNode.id,
+              target: 'method-' + method,
+              value: 1
+            });
+          }
+        });
+      });
+      
+      return { nodes, links };
+    }
+
+    function createForceSimulation(container, graphData, width, height) {
+      const { nodes, links } = graphData;
+      
+      // Create a simple force simulation without D3.js
+      // We'll use a basic physics engine
+      
+      // Initialize positions randomly but clustered
+      nodes.forEach(node => {
+        if (node.type === 'method') {
+          // Methods in center area
+          node.x = width / 2 + (Math.random() - 0.5) * width * 0.3;
+          node.y = height / 2 + (Math.random() - 0.5) * height * 0.3;
+        } else {
+          // Problems around the edges
+          const angle = Math.random() * Math.PI * 2;
+          const distance = width * 0.35 + Math.random() * width * 0.15;
+          node.x = width / 2 + Math.cos(angle) * distance;
+          node.y = height / 2 + Math.sin(angle) * distance;
+        }
+        node.vx = 0;
+        node.vy = 0;
+      });
+      
+      // Create edges group
+      const edgesGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      edgesGroup.setAttribute('class', 'edges');
+      container.appendChild(edgesGroup);
+      
+      // Create nodes group
+      const nodesGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      nodesGroup.setAttribute('class', 'nodes');
+      container.appendChild(nodesGroup);
+      
+      // Draw initial edges
+      links.forEach((link, i) => {
+        const sourceNode = nodes.find(n => n.id === link.source);
+        const targetNode = nodes.find(n => n.id === link.target);
+        
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('class', 'link');
+        line.setAttribute('stroke', 'rgba(255, 255, 255, 0.15)');
+        line.setAttribute('stroke-width', '2');
+        line.setAttribute('x1', sourceNode.x);
+        line.setAttribute('y1', sourceNode.y);
+        line.setAttribute('x2', targetNode.x);
+        line.setAttribute('y2', targetNode.y);
+        edgesGroup.appendChild(line);
+        
+        link.element = line;
+        link.sourceNode = sourceNode;
+        link.targetNode = targetNode;
+      });
+      
+      // Draw nodes
+      nodes.forEach(node => {
+        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        group.setAttribute('class', 'node');
+        group.setAttribute('transform', `translate(${node.x}, ${node.y})`);
+        group.style.cursor = 'pointer';
+        
+        // Circle bubble
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('r', node.radius);
+        circle.setAttribute('fill', node.type === 'method' ? 'url(#grad-method)' : 'url(#grad-problem)');
+        circle.setAttribute('stroke', '#ffffff');
+        circle.setAttribute('stroke-width', '2');
+        circle.setAttribute('filter', 'url(#glow)');
+        group.appendChild(circle);
+        
+        // Label
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('dominant-baseline', 'middle');
+        text.setAttribute('fill', '#ffffff');
+        text.setAttribute('font-size', node.type === 'method' ? '14' : '11');
+        text.setAttribute('font-weight', '600');
+        text.setAttribute('pointer-events', 'none');
+        
+        // Wrap text
+        const maxChars = node.type === 'method' ? 12 : 15;
+        const words = node.label.split(' ');
+        let lines = [];
+        let currentLine = '';
+        
+        words.forEach(word => {
+          if ((currentLine + word).length > maxChars && currentLine.length > 0) {
+            lines.push(currentLine.trim());
+            currentLine = word + ' ';
+          } else {
+            currentLine += word + ' ';
+          }
+        });
+        if (currentLine.trim()) lines.push(currentLine.trim());
+        
+        if (lines.length === 1) {
+          text.textContent = lines[0];
+        } else {
+          lines.slice(0, 2).forEach((line, i) => {
+            const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            tspan.setAttribute('x', '0');
+            tspan.setAttribute('dy', i === 0 ? (lines.length > 1 ? '-0.6em' : '0') : '1.2em');
+            tspan.textContent = line;
+            text.appendChild(tspan);
+          });
+        }
+        group.appendChild(text);
+        
+        // Interaction
+        let isDraggingNode = false;
+        let dragOffset = { x: 0, y: 0 };
+        
+        group.addEventListener('mousedown', (e) => {
+          e.stopPropagation();
+          isDraggingNode = true;
+          const pt = svg.createSVGPoint();
+          pt.x = e.clientX;
+          pt.y = e.clientY;
+          const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+          dragOffset.x = svgP.x - node.x;
+          dragOffset.y = svgP.y - node.y;
+        });
+        
+        const svg = document.getElementById('graph-canvas');
+        svg.addEventListener('mousemove', (e) => {
+          if (isDraggingNode) {
+            const pt = svg.createSVGPoint();
+            pt.x = e.clientX;
+            pt.y = e.clientY;
+            const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+            node.x = svgP.x - dragOffset.x;
+            node.y = svgP.y - dragOffset.y;
+            
+            // Update node position
+            group.setAttribute('transform', `translate(${node.x}, ${node.y})`);
+            
+            // Update connected links
+            links.forEach(link => {
+              if (link.sourceNode === node || link.targetNode === node) {
+                link.element.setAttribute('x1', link.sourceNode.x);
+                link.element.setAttribute('y1', link.sourceNode.y);
+                link.element.setAttribute('x2', link.targetNode.x);
+                link.element.setAttribute('y2', link.targetNode.y);
+              }
+            });
+          }
+        });
+        
+        svg.addEventListener('mouseup', () => {
+          isDraggingNode = false;
+        });
+        
+        group.addEventListener('click', (e) => {
+          if (!isDraggingNode) {
+            if (node.type === 'problem') {
+              openProblemModal(node.problem);
+            } else {
+              // Highlight connected problems
+              highlightMethodConnections(node, nodes, links, nodesGroup);
+            }
+          }
+        });
+        
+        // Hover effect
+        group.addEventListener('mouseenter', () => {
+          if (!isDraggingNode) {
+            circle.setAttribute('stroke-width', '4');
+            circle.style.filter = 'url(#glow) drop-shadow(0 0 10px rgba(255,255,255,0.8))';
+            
+            // Highlight connected edges
+            links.forEach(link => {
+              if (link.sourceNode === node || link.targetNode === node) {
+                link.element.setAttribute('stroke', 'rgba(255, 255, 255, 0.6)');
+                link.element.setAttribute('stroke-width', '3');
+              }
+            });
+          }
+        });
+        
+        group.addEventListener('mouseleave', () => {
+          circle.setAttribute('stroke-width', '2');
+          circle.style.filter = 'url(#glow)';
+          
+          // Reset edges
+          links.forEach(link => {
+            link.element.setAttribute('stroke', 'rgba(255, 255, 255, 0.15)');
+            link.element.setAttribute('stroke-width', '2');
+          });
+        });
+        
+        nodesGroup.appendChild(group);
+        node.element = group;
+      });
+      
+      // Simple physics simulation
+      function simulate() {
+        const alpha = 0.3;
+        const damping = 0.8;
+        
+        // Apply forces
+        nodes.forEach(node => {
+          node.vx *= damping;
+          node.vy *= damping;
+        });
+        
+        // Repulsion between all nodes
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            const nodeA = nodes[i];
+            const nodeB = nodes[j];
+            const dx = nodeB.x - nodeA.x;
+            const dy = nodeB.y - nodeA.y;
+            const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+            const minDistance = nodeA.radius + nodeB.radius + 50;
+            
+            if (distance < minDistance) {
+              const force = (minDistance - distance) * 0.1;
+              const fx = (dx / distance) * force;
+              const fy = (dy / distance) * force;
+              
+              nodeA.vx -= fx;
+              nodeA.vy -= fy;
+              nodeB.vx += fx;
+              nodeB.vy += fy;
+            }
+          }
+        }
+        
+        // Attraction along links
+        links.forEach(link => {
+          const dx = link.targetNode.x - link.sourceNode.x;
+          const dy = link.targetNode.y - link.sourceNode.y;
+          const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+          const targetDistance = 150;
+          const force = (distance - targetDistance) * 0.1;
+          
+          const fx = (dx / distance) * force;
+          const fy = (dy / distance) * force;
+          
+          link.sourceNode.vx += fx;
+          link.sourceNode.vy += fy;
+          link.targetNode.vx -= fx;
+          link.targetNode.vy -= fy;
+        });
+        
+        // Center force (weak)
+        nodes.forEach(node => {
+          const dx = width / 2 - node.x;
+          const dy = height / 2 - node.y;
+          node.vx += dx * 0.001;
+          node.vy += dy * 0.001;
+        });
+        
+        // Update positions
+        nodes.forEach(node => {
+          node.x += node.vx;
+          node.y += node.vy;
+          
+          // Keep within bounds
+          node.x = Math.max(node.radius + 10, Math.min(width - node.radius - 10, node.x));
+          node.y = Math.max(node.radius + 10, Math.min(height - node.radius - 10, node.y));
+          
+          node.element.setAttribute('transform', `translate(${node.x}, ${node.y})`);
+        });
+        
+        // Update links
+        links.forEach(link => {
+          link.element.setAttribute('x1', link.sourceNode.x);
+          link.element.setAttribute('y1', link.sourceNode.y);
+          link.element.setAttribute('x2', link.targetNode.x);
+          link.element.setAttribute('y2', link.targetNode.y);
+        });
+      }
+      
+      // Run simulation for a bit
+      let iterations = 0;
+      const maxIterations = 300;
+      const interval = setInterval(() => {
+        simulate();
+        iterations++;
+        if (iterations >= maxIterations) {
+          clearInterval(interval);
+        }
+      }, 16);
+      
+      graphState.simulation = { nodes, links, simulate };
+    }
+
+    function highlightMethodConnections(methodNode, allNodes, allLinks, nodesGroup) {
+      // Reset all
+      allNodes.forEach(node => {
+        if (node.element) {
+          node.element.style.opacity = '0.3';
+        }
+      });
+      allLinks.forEach(link => {
+        link.element.setAttribute('stroke', 'rgba(255, 255, 255, 0.05)');
+      });
+      
+      // Highlight method
+      methodNode.element.style.opacity = '1';
+      
+      // Highlight connected problems
+      allLinks.forEach(link => {
+        if (link.targetNode === methodNode) {
+          link.sourceNode.element.style.opacity = '1';
+          link.element.setAttribute('stroke', 'rgba(255, 255, 255, 0.6)');
+        }
+      });
+      
+      // Reset after 3 seconds
+      setTimeout(() => {
+        allNodes.forEach(node => {
+          if (node.element) {
+            node.element.style.opacity = '1';
+          }
+        });
+        allLinks.forEach(link => {
+          link.element.setAttribute('stroke', 'rgba(255, 255, 255, 0.15)');
+        });
+      }, 3000);
+    }
+
+    function setupGraphControls(svg, mainGroup) {
+      const zoomIn = document.getElementById('zoom-in');
+      const zoomOut = document.getElementById('zoom-out');
+      const resetView = document.getElementById('reset-view');
+      
+      function updateTransform() {
+        mainGroup.setAttribute('transform', 
+          `translate(${graphState.translateX}, ${graphState.translateY}) scale(${graphState.scale})`
+        );
+      }
+      
+      zoomIn.addEventListener('click', () => {
+        graphState.scale = Math.min(graphState.scale * 1.2, 3);
+        updateTransform();
+      });
+      
+      zoomOut.addEventListener('click', () => {
+        graphState.scale = Math.max(graphState.scale / 1.2, 0.3);
+        updateTransform();
+      });
+      
+      resetView.addEventListener('click', () => {
+        graphState.scale = 1;
+        graphState.translateX = 0;
+        graphState.translateY = 0;
+        updateTransform();
+      });
+      
+      // Pan functionality
+      svg.addEventListener('mousedown', (e) => {
+        graphState.isDragging = true;
+        graphState.dragStart = { x: e.clientX - graphState.translateX, y: e.clientY - graphState.translateY };
+      });
+      
+      svg.addEventListener('mousemove', (e) => {
+        if (graphState.isDragging) {
+          graphState.translateX = e.clientX - graphState.dragStart.x;
+          graphState.translateY = e.clientY - graphState.dragStart.y;
+          updateTransform();
+        }
+      });
+      
+      svg.addEventListener('mouseup', () => {
+        graphState.isDragging = false;
+      });
+      
+      svg.addEventListener('mouseleave', () => {
+        graphState.isDragging = false;
+      });
+      
+      // Zoom with mouse wheel
+      svg.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? 0.9 : 1.1;
+        graphState.scale = Math.min(Math.max(graphState.scale * delta, 0.3), 3);
+        updateTransform();
+      });
+    }
+
+    // === 9. Init =============================================================
+
+    function loadQuizStats() {
+      try {
+        const saved = localStorage.getItem('algolab_quiz_progress');
+        if (saved) {
+          const data = JSON.parse(saved);
+          
+          // Update total exercises (count from data)
+          const totalExercises = 34; // Updated count with new exercises
+          document.getElementById('total-exercises').textContent = totalExercises;
+          
+          // Count mastered exercises (80%+ accuracy with 3+ consecutive correct)
+          let masteredCount = 0;
+          for (const exerciseName in data.exercises) {
+            const ex = data.exercises[exerciseName];
+            const successRate = ex.correct / (ex.correct + ex.incorrect);
+            if (successRate >= 0.8 && ex.consecutiveCorrect >= 3) {
+              masteredCount++;
+            }
+          }
+          document.getElementById('completed-exercises').textContent = masteredCount;
+          
+          // Update streak
+          document.getElementById('quiz-streak').textContent = data.currentStreak || 0;
+        }
+      } catch (e) {
+        console.error('Error loading quiz stats:', e);
+      }
+    }
+
+    // === Modal functions =====================================================
+    
+    function openProblemModal(problem) {
+      const modal = document.getElementById('problemModal');
+      
+      // Set content
+      document.getElementById('modalTitle').textContent = problem.storyTitle;
+      document.getElementById('modalSubtitle').textContent = problem.modelTitle;
+      
+      // Meta tags
+      const metaHtml = `
+        <span class="tag tag-week">Week ${problem.week}</span>
+        <span class="tag tag-complexity">${problem.complexity}</span>
+        ${problem.inputHint ? `<span class="tag tag-size">${problem.inputHint}</span>` : ''}
+      `;
+      document.getElementById('modalMeta').innerHTML = metaHtml;
+      
+      // Description
+      const descEl = document.getElementById('modalDescription');
+      const description = problem.description || '[missing]';
+      descEl.textContent = description;
+      descEl.classList.toggle('missing', description === '[missing]');
+      
+      // Solution
+      const solEl = document.getElementById('modalSolution');
+      const solution = problem.solution || '[missing]';
+      solEl.textContent = solution;
+      solEl.classList.toggle('missing', solution === '[missing]');
+      
+      // Link
+      const linkEl = document.getElementById('modalLink');
+      if (problem.link) {
+        linkEl.href = problem.link;
+        linkEl.classList.remove('disabled');
+      } else {
+        linkEl.href = '#';
+        linkEl.classList.add('disabled');
+      }
+      
+      // Show modal
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeModal() {
+      const modal = document.getElementById('problemModal');
+      modal.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    
+    // Close modal on overlay click
+    document.addEventListener('DOMContentLoaded', () => {
+      const modal = document.getElementById('problemModal');
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+      
+      // Close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('show')) {
+          closeModal();
+        }
+      });
+    });
+
+    function init() {
+      initTabs();
+      initFilters();
+      renderTree();
+      renderProblemList();
+      loadQuizStats();
+    }
+
+    window.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
