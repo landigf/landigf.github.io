@@ -316,6 +316,29 @@
     .methodology-header h2 {
       font-size: 1.8rem;
       margin: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .collapse-icon {
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+
+    .methodology-section.collapsed .collapse-icon {
+      transform: rotate(-90deg);
+    }
+
+    .methodology-content {
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+      overflow: hidden;
+    }
+
+    .methodology-section.collapsed .methodology-content {
+      max-height: 0 !important;
+      opacity: 0;
     }
 
     .view-toggle {
@@ -349,6 +372,14 @@
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 15px;
       margin-bottom: 30px;
+    }
+
+    .methodology-grid:not(.active) {
+      display: none;
+    }
+
+    .methodology-grid.active {
+      display: grid;
     }
 
     .method-card {
@@ -508,21 +539,26 @@
       </select>
     </div>
 
-    <div class="methodology-section">
+    <div class="methodology-section" id="methodologySection">
       <div class="methodology-header">
-        <h2>Methodology Map</h2>
+        <h2 onclick="toggleMethodologySection()">
+          <span class="collapse-icon">▼</span>
+          Methodology Map
+        </h2>
         <div class="view-toggle">
           <button id="gridViewBtn" class="active" onclick="switchView('grid')">Grid</button>
           <button id="graphViewBtn" onclick="switchView('graph')">Graph</button>
         </div>
       </div>
 
-      <div id="methodologyGrid" class="methodology-grid">
-        <!-- Method cards will be loaded here -->
-      </div>
+      <div class="methodology-content">
+        <div id="methodologyGrid" class="methodology-grid active">
+          <!-- Method cards will be loaded here -->
+        </div>
 
-      <div id="methodologyGraph" class="methodology-graph">
-        <!-- Graph visualization will be loaded here -->
+        <div id="methodologyGraph" class="methodology-graph">
+          <!-- Graph visualization will be loaded here -->
+        </div>
       </div>
     </div>
 
@@ -684,8 +720,22 @@
       currentView = view;
       document.getElementById('gridViewBtn').classList.toggle('active', view === 'grid');
       document.getElementById('graphViewBtn').classList.toggle('active', view === 'graph');
-      document.getElementById('methodologyGrid').classList.toggle('active', view === 'grid');
-      document.getElementById('methodologyGraph').classList.toggle('active', view === 'graph');
+      
+      const gridEl = document.getElementById('methodologyGrid');
+      const graphEl = document.getElementById('methodologyGraph');
+      
+      if (view === 'grid') {
+        gridEl.classList.add('active');
+        graphEl.classList.remove('active');
+      } else {
+        gridEl.classList.remove('active');
+        graphEl.classList.add('active');
+      }
+    }
+
+    function toggleMethodologySection() {
+      const section = document.getElementById('methodologySection');
+      section.classList.toggle('collapsed');
     }
 
     function buildMethodologyData() {
