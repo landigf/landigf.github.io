@@ -581,16 +581,29 @@
     }
 
     function startMatchingGame() {
+      // Filter exercises with valid descriptions and solutions
+      const validExercises = EXERCISES.filter(ex => {
+        const hasValidProblem = ex.problemModel && ex.problemModel.trim() && ex.problemModel !== 'No description' && ex.problemModel !== 'No problem description available.';
+        const hasValidSolution = (ex.solutionShort && ex.solutionShort.trim() && ex.solutionShort !== 'No solution') || 
+                                 (ex.solution && ex.solution.trim() && ex.solution !== 'No solution');
+        return hasValidProblem && hasValidSolution;
+      });
+
+      if (validExercises.length < 2) {
+        document.getElementById('gameContainer').innerHTML = '<div class="game-card"><p style="text-align: center;">Not enough valid exercises for matching game.</p></div>';
+        return;
+      }
+
       // Pick one random exercise for the correct answer
-      const correctIndex = Math.floor(Math.random() * EXERCISES.length);
-      const correct = EXERCISES[correctIndex];
+      const correctIndex = Math.floor(Math.random() * validExercises.length);
+      const correct = validExercises[correctIndex];
       
       // Pick another random exercise for the wrong pair
-      let wrongIndex = Math.floor(Math.random() * EXERCISES.length);
+      let wrongIndex = Math.floor(Math.random() * validExercises.length);
       while (wrongIndex === correctIndex) {
-        wrongIndex = Math.floor(Math.random() * EXERCISES.length);
+        wrongIndex = Math.floor(Math.random() * validExercises.length);
       }
-      const wrong = EXERCISES[wrongIndex];
+      const wrong = validExercises[wrongIndex];
 
       // Randomize positions
       const problems = Math.random() > 0.5 
