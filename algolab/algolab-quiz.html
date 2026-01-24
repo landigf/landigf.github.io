@@ -539,6 +539,23 @@
             <div class="quiz-content">
                 <div class="question-number" id="questionNumber">Question 1</div>
                 <div class="problem-description" id="problemDescription"></div>
+                <div class="hint-section">
+                    <button class="hint-button" onclick="toggleHint()">💡 Show Hint</button>
+                    <div class="hint-content" id="hintContent">
+                        <div class="hint-item">
+                            <span class="hint-label">Exercise Name:</span>
+                            <span class="hint-value" id="hintName"></span>
+                        </div>
+                        <div class="hint-item">
+                            <span class="hint-label">Also Known As:</span>
+                            <span class="hint-value" id="hintAka"></span>
+                        </div>
+                        <div class="hint-item">
+                            <span class="hint-label">Methods:</span>
+                            <span class="hint-value" id="hintMethods"></span>
+                        </div>
+                    </div>
+                </div>
                 <div class="question-prompt" id="questionPrompt">What is the correct solution approach?</div>
                 <div class="options" id="options"></div>
                 <div class="feedback" id="feedback"></div>

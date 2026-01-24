@@ -249,6 +249,19 @@ function loadQuestion() {
     // Description (metadata badges removed as requested)
     document.getElementById('problemDescription').textContent = exercise.description;
     
+    // Populate hint content
+    document.getElementById('hintName').textContent = exercise.name || 'N/A';
+    document.getElementById('hintAka').textContent = exercise.aka || 'N/A';
+    document.getElementById('hintMethods').textContent = exercise.methods || 'N/A';
+    
+    // Reset hint to hidden state
+    const hintContent = document.getElementById('hintContent');
+    const hintButton = document.querySelector('.hint-button');
+    if (hintContent && hintButton) {
+        hintContent.classList.remove('show');
+        hintButton.textContent = '💡 Show Hint';
+    }
+    
     // Generate question based on type
     let correctAnswer, wrongAnswers, questionPrompt;
     
@@ -291,6 +304,20 @@ function loadQuestion() {
     document.getElementById('feedback').classList.remove('show', 'correct', 'incorrect');
     document.getElementById('checkBtn').disabled = true;
     document.getElementById('nextBtn').classList.add('hidden');
+}
+
+// Toggle hint visibility
+function toggleHint() {
+    const hintContent = document.getElementById('hintContent');
+    const hintButton = document.querySelector('.hint-button');
+    
+    if (hintContent.classList.contains('show')) {
+        hintContent.classList.remove('show');
+        hintButton.textContent = '💡 Show Hint';
+    } else {
+        hintContent.classList.add('show');
+        hintButton.textContent = '🔍 Hide Hint';
+    }
 }
 
 // Select an option
