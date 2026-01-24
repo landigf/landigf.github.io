@@ -247,6 +247,37 @@
       border-color: #fff;
     }
 
+    .hint-button {
+      display: inline-block;
+      background: #1a1a1a;
+      border: 1px solid #444;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      color: #888;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 5px;
+    }
+
+    .hint-button:hover {
+      border-color: #888;
+      color: #aaa;
+    }
+
+    .hint-content {
+      display: none;
+      margin-top: 10px;
+      padding: 12px;
+      background: #0a0a0a;
+      border-left: 2px solid #666;
+      color: #aaa;
+      font-size: 0.9rem;
+    }
+
+    .hint-content.visible {
+      display: block;
+    }
+
     /* Mini-game styles */
     .game-container {
       display: none;
@@ -445,6 +476,13 @@
     let currentIndex = 0;
     let solutionVisible = false;
 
+    function toggleHint() {
+      const hintContent = document.getElementById('hintContent');
+      if (hintContent) {
+        hintContent.classList.toggle('visible');
+      }
+    }
+
     function updateProgress() {
       const progress = ((currentIndex + 1) / EXERCISES.length) * 100;
       document.getElementById('progressBar').style.width = progress + '%';
@@ -460,7 +498,10 @@
             <div class="exercise-title">
               <h2>${ex.name || 'Untitled Exercise'}</h2>
               <div class="exercise-meta">
-                ${ex.aka ? `<div><strong>Also known as:</strong> ${ex.aka}</div>` : ''}
+                ${ex.aka ? `
+                  <div class="hint-button" onclick="toggleHint()">💡 Show Hint (Also known as)</div>
+                  <div class="hint-content" id="hintContent">${ex.aka}</div>
+                ` : ''}
                 ${ex.week ? `<div>Week ${ex.week}</div>` : ''}
               </div>
             </div>
