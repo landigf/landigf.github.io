@@ -267,7 +267,7 @@
     .hint-content {
       display: none;
       margin-top: 10px;
-      padding: 12px;
+      padding: 15px;
       background: #0a0a0a;
       border-left: 2px solid #666;
       color: #aaa;
@@ -276,6 +276,21 @@
 
     .hint-content.visible {
       display: block;
+    }
+
+    .hint-item {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    .hint-label {
+      color: #888;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+
+    .hint-value {
+      color: #ccc;
     }
 
     /* Mini-game styles */
@@ -496,23 +511,18 @@
         <div class="exercise-card">
           <div class="exercise-header">
             <div class="exercise-title">
-              <h2>${ex.name || 'Untitled Exercise'}</h2>
+              <h2>Exercise #${currentIndex + 1}</h2>
               <div class="exercise-meta">
-                ${ex.aka ? `
-                  <div class="hint-button" onclick="toggleHint()">💡 Show Hint (Also known as)</div>
-                  <div class="hint-content" id="hintContent">${ex.aka}</div>
-                ` : ''}
-                ${ex.week ? `<div>Week ${ex.week}</div>` : ''}
+                <div class="hint-button" onclick="toggleHint()">💡 Show Hint</div>
+                <div class="hint-content" id="hintContent">
+                  ${ex.week ? `<div class="hint-item"><span class="hint-label">Week:</span><span class="hint-value">${ex.week}</span></div>` : ''}
+                  ${ex.name ? `<div class="hint-item"><span class="hint-label">Exercise Name:</span><span class="hint-value">${ex.name}</span></div>` : ''}
+                  ${ex.aka ? `<div class="hint-item"><span class="hint-label">Also Known As:</span><span class="hint-value">${ex.aka}</span></div>` : ''}
+                  ${ex.methods ? `<div class="hint-item"><span class="hint-label">Methods:</span><span class="hint-value">${ex.methods}</span></div>` : ''}
+                </div>
               </div>
             </div>
-            <div class="exercise-number">#${currentIndex + 1}</div>
           </div>
-
-          ${ex.methods ? `
-          <div class="tags">
-            ${ex.methods.split(',').map(m => `<span class="tag">${m.trim()}</span>`).join('')}
-          </div>
-          ` : ''}
 
           <div class="problem-section">
             <div class="section-title">Problem</div>
