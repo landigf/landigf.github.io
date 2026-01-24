@@ -250,6 +250,7 @@ function loadQuestion() {
     document.getElementById('problemDescription').textContent = exercise.description;
     
     // Populate hint content
+    document.getElementById('hintWeek').textContent = exercise.week || 'N/A';
     document.getElementById('hintName').textContent = exercise.name || 'N/A';
     document.getElementById('hintAka').textContent = exercise.aka || 'N/A';
     document.getElementById('hintMethods').textContent = exercise.methods || 'N/A';
