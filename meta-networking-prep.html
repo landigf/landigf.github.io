@@ -359,6 +359,144 @@
         strong {
             color: #667eea;
         }
+
+        /* Exercise styles */
+        .ex-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 16px 0;
+            background: white;
+        }
+        .ex-category {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .ex-title {
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 6px;
+            color: #333;
+        }
+        .ex-desc {
+            color: #555;
+            margin: 8px 0 10px;
+        }
+        .ex-prompt {
+            color: #666;
+            margin: 8px 0;
+            font-style: italic;
+        }
+        .ex-input {
+            width: 100%;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background: #f8f9fa;
+            font-size: 0.95em;
+        }
+        .ex-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid #bbb;
+            background: #f7f7f7;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .result.ok {
+            color: #0a7a0a;
+            font-weight: 600;
+            background: #d4edda;
+            padding: 6px 12px;
+            border-radius: 6px;
+        }
+        .result.bad {
+            color: #b00020;
+            font-weight: 600;
+            background: #f8d7da;
+            padding: 6px 12px;
+            border-radius: 6px;
+        }
+        .hint, .expl {
+            color: #666;
+            margin-top: 8px;
+            padding: 10px;
+            border-radius: 6px;
+            background: #f8f9fa;
+            display: none;
+        }
+        .hint.show, .expl.show {
+            display: block;
+        }
+        .mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+        .exercise-section {
+            margin: 30px 0;
+        }
+        .exercise-section-title {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        .quick-links {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .quick-links h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .quick-link {
+            display: block;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: transform 0.2s;
+            font-weight: 600;
+        }
+        .quick-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .quick-link-desc {
+            font-size: 0.9em;
+            opacity: 0.9;
+            font-weight: normal;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -367,6 +505,24 @@
             <h1>🚀 Meta Networking Interview Prep - 1 Day Intensive</h1>
             <p class="subtitle">Master TCP, BGP, Routing Protocols, and Network Troubleshooting through hands-on practice</p>
         </header>
+
+        <div class="quick-links">
+            <h3>🎯 Quick Start Resources</h3>
+            <div class="link-grid">
+                <a href="linux-toolkit.html" class="quick-link">
+                    🐧 Linux Command Toolkit
+                    <div class="quick-link-desc">Organized by questions you're answering</div>
+                </a>
+                <a href="#exercises" class="quick-link">
+                    💻 Interactive Exercises
+                    <div class="quick-link-desc">W3Schools-style practice drills</div>
+                </a>
+                <a href="networking-commands-cheatsheet.md" class="quick-link">
+                    📋 Command Cheatsheet
+                    <div class="quick-link-desc">Quick reference for interview day</div>
+                </a>
+            </div>
+        </div>
 
         <div class="progress-tracker">
             <h3 style="margin-bottom: 15px;">Your Progress</h3>
@@ -457,11 +613,26 @@
                 <p class="time-estimate">⏱️ 90 minutes</p>
             </div>
         </div>
+
+        <!-- Interactive Exercises Section -->
+        <div id="exercises" class="exercise-section">
+            <h2 class="exercise-section-title">💻 Interactive Exercises - Practice Commands</h2>
+            <p style="color: #666; margin-bottom: 20px;">W3Schools-style interactive practice drills. Type the command, check your answer, and learn from hints!</p>
+            
+            <div id="exercisesByCategory"></div>
+        </div>
     </div>
 
     <!-- Modals will be inserted here by JavaScript -->
     <div id="modalContainer"></div>
 
     <script src="networking-prep.js"></script>
+    <script src="networking-exercises.js"></script>
+    <script>
+        // Initialize exercises when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            initExercisesByCategory();
+        });
+    </script>
 </body>
 </html>

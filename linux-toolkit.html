@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Network Toolkit - Command Reference</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: white;
+            border: 2px solid #3498db;
+            color: #3498db;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .tab-btn:hover {
+            background: #3498db;
+            color: white;
+        }
+
+        .tab-btn.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .content-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .tool-card {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .tool-title {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .tool-question {
+            background: #fff3cd;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: 600;
+            color: #856404;
+        }
+
+        .command-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .command-box code {
+            color: #4ec9b0;
+        }
+
+        .success-output {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .failure-output {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .next-steps {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .next-steps-title {
+            font-weight: 700;
+            color: #0c5460;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+        }
+
+        h3 {
+            color: #3498db;
+            margin: 20px 0 10px;
+        }
+
+        ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .back-link {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: #2980b9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #3498db;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐧 Linux Network Toolkit</h1>
+            <p class="subtitle">Command reference organized by the questions you're trying to answer</p>
+        </header>
+
+        <a href="meta-networking-prep.html" class="back-link">← Back to Main Prep</a>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" data-tab="state">State & Config</button>
+            <button class="tab-btn" data-tab="path">Path & Connectivity</button>
+            <button class="tab-btn" data-tab="dns">Name Resolution</button>
+            <button class="tab-btn" data-tab="tcp">TCP & Sockets</button>
+            <button class="tab-btn" data-tab="stats">Counters & Stats</button>
+            <button class="tab-btn" data-tab="capture">Packet Capture</button>
+        </div>
+
+        <!-- State & Config Section -->
+        <div id="state" class="content-section tab-content">
+            <h2>State & Configuration</h2>
+            <p><strong>Questions:</strong> What's my network config? What interfaces do I have? What's my default gateway?</p>
+
+            <div class="tool-card">
+                <div class="tool-title">ip addr (ip a)</div>
+                <div class="tool-question">❓ What IP addresses are configured on my interfaces?</div>
+                
+                <div class="command-box">
+<code># Show all interfaces with IPs
+ip a
+
+# Show specific interface
+ip addr show eth0
+
+# Show only IPv4
+ip -4 a
+
+# Show only IPv6
+ip -6 a</code>
+                </div>
+
+                <div class="success-output">
+                    <strong>What success looks like:</strong>
+                    <div class="command-box">
+<code>2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP>
+    link/ether 00:0c:29:xx:xx:xx
+    inet 192.168.1.100/24 brd 192.168.1.255 scope global eth0
+    inet6 fe80::20c:29ff:fexx:xxxx/64 scope link</code>
+                    </div>
+                    <ul>
+                        <li><strong>UP:</strong> Interface is enabled</li>
+                        <li><strong>inet:</strong> IPv4 address is assigned</li>
+                        <li><strong>/24:</strong> Subnet mask (255.255.255.0)</li>
+                    </ul>
+                </div>
+
+                <div class="failure-output">
+                    <strong>What failure looks like:</strong>
+                    <ul>
+                        <li><strong>DOWN:</strong> Interface disabled - <code>ip link set eth0 up</code></li>
+                        <li><strong>NO-CARRIER:</strong> Cable unplugged or no link</li>
+                        <li><strong>No inet:</strong> No IP assigned - check DHCP or set static</li>
+                    </ul>
+                </div>
+
+                <div class="next-steps">
+                    <div class="next-steps-title">What to do next:</div>
+                    <ul>
+                        <li>If no IP: Check DHCP logs or manually configure</li>
+                        <li>If DOWN: <code>sudo ip link set eth0 up</code></li>
+                        <li>Check routes next: <code>ip route</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-title">ip route (ip r)</div>
+                <div class="tool-question">❓ How does my system route traffic? What's my default gateway?</div>
+                
+                <div class="command-box">
+<code># Show routing table
+ip r
+
+# Show routes for specific destination
+ip route get 8.8.8.8
+
+# Add route (requires sudo)
+sudo ip route add 10.0.0.0/24 via 192.168.1.1
+
+# Delete route
+sudo ip route del 10.0.0.0/24</code>
+                </div>
+
+                <div class="success-output">
+                    <strong>What success looks like:</strong>
+                    <div class="command-box">
+<code>default via 192.168.1.1 dev eth0 proto dhcp metric 100
+192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.100</code>
+                    </div>
+                    <ul>
+                        <li><strong>default via X.X.X.X:</strong> Default gateway (where non-local traffic goes)</li>
+                        <li><strong>proto dhcp:</strong> Route learned from DHCP</li>
+                        <li><strong>proto kernel:</strong> Automatically added when IP configured</li>
+                    </ul>
+                </div>
+
+                <div class="failure-output">
+                    <strong>What failure looks like:</strong>
+                    <ul>
+                        <li><strong>No default route:</strong> Can't reach internet</li>
+                        <li><strong>Wrong gateway:</strong> Traffic goes to wrong router</li>
+                    </ul>
+                </div>
+
+                <div class="next-steps">
+                    <div class="next-steps-title">What to do next:</div>
+                    <ul>
+                        <li>Test gateway: <code>ping [gateway-ip]</code></li>
+                        <li>Check specific route decision: <code>ip route get 8.8.8.8</code></li>
+                        <li>If no default route: Check DHCP or add manually</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-title">ip neigh (ARP cache)</div>
+                <div class="tool-question">❓ What MAC addresses has my system learned?</div>
+                
+                <div class="command-box">
+<code># Show neighbor cache (ARP table)
+ip neigh
+
+# Flush all entries
+sudo ip neigh flush all
+
+# Delete specific entry
+sudo ip neigh del 192.168.1.1 dev eth0</code>
+                </div>
+
+                <div class="success-output">
+                    <strong>What success looks like:</strong>
+                    <div class="command-box">
+<code>192.168.1.1 dev eth0 lladdr aa:bb:cc:dd:ee:ff REACHABLE
+192.168.1.50 dev eth0 lladdr 11:22:33:44:55:66 STALE</code>
+                    </div>
+                    <ul>
+                        <li><strong>REACHABLE:</strong> Entry is valid and recently confirmed</li>
+                        <li><strong>STALE:</strong> Entry exists but hasn't been confirmed recently</li>
+                        <li><strong>DELAY/PROBE:</strong> System is verifying the entry</li>
+                    </ul>
+                </div>
+
+                <div class="next-steps">
+                    <div class="next-steps-title">What to do next:</div>
+                    <ul>
+                        <li>If no entry for gateway: ARP resolution may be failing</li>
+                        <li>If FAILED state: Layer 2 connectivity issue</li>
+                        <li>Test: <code>ping [ip]</code> should populate cache</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Path & Connectivity Section -->
+        <div id="path" class="content-section tab-content" style="display:none;">
+            <h2>Path & Connectivity Testing</h2>
+            <p><strong>Questions:</strong> Can I reach this host? Where is the packet being dropped? What's the latency?</p>
+
+            <div class="tool-card">
+                <div class="tool-title">ping</div>
+                <div class="tool-question">❓ Is the host reachable? What's the round-trip time?</div>
+                
+                <div class="command-box">
+<code># Basic ping (Ctrl+C to stop)
+ping 8.8.8.8
+
+# Limit to 5 packets
+ping -c 5 google.com
+
+# Test MTU (1472 + 28 = 1500 MTU)
+ping -s 1472 google.com
+
+# Don't fragment (test path MTU)
+ping -M do -s 1472 google.com
+
+# Flood ping (requires sudo, test capacity)
+sudo ping -f 8.8.8.8</code>
+                </div>
+
+                <div class="success-output">
+                    <strong>What success looks like:</strong>
+                    <div class="command-box">
+<code>64 bytes from 8.8.8.8: icmp_seq=1 ttl=56 time=12.3 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=56 time=11.9 ms
+---
+5 packets transmitted, 5 received, 0% packet loss
+rtt min/avg/max/mdev = 11.8/12.1/12.5/0.3 ms</code>
+                    </div>
+                    <ul>
+                        <li><strong>0% packet loss:</strong> Perfect connectivity</li>
+                        <li><strong>Low, consistent RTT:</strong> Good network quality</li>
+                        <li><strong>TTL:</strong> Decrements at each hop (tracks distance)</li>
+                    </ul>
+                </div>
+
+                <div class="failure-output">
+                    <strong>What failure looks like:</strong>
+                    <ul>
+                        <li><strong>100% packet loss:</strong> No connectivity - check routes, firewall</li>
+                        <li><strong>Destination Host Unreachable:</strong> No route to host</li>
+                        <li><strong>High RTT (>100ms):</strong> Network congestion or distant host</li>
+                        <li><strong>Variable RTT:</strong> Network instability</li>
+                        <li><strong>Packet loss >1%:</strong> Quality issue - investigate path</li>
+                    </ul>
+                </div>
+
+                <div class="next-steps">
+                    <div class="next-steps-title">What to do next:</div>
+                    <ul>
+                        <li>If timeout: Try gateway: <code>ping [gateway-ip]</code></li>
+                        <li>If gateway works but internet doesn't: DNS or routing issue</li>
+                        <li>For packet loss: Use <code>mtr</code> to locate where</li>
+                        <li>Remember: Some hosts block ICMP (ping works ≠ only test)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-title">traceroute</div>
+                <div class="tool-question">❓ What path do packets take? Where is the delay?</div>
+                
+                <div class="command-box">
+<code># Basic traceroute (UDP by default)
+traceroute google.com
+
+# Use ICMP (more likely to pass firewalls)
+traceroute -I google.com
+
+# Use TCP to specific port
+sudo traceroute -T -p 443 google.com
+
+# Set max hops
+traceroute -m 20 google.com</code>
+                </div>
+
+                <div class="success-output">
+                    <strong>What success looks like:</strong>
+                    <div class="command-box">
+<code> 1  router.local (192.168.1.1)  1.234 ms  1.123 ms  1.056 ms
+ 2  10.0.0.1 (10.0.0.1)  5.678 ms  5.543 ms  5.432 ms
+ 3  172.16.1.1 (172.16.1.1)  12.345 ms  12.234 ms  12.156 ms
+...
+10  google.com (142.250.185.46)  15.234 ms  15.123 ms  15.098 ms</code>
+                    </div>
+                </div>
+
+                <div class="failure-output">
+                    <strong>What failure looks like:</strong>
+                    <ul>
+                        <li><strong>* * *:</strong> Router not responding (may be configured to not respond, not always a problem)</li>
+                        <li><strong>High latency jump:</strong> Bottleneck at that hop</li>
+                        <li><strong>Never reaches destination:</strong> Routing black hole or firewall</li>
+                    </ul>
+                </div>
+
+                <div class="next-steps">
+                    <div class="next-steps-title">What to do next:</div>
+                    <ul>
+                        <li>Use <code>mtr</code> for continuous monitoring</li>
+                        <li>If * * * at end: Destination may block traceroute</li>
+                        <li>Compare multiple traceroutes over time</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-title">mtr (My Traceroute)</div>
+                <div class="tool-question">❓ Where is packet loss occurring? What's the hop-by-hop latency?</div>
+                
+                <div class="command-box">
+<code># Interactive mode (best for real-time)
+mtr google.com
+
+# Report mode (run 100 cycles, then exit)
+mtr -r -c 100 google.com
+
+# Wide report (no hostname truncation)
+mtr -rw google.com
+
+# Use TCP instead of ICMP
+mtr -T -P 443 google.com</code>
+                </div>
+
+                <div class="success-output">
+                    <strong>What success looks like:</strong>
+                    <div class="command-box">
+<code>HOST: localhost          Loss%   Snt   Last   Avg  Best  Wrst StDev
+  1.|-- router.local       0.0%   100    1.2   1.3   1.0   2.1   0.2
+  2.|-- 10.0.0.1           0.0%   100    5.6   5.8   5.2   8.3   0.5
+  3.|-- 172.16.1.1         0.0%   100   12.3  12.5  11.9  15.2   0.6
+...
+ 10.|-- google.com         0.0%   100   15.2  15.4  14.8  17.3   0.4</code>
+                    </div>
+                    <ul>
+                        <li><strong>0% Loss:</strong> No packet loss at any hop</li>
+                        <li><strong>Low StDev:</strong> Stable latency</li>
+                        <li><strong>Gradual latency increase:</strong> Normal (each hop adds time)</li>
+                    </ul>
+                </div>
+
+                <div class="failure-output">
+                    <strong>What failure looks like:</strong>
+                    <ul>
+                        <li><strong>Loss at specific hop only:</strong> May be ICMP rate limiting, not real loss</li>
+                        <li><strong>Loss at hop + all subsequent hops:</strong> Real issue at that hop</li>
+                        <li><strong>High StDev:</strong> Unstable/congested link</li>
+                    </ul>
+                </div>
+
+                <div class="next-steps">
+                    <div class="next-steps-title">What to do next:</div>
+                    <ul>
+                        <li>Run for 5-10 minutes to see patterns</li>
+                        <li>Loss only at one hop but not after = ICMP deprioritization</li>
+                        <li>If consistent loss: Contact network owner of that hop</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- DNS Section -->
+        <div id="dns" class="content-section tab-content" style="display:none;">
+            <h2>Name Resolution</h2>
+            <p><strong>Questions:</strong> Can I resolve this domain? Which DNS server am I using? Is DNS working?</p>
+
+            <div class="tool-card">
+                <div class="tool-title">dig</div>
+                <div class="tool-question">❓ What's the IP for this domain? Is DNS working?</div>
+                
+                <div class="command-box">
+<code># Basic lookup
+dig google.com
+
+# Trace full resolution path
+dig +trace google.com
+
+# Query specific record type
+dig google.com MX    # Mail servers
+dig google.com NS    # Nameservers
+dig google.com AAAA  # IPv6
+
+# Reverse lookup
+dig -x 8.8.8.8
+
+# Query specific DNS server
+dig @8.8.8.8 google.com
+
+# Short output (just the answer)
+dig +short google.com</code>
+                </div>
+
+                <div class="success-output">
+                    <strong>What success looks like:</strong>
+                    <div class="command-box">
+<code>;; QUESTION SECTION:
+;google.com.            IN  A
+
+;; ANSWER SECTION:
+google.com.     300 IN  A   142.250.185.46
+
+;; Query time: 23 msec
+;; SERVER: 192.168.1.1#53(192.168.1.1)</code>
+                    </div>
+                    <ul>
+                        <li><strong>ANSWER SECTION:</strong> Contains the IP address</li>
+                        <li><strong>300:</strong> TTL in seconds (cache lifetime)</li>
+                        <li><strong>Query time:</strong> DNS response time</li>
+                    </ul>
+                </div>
+
+                <div class="failure-output">
+                    <strong>What failure looks like:</strong>
+                    <ul>
+                        <li><strong>SERVFAIL:</strong> DNS server couldn't resolve</li>
+                        <li><strong>NXDOMAIN:</strong> Domain doesn't exist</li>
+                        <li><strong>No response / timeout:</strong> Can't reach DNS server</li>
+                        <li><strong>connection timed out:</strong> Firewall blocking port 53</li>
+                    </ul>
+                </div>
+
+                <div class="next-steps">
+                    <div class="next-steps-title">What to do next:</div>
+                    <ul>
+                        <li>If timeout: Check DNS server IP in /etc/resolv.conf</li>
+                        <li>Try different server: <code>dig @8.8.8.8 google.com</code></li>
+                        <li>Compare results from different DNS servers</li>
+                        <li>For delegation issues: Use <code>dig +trace</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-title">getent hosts</div>
+                <div class="tool-question">❓ How does the OS resolve this hostname? (includes /etc/hosts)</div>
+                
+                <div class="command-box">
+<code># Resolve hostname using system resolver
+getent hosts google.com
+
+# Check specific host
+getent hosts localhost
+
+# Get all hosts
+getent hosts</code>
+                </div>
+
+                <div class="success-output">
+                    <strong>Why use this over dig:</strong>
+                    <ul>
+                        <li>Follows /etc/nsswitch.conf order</li>
+                        <li>Checks /etc/hosts before DNS</li>
+                        <li>Reflects what applications actually use</li>
+                        <li>dig queries DNS directly, bypassing NSS</li>
+                    </ul>
+                </div>
+
+                <div class="next-steps">
+                    <div class="next-steps-title">What to do next:</div>
+                    <ul>
+                        <li>Check /etc/hosts for overrides: <code>cat /etc/hosts</code></li>
+                        <li>Check resolver order: <code>cat /etc/nsswitch.conf | grep hosts</code></li>
+                        <li>Check DNS config: <code>cat /etc/resolv.conf</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- TCP & Sockets Section -->
+        <div id="tcp" class="content-section tab-content" style="display:none;">
+            <h2>TCP & Sockets</h2>
+            <p><strong>Questions:</strong> What's listening? Can I connect? What's the connection state?</p>
+
+            <div class="tool-card">
+                <div class="tool-title">ss (Socket Statistics)</div>
+                <div class="tool-question">❓ What ports are listening? What connections exist?</div>
+                
+                <div class="command-box">
+<code># Show all TCP connections
+ss -tan
+
+# Show listening TCP ports with process info
+sudo ss -tlnp
+
+# Show established connections only
+ss -tan state established
+
+# Show connections to specific port
+ss -tan '( dport = :443 or sport = :443 )'
+
+# Show TCP info (cwnd, RTT, retransmissions)
+ss -ti
+
+# Show connection to specific host
+ss -tan dst 8.8.8.8
+
+# Memory usage per socket
+ss -tm</code>
+                </div>
+
+                <div class="success-output">
+                    <strong>What success looks like:</strong>
+                    <div class="command-box">
+<code>State    Recv-Q Send-Q Local Address:Port  Peer Address:Port
+LISTEN   0      128    0.0.0.0:22           0.0.0.0:*      users:(("sshd",pid=1234))
+ESTAB    0      0      192.168.1.100:54321  8.8.8.8:443</code>
+                    </div>
+                    <ul>
+                        <li><strong>LISTEN:</strong> Service waiting for connections</li>
+                        <li><strong>ESTAB:</strong> Active connection</li>
+                        <li><strong>Recv-Q/Send-Q = 0:</strong> No data buffered</li>
+                    </ul>
+                </div>
+
+                <div class="failure-output">
+                    <strong>What failure looks like:</strong>
+                    <ul>
+                        <li><strong>No LISTEN on expected port:</strong> Service not running</li>
+                        <li><strong>High Recv-Q:</strong> Application not reading fast enough</li>
+                        <li><strong>High Send-Q:</strong> Network congestion or slow receiver</li>
+                        <li><strong>Many TIME-WAIT:</strong> High connection turnover</li>
+                    </ul>
+                </div>
+
+                <div class="next-steps">
+                    <div class="next-steps-title">What to do next:</div>
+                    <ul>
+                        <li>If not listening: Start service or check config</li>
+                        <li>For TCP details: <code>ss -ti</code> shows retransmissions, cwnd</li>
+                        <li>Count connections: <code>ss -tan | wc -l</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-title">nc (netcat)</div>
+                <div class="tool-question">❓ Can I establish a TCP connection to this port?</div>
+                
+                <div class="command-box">
+<code># Test TCP connection
+nc -vz google.com 443
+
+# Test multiple ports
+nc -vz google.com 80 443 22
+
+# Connect and send data
+echo "GET / HTTP/1.1\r\nHost: example.com\r\n\r\n" | nc example.com 80
+
+# Listen on port (simple server)
+nc -l 8080
+
+# Port scan range
+nc -vz -w 2 192.168.1.1 20-25</code>
+                </div>
+
+                <div class="success-output">
+                    <strong>What success looks like:</strong>
+                    <div class="command-box">
+<code>Connection to google.com 443 port [tcp/https] succeeded!</code>
+                    </div>
+                    <p>TCP handshake completed successfully.</p>
+                </div>
+
+                <div class="failure-output">
+                    <strong>What failure looks like:</strong>
+                    <ul>
+                        <li><strong>Connection refused:</strong> Port closed (RST received)</li>
+                        <li><strong>Connection timed out:</strong> Filtered/firewall or host down</li>
+                        <li><strong>No route to host:</strong> Network unreachable</li>
+                    </ul>
+                </div>
+
+                <div class="next-steps">
+                    <div class="next-steps-title">What to do next:</div>
+                    <ul>
+                        <li>If refused: Check if service is running and listening</li>
+                        <li>If timeout: Check firewall rules, routing</li>
+                        <li>Use <code>tcpdump</code> to see if packets are sent/received</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-title">curl</div>
+                <div class="tool-question">❓ Can I make an HTTP/HTTPS request? What's the timing?</div>
+                
+                <div class="command-box">
+<code># Verbose HTTPS request
+curl -v https://google.com
+
+# Headers only
+curl -I https://google.com
+
+# Show timing breakdown
+curl -w "@curl-format.txt" -o /dev/null -s https://google.com
+
+# Create curl-format.txt:
+cat > curl-format.txt << 'EOF'
+    time_namelookup:  %{time_namelookup}s
+       time_connect:  %{time_connect}s
+    time_appconnect:  %{time_appconnect}s
+   time_pretransfer:  %{time_pretransfer}s
+      time_redirect:  %{time_redirect}s
+ time_starttransfer:  %{time_starttransfer}s
+                    ----------
+         time_total:  %{time_total}s
+EOF
+
+# Follow redirects
+curl -L https://google.com
+
+# Specify IP (bypass DNS)
+curl --resolve google.com:443:142.250.185.46 https://google.com</code>
+                </div>
+
+                <div class="success-output">
+                    <strong>What success looks like:</strong>
+                    <div class="command-box">
+<code>* Connected to google.com (142.250.185.46) port 443
+* SSL connection using TLS1.3 / ECDHE-ECDSA-AES128-GCM-SHA256
+< HTTP/2 200
+< content-type: text/html</code>
+                    </div>
+                </div>
+
+                <div class="next-steps">
+                    <div class="next-steps-title">What to do next:</div>
+                    <ul>
+                        <li>Compare different URLs/IPs to isolate issue</li>
+                        <li>Check if HTTP works but HTTPS doesn't (TLS issue)</li>
+                        <li>Use timing info to identify slow components</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div id="stats" class="content-section tab-content" style="display:none;">
+            <h2>Counters & Statistics</h2>
+            <p><strong>Questions:</strong> Are packets being dropped? Are there errors? What's the traffic volume?</p>
+
+            <div class="tool-card">
+                <div class="tool-title">ip -s link</div>
+                <div class="tool-question">❓ Are there interface errors or drops?</div>
+                
+                <div class="command-box">
+<code># Show interface statistics
+ip -s link
+
+# Show specific interface
+ip -s link show eth0
+
+# More detailed stats
+ip -s -s link show eth0</code>
+                </div>
+
+                <div class="success-output">
+                    <strong>What success looks like:</strong>
+                    <div class="command-box">
+<code>2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP>
+    RX: bytes  packets  errors  dropped overrun mcast
+    1234567    10000    0       0       0       100
+    TX: bytes  packets  errors  dropped carrier collsns
+    7654321    8000     0       0       0       0</code>
+                    </div>
+                    <ul>
+                        <li><strong>errors = 0:</strong> No physical layer issues</li>
+                        <li><strong>dropped = 0:</strong> No buffer overflows</li>
+                        <li><strong>collsns = 0:</strong> No duplex mismatch</li>
+                    </ul>
+                </div>
+
+                <div class="failure-output">
+                    <strong>What failure looks like:</strong>
+                    <ul>
+                        <li><strong>RX errors:</strong> Bad cable, NIC issue, or duplex mismatch</li>
+                        <li><strong>RX dropped:</strong> Receive buffer full (CPU overload)</li>
+                        <li><strong>TX errors:</strong> Transmission problems</li>
+                        <li><strong>Collisions:</strong> Duplex mismatch (half vs full)</li>
+                    </ul>
+                </div>
+
+                <div class="next-steps">
+                    <div class="next-steps-title">What to do next:</div>
+                    <ul>
+                        <li>Check duplex settings: <code>ethtool eth0</code></li>
+                        <li>If errors increasing: Replace cable or check NIC</li>
+                        <li>If drops: Check for CPU/memory pressure</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool-title">netstat -s / ss -s</div>
+                <div class="tool-question">❓ How many retransmissions? Connection failures?</div>
+                
+                <div class="command-box">
+<code># Show all protocol statistics
+netstat -s
+
+# Show TCP statistics only
+netstat -st
+
+# ss summary
+ss -s
+
+# Watch retransmissions
+watch -n 1 "netstat -s | grep -i retrans"</code>
+                </div>
+
+                <div class="success-output">
+                    <strong>Key metrics to watch:</strong>
+                    <ul>
+                        <li><strong>segments retransmitted:</strong> Should be <1% of total</li>
+                        <li><strong>connection resets:</strong> Applications or firewalls closing</li>
+                        <li><strong>failed connection attempts:</strong> Unreachable hosts</li>
+                        <li><strong>passive connection openings:</strong> Incoming connections</li>
+                        <li><strong>active connection openings:</strong> Outgoing connections</li>
+                    </ul>
+                </div>
+
+                <div class="next-steps">
+                    <div class="next-steps-title">What to do next:</div>
+                    <ul>
+                        <li>High retransmissions: Check packet loss with <code>mtr</code></li>
+                        <li>Many resets: Application or firewall issue</li>
+                        <li>Failed connections: Unreachable servers or firewall</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Packet Capture Section -->
+        <div id="capture" class="content-section tab-content" style="display:none;">
+            <h2>Packet Capture & Analysis</h2>
+            <p><strong>Questions:</strong> What's actually on the wire? Is the SYN being sent? Why is the handshake failing?</p>
+
+            <div class="tool-card">
+                <div class="tool-title">tcpdump</div>
+                <div class="tool-question">❓ What packets are actually being sent/received?</div>
+                
+                <div class="command-box">
+<code># Capture on all interfaces
+sudo tcpdump -i any
+
+# Capture specific host
+sudo tcpdump host google.com
+
+# Capture specific port
+sudo tcpdump port 443
+
+# Capture TCP to specific host and port
+sudo tcpdump 'tcp and host google.com and port 443'
+
+# Save to file for Wireshark
+sudo tcpdump -i any -w capture.pcap
+
+# Read from file
+tcpdump -r capture.pcap
+
+# Show packet contents
+sudo tcpdump -X
+
+# Show only SYN packets
+sudo tcpdump 'tcp[tcpflags] & tcp-syn != 0'
+
+# Don't resolve names (faster)
+sudo tcpdump -nn
+
+# Limit packet count
+sudo tcpdump -c 100</code>
+                </div>
+
+                <div class="success-output">
+                    <strong>What to look for:</strong>
+                    <ul>
+                        <li><strong>SYN → SYN-ACK → ACK:</strong> Successful handshake</li>
+                        <li><strong>SYN → RST:</strong> Port closed</li>
+                        <li><strong>SYN → (nothing):</strong> Filtered or unreachable</li>
+                        <li><strong>[Retransmission]:</strong> Packet loss</li>
+                        <li><strong>[Dup ACK]:</strong> Out-of-order or loss</li>
+                    </ul>
+                </div>
+
+                <div class="next-steps">
+                    <div class="next-steps-title">What to do next:</div>
+                    <ul>
+                        <li>Open .pcap files in Wireshark for detailed analysis</li>
+                        <li>Filter by TCP flags to see handshakes</li>
+                        <li>Look for gaps in sequence numbers (loss)</li>
+                        <li>Check timing between packets</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons and hide all content
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+                
+                // Add active class to clicked button and show corresponding content
+                btn.classList.add('active');
+                const tabId = btn.dataset.tab;
+                document.getElementById(tabId).style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
