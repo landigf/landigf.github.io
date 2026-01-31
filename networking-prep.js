@@ -1244,8 +1244,7 @@ Down → Init → 2-Way → ExStart → Exchange → Loading → Full
                 </div>
             </div>
         `
-    }
-},
+    },
 
     'packet-flow': {
         title: "Complete Packet Flow Journey",
