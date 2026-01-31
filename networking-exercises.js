@@ -18,6 +18,81 @@ const EXERCISES = [
     explain: "This shows Layer 3 (IP) config. Look for 'inet' (IPv4) and 'inet6' (IPv6) lines."
   },
   {
+    id: "arp-view",
+    category: "ARP",
+    title: "View ARP cache",
+    desc: "Goal: Check which IP-to-MAC mappings your system knows.",
+    prompt: "Type the command to view the ARP cache (Linux).",
+    accepted: [
+      /^ip\s+neigh$/,
+      /^ip\s+neigh\s+show$/,
+      /^ip\s+neighbor$/,
+      /^ip\s+neighbor\s+show$/,
+      /^arp\s+-a$/
+    ],
+    hint: "The modern Linux tool is 'ip neigh'. On macOS/older systems, use 'arp -a'.",
+    solution: "ip neigh show",
+    explain: "Shows current ARP entries. 'REACHABLE' means recently verified, 'STALE' means old entry."
+  },
+  {
+    id: "dns-dig-basic",
+    category: "DNS",
+    title: "Perform basic DNS lookup",
+    desc: "Goal: Query DNS for A record of a domain.",
+    prompt: "Type the command to query the A record for example.com.",
+    accepted: [
+      /^dig\s+example\.com$/,
+      /^dig\s+example\.com\s+A$/,
+      /^dig\s+A\s+example\.com$/
+    ],
+    hint: "Use 'dig' followed by the domain name. A records are queried by default.",
+    solution: "dig example.com",
+    explain: "dig queries DNS. Look for the ANSWER SECTION showing the IP address."
+  },
+  {
+    id: "dhcp-view-lease",
+    category: "DHCP",
+    title: "View DHCP lease information",
+    desc: "Goal: Check what IP address and configuration DHCP assigned.",
+    prompt: "Type the command to view DHCP lease on macOS interface en0.",
+    accepted: [
+      /^ipconfig\s+getpacket\s+en0$/,
+      /^sudo\s+ipconfig\s+getpacket\s+en0$/
+    ],
+    hint: "On macOS, use 'ipconfig getpacket' followed by interface name.",
+    solution: "ipconfig getpacket en0",
+    explain: "Shows DHCP server IP, assigned IP, subnet mask, router (gateway), DNS servers, and lease time."
+  },
+  {
+    id: "subnet-calculate",
+    category: "Subnetting",
+    title: "Calculate usable hosts",
+    desc: "Mental exercise: How many usable hosts in a /26 network?",
+    prompt: "Type just the number (e.g., 254).",
+    accepted: [
+      /^62$/
+    ],
+    hint: "/26 means 6 bits for hosts. 2^6 = 64, minus 2 (network & broadcast) = 62.",
+    solution: "62",
+    explain: "/26 = 32-26 = 6 host bits. 2^6 = 64 addresses total. Usable = 64 - 2 = 62."
+  },
+  {
+    id: "tcp-connections",
+    category: "TCP",
+    title: "Show TCP connections",
+    desc: "Goal: List all established TCP connections.",
+    prompt: "Type the command to show established TCP connections with numeric addresses.",
+    accepted: [
+      /^ss\s+-tn$/,
+      /^ss\s+-nt$/,
+      /^netstat\s+-tn$/,
+      /^netstat\s+-nt$/
+    ],
+    hint: "Use 'ss' (modern) or 'netstat' with -t (TCP) and -n (numeric) flags.",
+    solution: "ss -tn",
+    explain: "Shows active TCP connections. Look for state ESTAB (established)."
+  },
+  {
     id: "linux-ip-route",
     category: "Linux Basics",
     title: "Show the routing table",
@@ -395,6 +470,84 @@ function createExerciseCard(ex) {
   };
 
   return card;
+}
+
+// Get exercise by ID
+function getExerciseById(id) {
+  return EXERCISES.find(ex => ex.id === id);
+}
+
+// Create inline mini exercise (compact version for embedding in modules)
+function createInlineExercise(exerciseId) {
+  const ex = getExerciseById(exerciseId);
+  if (!ex) return document.createElement('div');
+
+  const card = document.createElement("div");
+  card.className = "inline-exercise";
+  
+  card.innerHTML = `
+    <div class="inline-ex-header">
+      <span class="inline-ex-icon">💻</span>
+      <span class="inline-ex-title">${ex.title}</span>
+    </div>
+    <div class="inline-ex-prompt">${ex.prompt}</div>
+    <textarea class="ex-input mono" rows="1" placeholder="Type command here..."></textarea>
+    <div class="ex-row">
+      <button class="btn check">Check</button>
+      <button class="btn show-hint">Hint</button>
+      <button class="btn show">Solution</button>
+      <span class="result"></span>
+    </div>
+    <div class="hint"></div>
+    <div class="expl"></div>
+  `;
+
+  const input = card.querySelector("textarea");
+  const result = card.querySelector(".result");
+  const hint = card.querySelector(".hint");
+  const expl = card.querySelector(".expl");
+
+  card.querySelector(".check").onclick = () => {
+    const val = normalize(input.value);
+    const ok = ex.accepted.some(rx => rx.test(val));
+    if (ok) {
+      result.textContent = "✓ Correct!";
+      result.className = "result ok";
+      hint.textContent = "";
+      hint.className = "hint";
+      expl.textContent = ex.explain;
+      expl.className = "expl show";
+    } else {
+      result.textContent = "✗ Try again";
+      result.className = "result bad";
+      hint.textContent = "";
+      hint.className = "hint";
+      expl.textContent = "";
+      expl.className = "expl";
+    }
+  };
+
+  card.querySelector(".show-hint").onclick = () => {
+    hint.textContent = "💡 " + ex.hint;
+    hint.className = "hint show";
+  };
+
+  card.querySelector(".show").onclick = () => {
+    input.value = ex.solution;
+    result.textContent = "";
+    hint.textContent = "";
+    hint.className = "hint";
+    expl.textContent = "📖 " + ex.explain;
+    expl.className = "expl show";
+  };
+
+  return card;
+}
+
+// Render inline exercise into module content
+function renderInlineExercise(exerciseId) {
+  const ex = createInlineExercise(exerciseId);
+  return ex.outerHTML;
 }
 
 // Initialize exercises

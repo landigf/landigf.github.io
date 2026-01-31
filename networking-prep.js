@@ -12,7 +12,9 @@ const modules = {
                     <div class="theory">
                         <div class="theory-title">Core Concept</div>
                         <p><strong>Purpose:</strong> Maps IP addresses (Layer 3) to MAC addresses (Layer 2)</p>
+                        
                         <p><strong>Why needed?</strong> Devices on same network segment need MAC addresses to communicate at Layer 2</p>
+                        
                         <ul>
                             <li><strong>ARP Request:</strong> Broadcast - "Who has IP 192.168.1.5? Tell 192.168.1.10"</li>
                             <li><strong>ARP Reply:</strong> Unicast - "192.168.1.5 is at MAC aa:bb:cc:dd:ee:ff"</li>
@@ -33,6 +35,8 @@ Computer A (192.168.1.10)                Computer B (192.168.1.5)
         |                                          |
         |  Now can send data using MAC address    |
                     </div>
+
+                    <div class="inline-exercise-placeholder" data-exercise="arp-view"></div>
 
                     <div class="exercise">
                         <div class="exercise-title">🔧 Practice Exercise</div>
@@ -62,6 +66,7 @@ watch -n 1 "arp -a"</code>
                     <div class="interview-question">
                         <div class="question-title">💬 Interview Question</div>
                         <p><strong>Q: "You plug a new computer into a network. Walk me through what happens when it tries to ping another computer on the same subnet."</strong></p>
+                        
                         <p><strong>Answer:</strong></p>
                         <ol>
                             <li>Computer checks if destination IP is on same subnet (subnet mask comparison)</li>
@@ -111,6 +116,8 @@ Resolver → Authoritative NS (example.com)
        ↓
 Client ← IP address cached and returned
                     </div>
+
+                    <div class="inline-exercise-placeholder" data-exercise="dns-dig-basic"></div>
 
                     <div class="exercise">
                         <div class="exercise-title">🔧 Practice Exercise</div>
@@ -203,6 +210,8 @@ Client                    DHCP Server
   |  "Confirmed + config"       |
   |<----------------------------|
                     </div>
+
+                    <div class="inline-exercise-placeholder" data-exercise="dhcp-view-lease"></div>
 
                     <div class="exercise">
                         <div class="exercise-title">🔧 Practice Exercise</div>
@@ -308,6 +317,8 @@ Inside Local        Inside Global
                             <li>Usable hosts = 2^8 - 2 = 254 (minus network & broadcast)</li>
                         </ul>
                     </div>
+
+                    <div class="inline-exercise-placeholder" data-exercise="subnet-calculate"></div>
 
                     <div class="exercise">
                         <div class="exercise-title">🔧 Subnetting Practice</div>
@@ -623,6 +634,8 @@ States:
 3. Congestion Avoidance: cwnd = 17, 18, 19... (linear)
 4. Packet loss detected → Fast Recovery → cwnd/2
                     </div>
+
+                    <div class="inline-exercise-placeholder" data-exercise="tcp-connections"></div>
 
                     <div class="exercise">
                         <div class="exercise-title">🔧 Practice Exercise</div>
@@ -2840,6 +2853,8 @@ function openModule(moduleId) {
     const modal = document.createElement('div');
     modal.className = 'modal';
     modal.style.display = 'block';
+    
+    // Set innerHTML first
     modal.innerHTML = `
         <div class="modal-content">
             <button class="close-modal">&times;</button>
@@ -2851,6 +2866,15 @@ function openModule(moduleId) {
     `;
 
     document.body.appendChild(modal);
+    
+    // Now render inline exercises after DOM is ready
+    modal.querySelectorAll('.inline-exercise-placeholder').forEach(placeholder => {
+        const exerciseId = placeholder.dataset.exercise;
+        if (exerciseId && typeof createInlineExercise === 'function') {
+            const exerciseElement = createInlineExercise(exerciseId);
+            placeholder.replaceWith(exerciseElement);
+        }
+    });
 
     // Close modal
     modal.querySelector('.close-modal').addEventListener('click', () => {
