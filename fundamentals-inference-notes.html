@@ -115,12 +115,11 @@
         
         <div class="post-content">
           <div class="course-info">
-            <h3>📊 Course Context</h3>
+            <h3>Course Context</h3>
             <ul>
               <li><strong>Part of:</strong> Probabilistic Artificial Intelligence (PAI)</li>
               <li><strong>Topic:</strong> Mathematical Foundations of Inference</li>
               <li><strong>Focus:</strong> High-dimensional distributions and Gaussian processes</li>
-              <li><strong>Difficulty:</strong> <span class="status-badge">Advanced</span></li>
             </ul>
           </div>
 
@@ -130,37 +129,37 @@
 
           <p>After exploring <a href="pai-notes.html">the big picture of Probabilistic AI</a>, let's dive deep into the mathematical foundations that make it all possible. This post covers the fundamentals of probabilistic inference - the mathematical backbone that enables machines to reason about uncertainty.</p>
 
-          <h2>🎯 The High-Dimensional Challenge</h2>
+          <h2>The High-Dimensional Challenge</h2>
 
           <p>Working with high-dimensional probability distributions presents three fundamental challenges that any practical AI system must overcome:</p>
 
-          <h3>1. 📈 Representation (Parametrization) Problem</h3>
+          <h3>1. Representation (Parametrization) Problem</h3>
           <p>Consider a simple example: <strong>n</strong> Bernoulli random variables. How many parameters do we need to fully specify their joint distribution?</p>
           
           <div class="math-box">
-            <p><strong>Answer:</strong> We need <span class="math-inline">2^n - 1</span> parameters! 😱</p>
+            <p><strong>Answer:</strong> We need <span class="math-inline">2^n - 1</span> parameters!</p>
             <p>This exponential explosion makes representation impossible for large <strong>n</strong>.</p>
           </div>
 
-          <h3>2. 📚 Learning (Estimation) Problem</h3>
+          <h3>2. Learning (Estimation) Problem</h3>
           <p>With exponentially many parameters, we would need exponentially many data points to learn the distribution. This is clearly impractical - <strong>we need smart assumptions and structures</strong>.</p>
 
-          <h3>3. 🔍 Inference (Prediction) Problem</h3>
+          <h3>3. Inference (Prediction) Problem</h3>
           <p>Even if we could represent and learn high-dimensional distributions, <strong>marginalization becomes computationally prohibitive</strong> in high dimensions. We need closed-form solutions or efficient approximations.</p>
 
-          <h2>🌟 Enter the Gaussian: Our Mathematical Savior</h2>
+          <h2>Enter the Gaussian: Our Mathematical Savior</h2>
 
           <p>Why do we obsess over <strong>multivariate Gaussian distributions</strong> in machine learning? The answer lies in their remarkable mathematical properties:</p>
 
-          <h3>✨ Efficient Representation</h3>
+          <h3>Efficient Representation</h3>
           <p>A <strong>d-dimensional</strong> Gaussian distribution needs only:</p>
           <ul>
-            <li>📍 A mean vector μ (d parameters)</li>
-            <li>📊 A covariance matrix Σ (d²/2 + d/2 parameters due to symmetry)</li>
+            <li>A mean vector μ (d parameters)</li>
+            <li>A covariance matrix Σ (d²/2 + d/2 parameters due to symmetry)</li>
             <li><strong>Total:</strong> <span class="math-inline">O(d^2)</span> parameters instead of <span class="math-inline">2^d</span>!</li>
           </ul>
 
-          <h3>🔧 Closed-Form Operations</h3>
+          <h3>Closed-Form Operations</h3>
           <p>The real magic happens with inference operations:</p>
           <ul>
             <li><strong>Marginalization:</strong> Just drop rows/columns from μ and Σ</li>
@@ -168,25 +167,25 @@
             <li><strong>Multiplication:</strong> Another Gaussian with computable parameters</li>
           </ul>
 
-          <h2>🧠 The Intuition Behind Gaussian Conditioning</h2>
+          <h2>The Intuition Behind Gaussian Conditioning</h2>
 
-          <p>Let me share some intuitive insights (with a touch of Italian passion 😄) about why Gaussian conditioning works so elegantly:</p>
+          <p>Let me share some intuitive insights (with a touch of Italian passion :)) about why Gaussian conditioning works so elegantly:</p>
 
-          <h3>🎯 Covariance Matrix as "Influence Weight"</h3>
+          <h3>Covariance Matrix as "Influence Weight"</h3>
           <blockquote class="insight-box">
             <p><strong>My take:</strong> "Vedi la matrice di covarianza di B, la mettiamo al denominatore così se è tanto alta significa che sta cazzo di B è molto sparsa quindi la facciamo diventare poco influente. Al contrario se è molto piccola è molto importante."</p>
           </blockquote>
 
           <p>Translation for the academic audience: <strong>The covariance matrix acts as an influence weight</strong>. When B has high variance (is "spread out"), it becomes less influential in our conditioning. When B has low variance (is "concentrated"), it provides more reliable information.</p>
 
-          <h3>🔗 Independence and Covariance</h3>
+          <h3>Independence and Covariance</h3>
           <blockquote class="insight-box">
             <p><strong>Key insight:</strong> "Se la matrice di covarianza AB è nulla significa che sono indipendenti e si trova che diventa solo μ_A"</p>
           </blockquote>
 
           <p>When the cross-covariance between A and B is zero, <strong>they're independent</strong>! In this case, observing B tells us nothing about A, so the conditional mean of A given B is just μ_A.</p>
 
-          <h3>💡 The Information Content of Observations</h3>
+          <h3>The Information Content of Observations</h3>
           <blockquote class="insight-box">
             <p><strong>Another gem:</strong> "Anche se b = μ_B significa che grazie al cazzo l'ho preso alla media che nuova informazione mi deve mai dare il bro"</p>
           </blockquote>
@@ -204,15 +203,15 @@
             <li><strong>Observation at mean = Expected value = No surprise = No update</strong></li>
           </ul>
 
-          <h2>🎯 Why This Matters for AI</h2>
+          <h2>Why This Matters for AI</h2>
 
           <p>These mathematical foundations directly enable the powerful techniques we explored in <a href="pai-notes.html">our PAI overview</a>:</p>
 
           <ul>
-            <li>🧠 <strong>Bayesian Neural Networks:</strong> Use Gaussian priors over weights</li>
-            <li>📈 <strong>Gaussian Processes:</strong> Entire functions as Gaussian distributions</li>
-            <li>🎯 <strong>Kalman Filters:</strong> Sequential Bayesian inference with Gaussians</li>
-            <li>🔍 <strong>Variational Inference:</strong> Approximate complex posteriors with Gaussians</li>
+            <li><strong>Bayesian Neural Networks:</strong> Use Gaussian priors over weights</li>
+            <li><strong>Gaussian Processes:</strong> Entire functions as Gaussian distributions</li>
+            <li><strong>Kalman Filters:</strong> Sequential Bayesian inference with Gaussians</li>
+            <li><strong>Variational Inference:</strong> Approximate complex posteriors with Gaussians</li>
           </ul>
 
           <h2>🌈 The Big Picture</h2>
@@ -231,7 +230,7 @@
           </blockquote>
 
           <div class="related-posts">
-            <h3>🔗 Related PAI Posts</h3>
+            <h3>Related PAI Posts</h3>
             <ul>
               <li><a href="pai-notes.html">← PAI Course Introduction: Probabilistic AI and Uncertainty</a></li>
               <li><em>More PAI posts coming soon...</em></li>
@@ -250,6 +249,16 @@
       </article>
     </main>
   </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>&copy; 2026 Gennaro Francesco Landi. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="https://github.com/landigf" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/landigf" target="_blank"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </div>
+  </footer>
 
   <script>
     // Dark mode toggle functionality

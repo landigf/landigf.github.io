@@ -416,6 +416,86 @@
     body.dark-mode .drive-info {
       background: #2d3748;
     }
+    
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+      .eth-hero {
+        height: 300px;
+      }
+      
+      .eth-hero h1 {
+        font-size: 2rem;
+      }
+      
+      .eth-hero-subtitle {
+        font-size: 1rem;
+      }
+      
+      .eth-hero-content {
+        padding: 1rem;
+      }
+      
+      .courses-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .course-card {
+        padding: 1.5rem;
+      }
+      
+      .semester-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      
+      .drive-section {
+        padding: 1.5rem;
+      }
+      
+      .drive-header h2 {
+        font-size: 1.5rem;
+        flex-direction: column;
+      }
+      
+      .drive-header p {
+        font-size: 1rem;
+      }
+      
+      .drive-toggle-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .drive-iframe-wrapper iframe {
+        height: 400px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .eth-hero {
+        height: 250px;
+      }
+      
+      .eth-hero h1 {
+        font-size: 1.5rem;
+      }
+      
+      .eth-hero-subtitle {
+        font-size: 0.9rem;
+      }
+      
+      .course-card h3 {
+        font-size: 1.2rem;
+      }
+      
+      .drive-iframe-wrapper iframe {
+        height: 300px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -643,7 +723,7 @@
 
   <footer class="site-footer">
     <div class="footer-content">
-      <p>&copy; 2025 Gennaro Francesco Landi. All rights reserved.</p>
+      <p>&copy; 2026 Gennaro Francesco Landi. All rights reserved.</p>
       <div class="footer-links">
         <a href="https://github.com/landigf" target="_blank"><i class="fab fa-github"></i></a>
         <a href="https://www.linkedin.com/in/landigf" target="_blank"><i class="fab fa-linkedin"></i></a>
@@ -651,6 +731,33 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script>
+    // Dark mode toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = themeToggle.querySelector('i');
+      
+      // Check for saved theme preference
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.body.classList.add(savedTheme);
+        if (savedTheme === 'dark-mode') {
+          themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+      }
+      
+      themeToggle.addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+        
+        if (document.body.classList.contains('dark-mode')) {
+          themeIcon.classList.replace('fa-moon', 'fa-sun');
+          localStorage.setItem('theme', 'dark-mode');
+        } else {
+          themeIcon.classList.replace('fa-sun', 'fa-moon');
+          localStorage.setItem('theme', 'light-mode');
+        }
+      });
+    });
+  </script>
 </body>
 </html>
