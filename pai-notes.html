@@ -147,14 +147,14 @@
           <h3>3. Bayesian Neural Networks</h3>
           <p>Neural networks, but probabilistic: instead of fixed weights, we learn <strong>distributions over weights</strong>. This lets the network say <em>"I'm confident here"</em> or <em>"I'm uncertain there"</em>, which is critical for safe decision-making in the real world.</p>
 
-          <h2>🎯 Part II: Uncertainty in Sequential Tasks</h2>
+          <h2> Part II: Uncertainty in Sequential Tasks</h2>
 
           <p>The second part is about uncertainty in sequential tasks. We consider active learning and optimization approaches that actively collect data by proposing experiments that are <strong>informative</strong> for reducing epistemic uncertainty.</p>
 
-          <h3>🔬 4. Bayesian Optimization</h3>
+          <h3> 4. Bayesian Optimization</h3>
           <p>When experiments are expensive (think: running clinical trials or tuning giant ML models), Bayesian optimization helps choose the <strong>next experiment to run</strong> by balancing exploration and exploitation. It actively seeks the most <em>informative</em> data points to shrink uncertainty fastest.</p>
 
-          <h3>💡 How Do We Know Which Experiments Are Informative?</h3>
+          <h3> How Do We Know Which Experiments Are Informative?</h3>
           <p>Great question! We measure informativeness through <strong>epistemic uncertainty</strong> — the uncertainty that comes from not having enough data. By asking <em>"where am I most ignorant?"</em>, the algorithm proposes experiments that are maximally clarifying.</p>
 
           <p>When we say an algorithm knows which experiments are informative, we're talking about <strong>information-theoretic criteria</strong> that measure how much an experiment would reduce <em>epistemic uncertainty</em>:</p>
@@ -170,17 +170,17 @@
             </li>
           </ul>
 
-          <h2>🤖 Reinforcement Learning & MDPs</h2>
+          <h2> Reinforcement Learning & MDPs</h2>
 
           <p>Then we cover reinforcement learning (RL), a rich formalism for modeling agents that learn to act in uncertain environments.</p>
 
-          <h3>🎲 5. Markov Decision Process (MDP)</h3>
+          <h3> 5. Markov Decision Process (MDP)</h3>
           <p>The MDP is the mathematical backbone of reinforcement learning. It models the world as states, actions, and rewards, capturing the idea that decisions today affect both what you see tomorrow and what long-term payoff you'll get.</p>
 
-          <h3>🧠 6. RL with Neural Network Approximations</h3>
+          <h3> 6. RL with Neural Network Approximations</h3>
           <p>Modern RL uses deep neural networks to approximate value functions or policies in huge state spaces. This gives us "deep RL" — the engine behind agents that can play Go, control robots, or learn strategies in complex, high-dimensional environments.</p>
 
-          <h2>🛡️ Model-Based RL and Safety</h2>
+          <h2> Model-Based RL and Safety</h2>
 
           <p>We close by discussing modern approaches in model-based RL, which use epistemic and aleatoric uncertainty to guide exploration, while also reasoning about safety.</p>
 
@@ -188,7 +188,7 @@
             <p><strong>The Big Picture:</strong> Probabilistic AI is not just about making machines <em>smart</em>, but about making them <em>humble</em>: systems that <strong>know what they don't know</strong>, and act cautiously when uncertainty is high. That's the difference between a reckless model and a trustworthy intelligent agent.</p>
           </blockquote>
 
-          <h2>🔮 Why This Matters</h2>
+          <h2> Why This Matters</h2>
 
           <p>In a world where AI systems are making increasingly important decisions — from medical diagnoses to autonomous vehicle control — the ability to quantify and reason about uncertainty isn't just mathematically elegant, it's <strong>ethically essential</strong>.</p>
 
@@ -202,12 +202,12 @@
 
           <p>This course is reshaping how I think about intelligence itself — not just as the ability to be right, but as the wisdom to know when you might be wrong.</p>
 
-          <h2>📝 Completed Tasks & Projects</h2>
+          <h2> Completed Tasks & Projects</h2>
 
           <p>Below are the key tasks I've completed for the PAI exam, demonstrating practical applications of the theoretical concepts covered in the course.</p>
 
           <div class="task-container">
-            <h3>🎯 Task 1: Bayesian Linear Regression with Model Selection</h3>
+            <h3> Task 1: Bayesian Linear Regression with Model Selection</h3>
             
             <div class="task-section">
               <h4>The Problem</h4>
@@ -234,16 +234,16 @@
             <div class="task-section">
               <h4>Key Insights</h4>
               <ul>
-                <li>📊 <strong>Marginal Likelihood as Model Selection:</strong> The evidence automatically trades off model fit and complexity, selecting simpler models when data doesn't justify complexity</li>
-                <li>🎲 <strong>Uncertainty Quantification:</strong> Unlike traditional regression, Bayesian methods provide confidence intervals that widen in regions with sparse data</li>
-                <li>⚖️ <strong>Occam's Razor in Action:</strong> More complex models are penalized unless they significantly improve fit, preventing overfitting</li>
-                <li>🔄 <strong>No Cross-Validation Needed:</strong> The marginal likelihood handles model selection in one pass, without requiring train/validation splits</li>
+                <li> <strong>Marginal Likelihood as Model Selection:</strong> The evidence automatically trades off model fit and complexity, selecting simpler models when data doesn't justify complexity</li>
+                <li> <strong>Uncertainty Quantification:</strong> Unlike traditional regression, Bayesian methods provide confidence intervals that widen in regions with sparse data</li>
+                <li> <strong>Occam's Razor in Action:</strong> More complex models are penalized unless they significantly improve fit, preventing overfitting</li>
+                <li> <strong>No Cross-Validation Needed:</strong> The marginal likelihood handles model selection in one pass, without requiring train/validation splits</li>
               </ul>
             </div>
           </div>
 
           <div class="task-container">
-            <h3>🎯 Task 2: Gaussian Processes for Regression</h3>
+            <h3> Task 2: Gaussian Processes for Regression</h3>
             
             <div class="task-section">
               <h4>The Problem</h4>
@@ -272,18 +272,18 @@
             <div class="task-section">
               <h4>Key Insights</h4>
               <ul>
-                <li>🌊 <strong>Non-Parametric Flexibility:</strong> GPs define distributions over functions rather than parameters, allowing them to adapt to arbitrary function complexity without fixed model structure</li>
-                <li>📏 <strong>Kernel as Prior:</strong> The choice of kernel encodes our prior beliefs about function smoothness, periodicity, and correlation structure—critical for good predictions</li>
-                <li>🎯 <strong>Uncertainty-Aware Predictions:</strong> Predictive variance naturally increases in regions far from training data, providing honest uncertainty quantification</li>
-                <li>⚡ <strong>Computational Challenges:</strong> GP inference scales as O(n³) due to matrix inversion, requiring approximations (e.g., inducing points) for large datasets</li>
-                <li>🔧 <strong>Automatic Relevance Determination:</strong> Hyperparameter optimization naturally performs feature selection by learning which input dimensions are most relevant</li>
-                <li>🔄 <strong>Connection to Bayesian Linear Regression:</strong> GPs can be seen as infinite-dimensional extensions of Bayesian linear regression with infinite basis functions</li>
+                <li> <strong>Non-Parametric Flexibility:</strong> GPs define distributions over functions rather than parameters, allowing them to adapt to arbitrary function complexity without fixed model structure</li>
+                <li> <strong>Kernel as Prior:</strong> The choice of kernel encodes our prior beliefs about function smoothness, periodicity, and correlation structure—critical for good predictions</li>
+                <li> <strong>Uncertainty-Aware Predictions:</strong> Predictive variance naturally increases in regions far from training data, providing honest uncertainty quantification</li>
+                <li> <strong>Computational Challenges:</strong> GP inference scales as O(n³) due to matrix inversion, requiring approximations (e.g., inducing points) for large datasets</li>
+                <li> <strong>Automatic Relevance Determination:</strong> Hyperparameter optimization naturally performs feature selection by learning which input dimensions are most relevant</li>
+                <li> <strong>Connection to Bayesian Linear Regression:</strong> GPs can be seen as infinite-dimensional extensions of Bayesian linear regression with infinite basis functions</li>
               </ul>
             </div>
           </div>
 
           <div class="task-container">
-            <h3>🎯 Task 3: Safe Bayesian Optimization with Constraints</h3>
+            <h3> Task 3: Safe Bayesian Optimization with Constraints</h3>
             
             <div class="task-section">
               <h4>The Problem</h4>
@@ -314,19 +314,19 @@
             <div class="task-section">
               <h4>Key Insights</h4>
               <ul>
-                <li>🛡️ <strong>Safety Through Uncertainty:</strong> High uncertainty in constraint predictions forces conservative behavior—the algorithm won't risk unsafe regions until it has more data</li>
-                <li>⚖️ <strong>Exploration-Safety Tradeoff:</strong> Safe BO must balance three objectives: maximize reward, explore the space, and never violate constraints—a harder problem than unconstrained BO</li>
-                <li>🎲 <strong>Dual Modeling:</strong> Separate GPs for objective and constraint allow independent uncertainty quantification, crucial since we need conservative constraint estimates but optimistic objective estimates</li>
-                <li>🔒 <strong>Never Leave the Safe Set:</strong> Unlike penalty methods or barrier functions, safe BO provides hard guarantees: if the initial point is safe and the GP is well-calibrated, all queries remain safe with high probability</li>
-                <li>📊 <strong>Beta Parameter Tuning:</strong> The safety parameter β controls risk aversion—higher β means more conservative (larger safe set margin), lower β allows more aggressive exploration</li>
-                <li>💡 <strong>Real-World Applications:</strong> This framework is critical for domains where constraint violations are unacceptable: medical treatments, autonomous systems, chemical processes, robotics</li>
-                <li>🔄 <strong>Sample Efficiency:</strong> Safe BO achieves near-optimal solutions in fewer evaluations than random search or grid search while maintaining safety, crucial when experiments are expensive or time-consuming</li>
+                <li> <strong>Safety Through Uncertainty:</strong> High uncertainty in constraint predictions forces conservative behavior—the algorithm won't risk unsafe regions until it has more data</li>
+                <li> <strong>Exploration-Safety Tradeoff:</strong> Safe BO must balance three objectives: maximize reward, explore the space, and never violate constraints—a harder problem than unconstrained BO</li>
+                <li> <strong>Dual Modeling:</strong> Separate GPs for objective and constraint allow independent uncertainty quantification, crucial since we need conservative constraint estimates but optimistic objective estimates</li>
+                <li> <strong>Never Leave the Safe Set:</strong> Unlike penalty methods or barrier functions, safe BO provides hard guarantees: if the initial point is safe and the GP is well-calibrated, all queries remain safe with high probability</li>
+                <li> <strong>Beta Parameter Tuning:</strong> The safety parameter β controls risk aversion—higher β means more conservative (larger safe set margin), lower β allows more aggressive exploration</li>
+                <li> <strong>Real-World Applications:</strong> This framework is critical for domains where constraint violations are unacceptable: medical treatments, autonomous systems, chemical processes, robotics</li>
+                <li> <strong>Sample Efficiency:</strong> Safe BO achieves near-optimal solutions in fewer evaluations than random search or grid search while maintaining safety, crucial when experiments are expensive or time-consuming</li>
               </ul>
             </div>
           </div>
 
           <div class="task-container">
-            <h3>🎯 Task 4: Maximum a Posteriori Policy Optimization (MPO)</h3>
+            <h3> Task 4: Maximum a Posteriori Policy Optimization (MPO)</h3>
             
             <div class="task-section">
               <h4>The Problem</h4>
@@ -364,14 +364,14 @@
             <div class="task-section">
               <h4>Key Insights</h4>
               <ul>
-                <li>🎭 <strong>EM Perspective on RL:</strong> MPO frames policy improvement as an EM algorithm—E-step evaluates actions, M-step improves policy toward high-value actions weighted by their advantage</li>
-                <li>🔒 <strong>Trust Region via KL Constraint:</strong> Unlike PPO's clipping or TRPO's line search, MPO uses a temperature parameter to implicitly enforce trust regions, ensuring smooth policy evolution</li>
-                <li>⚖️ <strong>Sample Reweighting:</strong> Importance weights naturally implement advantage-weighted regression: actions with high Q-values get more influence on policy updates</li>
-                <li>🎯 <strong>Continuous Control Challenges:</strong> Tanh squashing ensures actions stay within bounds while maintaining differentiability for gradient-based optimization</li>
-                <li>📊 <strong>Twin Q-Functions:</strong> Taking min(Q₁, Q₂) for target computation reduces overoptimistic Q-value estimates that plague single-critic methods, improving stability</li>
-                <li>🔄 <strong>Off-Policy Efficiency:</strong> Replay buffer enables multiple gradient updates per environment step, dramatically improving sample efficiency compared to on-policy methods like PPO</li>
-                <li>🧠 <strong>Reparameterization Trick:</strong> Sampling a ~ N(μ, σ) as a = μ + σ·ε (ε ~ N(0,1)) allows backpropagation through stochastic sampling, critical for policy gradient estimation</li>
-                <li>⚡ <strong>Stabilization Techniques:</strong> Combination of target networks, twin critics, soft updates, and KL constraints creates a remarkably stable learning algorithm suitable for complex control tasks</li>
+                <li> <strong>EM Perspective on RL:</strong> MPO frames policy improvement as an EM algorithm—E-step evaluates actions, M-step improves policy toward high-value actions weighted by their advantage</li>
+                <li> <strong>Trust Region via KL Constraint:</strong> Unlike PPO's clipping or TRPO's line search, MPO uses a temperature parameter to implicitly enforce trust regions, ensuring smooth policy evolution</li>
+                <li> <strong>Sample Reweighting:</strong> Importance weights naturally implement advantage-weighted regression: actions with high Q-values get more influence on policy updates</li>
+                <li> <strong>Continuous Control Challenges:</strong> Tanh squashing ensures actions stay within bounds while maintaining differentiability for gradient-based optimization</li>
+                <li> <strong>Twin Q-Functions:</strong> Taking min(Q₁, Q₂) for target computation reduces overoptimistic Q-value estimates that plague single-critic methods, improving stability</li>
+                <li> <strong>Off-Policy Efficiency:</strong> Replay buffer enables multiple gradient updates per environment step, dramatically improving sample efficiency compared to on-policy methods like PPO</li>
+                <li> <strong>Reparameterization Trick:</strong> Sampling a ~ N(μ, σ) as a = μ + σ·ε (ε ~ N(0,1)) allows backpropagation through stochastic sampling, critical for policy gradient estimation</li>
+                <li> <strong>Stabilization Techniques:</strong> Combination of target networks, twin critics, soft updates, and KL constraints creates a remarkably stable learning algorithm suitable for complex control tasks</li>
               </ul>
             </div>
           </div>
