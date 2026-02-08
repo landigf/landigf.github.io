@@ -91,13 +91,6 @@
             </div>
           </div>
         </div>
-        
-        <div class="related-posts">
-            <h3>🔗 Related Posts</h3>
-            <ul>
-                <li><a href="fundamentals-inference-notes.html">Fundamentals of Inference: Mathematical Foundations</a> - Deep dive into the mathematical theory behind probabilistic inference</li>
-            </ul>
-        </div>
       </div>
     </aside>
 
@@ -124,6 +117,7 @@
               <li><strong>Semester:</strong> Fall 2025</li>
               <li><strong>University:</strong> ETH Zurich</li>
               <li><strong>Status:</strong> <span class="status-badge">In Progress</span></li>
+              <li><strong>📄 Course Materials:</strong> <a href="https://drive.google.com/file/d/13Lw92z64lMlmOWSaT3vdlNoBmnJIXIKp/view?usp=sharing" target="_blank">PDF Notes</a></li>
             </ul>
           </div>
 
@@ -207,6 +201,181 @@
           </ul>
 
           <p>This course is reshaping how I think about intelligence itself — not just as the ability to be right, but as the wisdom to know when you might be wrong.</p>
+
+          <h2>📝 Completed Tasks & Projects</h2>
+
+          <p>Below are the key tasks I've completed for the PAI exam, demonstrating practical applications of the theoretical concepts covered in the course.</p>
+
+          <div class="task-container">
+            <h3>🎯 Task 1: Bayesian Linear Regression with Model Selection</h3>
+            
+            <div class="task-section">
+              <h4>The Problem</h4>
+              <p>Given a dataset with input-output pairs, we need to:</p>
+              <ul>
+                <li>Implement <strong>Bayesian Linear Regression</strong> to model the relationship between inputs and outputs</li>
+                <li>Perform <strong>model selection</strong> by comparing different polynomial feature transformations</li>
+                <li>Use the <strong>marginal likelihood (evidence)</strong> to select the best model complexity</li>
+                <li>Quantify prediction uncertainty using the posterior predictive distribution</li>
+              </ul>
+            </div>
+
+            <div class="task-section">
+              <h4>Our Approach</h4>
+              <p>We tackled this problem using a fully Bayesian framework:</p>
+              <ul>
+                <li><strong>Feature Engineering:</strong> Applied polynomial transformations of varying degrees (1 to 10) to capture non-linear relationships</li>
+                <li><strong>Bayesian Inference:</strong> Instead of point estimates, we computed full posterior distributions over model parameters using conjugate priors (Gaussian-Gamma)</li>
+                <li><strong>Model Evidence:</strong> Calculated the marginal likelihood for each polynomial degree, which naturally penalizes overfitting through the Bayesian Occam's Razor principle</li>
+                <li><strong>Posterior Predictive:</strong> Generated predictions with credible intervals that reflect both aleatoric (data noise) and epistemic (parameter) uncertainty</li>
+              </ul>
+            </div>
+
+            <div class="task-section">
+              <h4>Key Insights</h4>
+              <ul>
+                <li>📊 <strong>Marginal Likelihood as Model Selection:</strong> The evidence automatically trades off model fit and complexity, selecting simpler models when data doesn't justify complexity</li>
+                <li>🎲 <strong>Uncertainty Quantification:</strong> Unlike traditional regression, Bayesian methods provide confidence intervals that widen in regions with sparse data</li>
+                <li>⚖️ <strong>Occam's Razor in Action:</strong> More complex models are penalized unless they significantly improve fit, preventing overfitting</li>
+                <li>🔄 <strong>No Cross-Validation Needed:</strong> The marginal likelihood handles model selection in one pass, without requiring train/validation splits</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="task-container">
+            <h3>🎯 Task 2: Gaussian Processes for Regression</h3>
+            
+            <div class="task-section">
+              <h4>The Problem</h4>
+              <p>Implement Gaussian Process (GP) regression to model complex, non-linear functions with uncertainty quantification:</p>
+              <ul>
+                <li>Build a <strong>Gaussian Process model</strong> from scratch using kernel functions</li>
+                <li>Handle <strong>noisy observations</strong> while maintaining smooth predictions</li>
+                <li>Implement different <strong>kernel functions</strong> (RBF, Matérn, Periodic) to capture various function behaviors</li>
+                <li>Optimize <strong>hyperparameters</strong> (length scale, variance, noise) using maximum likelihood estimation</li>
+                <li>Provide <strong>uncertainty bounds</strong> that adapt to data density</li>
+              </ul>
+            </div>
+
+            <div class="task-section">
+              <h4>Our Approach</h4>
+              <p>We implemented a complete Gaussian Process regression framework:</p>
+              <ul>
+                <li><strong>Kernel Design:</strong> Implemented multiple kernel functions including RBF (Radial Basis Function), Matérn, and Periodic kernels to model different smoothness and periodicity assumptions</li>
+                <li><strong>GP Posterior Computation:</strong> Derived and implemented the exact posterior distribution over functions given observed data, using the kernel trick to avoid explicit feature space computation</li>
+                <li><strong>Hyperparameter Optimization:</strong> Maximized the log marginal likelihood with respect to kernel hyperparameters using gradient-based optimization (e.g., L-BFGS)</li>
+                <li><strong>Numerical Stability:</strong> Applied Cholesky decomposition for efficient and numerically stable inversion of covariance matrices</li>
+                <li><strong>Predictive Distribution:</strong> Computed mean and variance of the posterior predictive distribution at test points, providing both point predictions and uncertainty estimates</li>
+              </ul>
+            </div>
+
+            <div class="task-section">
+              <h4>Key Insights</h4>
+              <ul>
+                <li>🌊 <strong>Non-Parametric Flexibility:</strong> GPs define distributions over functions rather than parameters, allowing them to adapt to arbitrary function complexity without fixed model structure</li>
+                <li>📏 <strong>Kernel as Prior:</strong> The choice of kernel encodes our prior beliefs about function smoothness, periodicity, and correlation structure—critical for good predictions</li>
+                <li>🎯 <strong>Uncertainty-Aware Predictions:</strong> Predictive variance naturally increases in regions far from training data, providing honest uncertainty quantification</li>
+                <li>⚡ <strong>Computational Challenges:</strong> GP inference scales as O(n³) due to matrix inversion, requiring approximations (e.g., inducing points) for large datasets</li>
+                <li>🔧 <strong>Automatic Relevance Determination:</strong> Hyperparameter optimization naturally performs feature selection by learning which input dimensions are most relevant</li>
+                <li>🔄 <strong>Connection to Bayesian Linear Regression:</strong> GPs can be seen as infinite-dimensional extensions of Bayesian linear regression with infinite basis functions</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="task-container">
+            <h3>🎯 Task 3: Safe Bayesian Optimization with Constraints</h3>
+            
+            <div class="task-section">
+              <h4>The Problem</h4>
+              <p>Optimize a black-box objective function while respecting safety constraints—a critical challenge in real-world applications like drug design:</p>
+              <ul>
+                <li>Maximize <strong>bioavailability f(x)</strong> of a drug formulation</li>
+                <li>Ensure <strong>surface area v(x) ≤ 4.0</strong> to remain safe for patients</li>
+                <li>Handle <strong>noisy observations</strong> from expensive experiments</li>
+                <li>Never violate safety constraints during the optimization process (<strong>safe exploration</strong>)</li>
+                <li>Balance <strong>exploration vs. exploitation</strong> within the safe set</li>
+              </ul>
+              <p>The key challenge: we cannot afford to test unsafe configurations, so we must learn both the objective and constraint functions conservatively.</p>
+            </div>
+
+            <div class="task-section">
+              <h4>Our Approach</h4>
+              <p>We implemented a dual-GP safe Bayesian optimization framework:</p>
+              <ul>
+                <li><strong>Dual Gaussian Processes:</strong> Maintained two independent GPs—one modeling the objective f(x) and another modeling the constraint violation g(x) = v(x) - 4.0</li>
+                <li><strong>Conservative Safe Set:</strong> Defined a point as safe if μ_g(x) + β·σ_g(x) ≤ -ε, where β = 3.0 provides high-probability safety guarantees (analogous to UCB but for constraints)</li>
+                <li><strong>Kernel Engineering:</strong> Used Matérn kernels for f(x) with fixed noise (σ_f = 0.15) and a composite kernel (Linear + Matérn + RBF) for v(x) to capture both global trends and local variations</li>
+                <li><strong>Safe Expected Improvement:</strong> Maximized Expected Improvement (EI) acquisition function only over the safe set, ensuring all proposed experiments respect safety constraints</li>
+                <li><strong>Exploration Bonus:</strong> Added a small variance term to the acquisition to avoid premature convergence and encourage safe exploration</li>
+                <li><strong>Graceful Degradation:</strong> Implemented fallback mechanisms when the GP becomes overly pessimistic—re-sample near previously safe observations</li>
+              </ul>
+            </div>
+
+            <div class="task-section">
+              <h4>Key Insights</h4>
+              <ul>
+                <li>🛡️ <strong>Safety Through Uncertainty:</strong> High uncertainty in constraint predictions forces conservative behavior—the algorithm won't risk unsafe regions until it has more data</li>
+                <li>⚖️ <strong>Exploration-Safety Tradeoff:</strong> Safe BO must balance three objectives: maximize reward, explore the space, and never violate constraints—a harder problem than unconstrained BO</li>
+                <li>🎲 <strong>Dual Modeling:</strong> Separate GPs for objective and constraint allow independent uncertainty quantification, crucial since we need conservative constraint estimates but optimistic objective estimates</li>
+                <li>🔒 <strong>Never Leave the Safe Set:</strong> Unlike penalty methods or barrier functions, safe BO provides hard guarantees: if the initial point is safe and the GP is well-calibrated, all queries remain safe with high probability</li>
+                <li>📊 <strong>Beta Parameter Tuning:</strong> The safety parameter β controls risk aversion—higher β means more conservative (larger safe set margin), lower β allows more aggressive exploration</li>
+                <li>💡 <strong>Real-World Applications:</strong> This framework is critical for domains where constraint violations are unacceptable: medical treatments, autonomous systems, chemical processes, robotics</li>
+                <li>🔄 <strong>Sample Efficiency:</strong> Safe BO achieves near-optimal solutions in fewer evaluations than random search or grid search while maintaining safety, crucial when experiments are expensive or time-consuming</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="task-container">
+            <h3>🎯 Task 4: Maximum a Posteriori Policy Optimization (MPO)</h3>
+            
+            <div class="task-section">
+              <h4>The Problem</h4>
+              <p>Implement a state-of-the-art deep reinforcement learning algorithm for continuous control:</p>
+              <ul>
+                <li>Train an agent to solve the <strong>CartPole-v1</strong> control task using only raw observations</li>
+                <li>Handle <strong>continuous action spaces</strong> with Gaussian stochastic policies</li>
+                <li>Balance <strong>exploration and exploitation</strong> while learning from experience</li>
+                <li>Ensure <strong>stable learning</strong> by constraining policy updates to avoid catastrophic forgetting</li>
+                <li>Use <strong>off-policy learning</strong> with a replay buffer for sample efficiency</li>
+                <li>Implement <strong>actor-critic architecture</strong> with twin Q-functions for value estimation</li>
+              </ul>
+            </div>
+
+            <div class="task-section">
+              <h4>Our Approach</h4>
+              <p>We implemented MPO, an EM-style algorithm that constrains policy updates using KL divergence:</p>
+              <ul>
+                <li><strong>Twin Critics (Clipped Double Q-Learning):</strong> Maintained two independent Q-networks (Q₁, Q₂) and used their minimum for target computation to reduce overestimation bias</li>
+                <li><strong>Gaussian Stochastic Actor:</strong> Policy network outputs mean μ and log-std for each action dimension, creating a diagonal Gaussian distribution. Actions are sampled using the reparameterization trick and squashed through tanh for bounded control</li>
+                <li><strong>E-Step (Critic Update):</strong> Updated critics toward Bellman targets computed by sampling K actions from the target policy at next states and averaging their Q-values</li>
+                <li><strong>M-Step (Policy Update):</strong> Updated policy to maximize expected Q-value using importance-weighted maximum likelihood:
+                  <ul>
+                    <li>Sample K actions from current policy at observed states</li>
+                    <li>Compute importance weights w_k ∝ exp(Q(s,a_k)/η) using softmax</li>
+                    <li>Maximize weighted log-likelihood: Σ_k w_k log π(a_k|s)</li>
+                  </ul>
+                </li>
+                <li><strong>Temperature Parameter η:</strong> Adaptively controlled via Lagrangian optimization to maintain KL(π_old || π_new) ≈ ε_KL, preventing drastic policy changes</li>
+                <li><strong>Soft Target Updates:</strong> Applied Polyak averaging (τ=0.005) to slowly update target networks, stabilizing learning</li>
+                <li><strong>Replay Buffer:</strong> Stored 50k transitions for off-policy sampling, enabling data reuse and breaking temporal correlations</li>
+              </ul>
+            </div>
+
+            <div class="task-section">
+              <h4>Key Insights</h4>
+              <ul>
+                <li>🎭 <strong>EM Perspective on RL:</strong> MPO frames policy improvement as an EM algorithm—E-step evaluates actions, M-step improves policy toward high-value actions weighted by their advantage</li>
+                <li>🔒 <strong>Trust Region via KL Constraint:</strong> Unlike PPO's clipping or TRPO's line search, MPO uses a temperature parameter to implicitly enforce trust regions, ensuring smooth policy evolution</li>
+                <li>⚖️ <strong>Sample Reweighting:</strong> Importance weights naturally implement advantage-weighted regression: actions with high Q-values get more influence on policy updates</li>
+                <li>🎯 <strong>Continuous Control Challenges:</strong> Tanh squashing ensures actions stay within bounds while maintaining differentiability for gradient-based optimization</li>
+                <li>📊 <strong>Twin Q-Functions:</strong> Taking min(Q₁, Q₂) for target computation reduces overoptimistic Q-value estimates that plague single-critic methods, improving stability</li>
+                <li>🔄 <strong>Off-Policy Efficiency:</strong> Replay buffer enables multiple gradient updates per environment step, dramatically improving sample efficiency compared to on-policy methods like PPO</li>
+                <li>🧠 <strong>Reparameterization Trick:</strong> Sampling a ~ N(μ, σ) as a = μ + σ·ε (ε ~ N(0,1)) allows backpropagation through stochastic sampling, critical for policy gradient estimation</li>
+                <li>⚡ <strong>Stabilization Techniques:</strong> Combination of target networks, twin critics, soft updates, and KL constraints creates a remarkably stable learning algorithm suitable for complex control tasks</li>
+              </ul>
+            </div>
+          </div>
+
         </div>
         
         <div class="post-tags">

@@ -832,6 +832,64 @@ a:hover {
   font-size: 1.1rem;
 }
 
+/* ========== TASK CONTAINERS ========== */
+
+.task-container {
+  background: #ffffff;
+  border: 2px solid #e1e8ed;
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.task-container:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-color: #2980b9;
+}
+
+.task-container h3 {
+  color: #2980b9;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.4rem;
+  border-bottom: 2px solid #e1e8ed;
+  padding-bottom: 0.5rem;
+}
+
+.task-section {
+  margin: 1.5rem 0;
+}
+
+.task-section h4 {
+  color: #333;
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+}
+
+.task-section h4::before {
+  content: "▸";
+  color: #2980b9;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.task-section ul {
+  margin: 0.5rem 0;
+  padding-left: 2rem;
+}
+
+.task-section li {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.task-section li strong {
+  color: #2980b9;
+}
+
 .velocity-factors {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1285,6 +1343,37 @@ body.dark-mode blockquote {
   background: #2d2d2d !important;
   border-left-color: #64b5f6 !important;
   color: #e0e0e0 !important;
+}
+
+/* Task containers dark mode */
+body.dark-mode .task-container {
+  background: #2d2d2d;
+  border-color: #404040;
+}
+
+body.dark-mode .task-container:hover {
+  border-color: #64b5f6;
+}
+
+body.dark-mode .task-container h3 {
+  color: #64b5f6 !important;
+  border-bottom-color: #404040;
+}
+
+body.dark-mode .task-section h4 {
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .task-section h4::before {
+  color: #64b5f6;
+}
+
+body.dark-mode .task-section li {
+  color: #b0b0b0 !important;
+}
+
+body.dark-mode .task-section li strong {
+  color: #64b5f6 !important;
 }
 
 /* Article content dark mode */
