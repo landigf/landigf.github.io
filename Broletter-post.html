@@ -115,27 +115,131 @@
           </div>
         </header>
         <div class="post-body">
-          <h2>What is Broletter?</h2>
-          <p>Broletter is a free, self-adapting daily science newsletter powered by Gemini, arXiv, and Telegram. It learns from your feedback and delivers personalized articles every day, at zero cost.</p>
-          <h3>How It Works</h3>
+
+          <p>The best things I've ever learned came from friends doing stuff and telling me about it. Not from courses, not from textbooks &mdash; from a friend casually explaining something they're obsessed with over coffee. That excited, effortless transfer of knowledge. A friend working on compiler optimizations explaining how branch prediction works. Someone in biophysics ranting about protein folding over lunch.</p>
+
+          <p>The problem: you can't scale that. Your friends work in 3&ndash;4 fields max. arXiv has 15,000 papers a day. Twitter/X is noise. RSS feeds are firehoses. And curated newsletters are written for someone else's taste.</p>
+
+          <p>So the question became: <strong>what if I could build a "friend" that reads arXiv every night, picks the interesting stuff across many fields, and explains it to me like an excited colleague &mdash; and actually learns what I care about over time?</strong></p>
+
+          <h2>What It Became &mdash; Broletter</h2>
+
+          <p>A fully automated, personalized daily science newsletter. It runs on my laptop at 11 PM every night, costs <strong>$0/day</strong>, and delivers ~7 minutes of reading to my Telegram each morning. It fetches real papers from <a href="https://arxiv.org/" target="_blank">arXiv</a>, generates the newsletter using <a href="https://aistudio.google.com/apikey" target="_blank">Gemini 2.5 Flash</a> (free tier), and sends it via <a href="https://t.me/Broletter" target="_blank">Telegram</a>.</p>
+
+          <p>Every issue has four sections:</p>
+
           <ul>
-            <li><strong>AI-Powered Selection:</strong> Uses Gemini to scan arXiv and select papers based on your interests.</li>
-            <li><strong>Feedback Loop:</strong> Your likes/dislikes on Telegram are used to improve future recommendations.</li>
-            <li><strong>Automation:</strong> Runs daily, fully automated, with no manual curation required.</li>
-            <li><strong>Open Source:</strong> Built with transparency and extensibility in mind.</li>
+            <li><strong>Deep Curiosity</strong> &mdash; one fascinating topic explored in depth. Could be the physics of black holes, the history of Unix, or how deep-sea creatures see in the dark.</li>
+            <li><strong>Research Spotlight</strong> &mdash; a real arXiv paper, explained clearly, with the actual researchers named, their labs, where they studied. Science is a community of real humans and the newsletter treats it that way.</li>
+            <li><strong>Quick Bites</strong> &mdash; three mind-blowing facts from completely different fields.</li>
+            <li><strong>Your Research Corner</strong> &mdash; tied directly to my thesis area (AI infrastructure, caching, scheduling), referencing real labs and ongoing debates.</li>
           </ul>
-          <h3>Why I Built It</h3>
-          <p>I wanted a newsletter that adapts to my interests, costs nothing, and leverages modern AI tools. Broletter is my solution—combining open-source code, cloud automation, and feedback-driven learning.</p>
-          <h3>Tech Stack</h3>
+
+          <p>On Sundays, there's a <strong>weekly recap</strong> that draws connections across everything covered that week &mdash; the kind of cross-disciplinary links that are the whole reason this thing exists.</p>
+
+          <h2>The Feedback Loop</h2>
+
+          <p>This is probably the part I'm most proud of. Each section arrives as a separate Telegram message with inline reaction buttons: <strong>Love it</strong>, <strong>Meh</strong>, <strong>Skip</strong>, and <strong>More of this tomorrow</strong>. The system gently adapts based on my reactions.</p>
+
+          <p>But here's the key design decision: <strong>exploration over exploitation</strong>. The adaptation weights are clamped to [0.85, 1.15] and they drift back toward 1.0 over time. A single "meh" doesn't kill a topic. A string of "love it" reactions on quantum computing doesn't turn your newsletter into a quantum computing gazette. The system is biased toward breadth because serendipity is the whole point.</p>
+
+          <p>After the last section, there's also a length feedback row &mdash; <strong>Shorter / Perfect / Longer</strong> &mdash; that shifts the target reading time by 0.3 minutes per vote, clamped to &plusmn;1.5 from your configured base.</p>
+
+          <h2>Managing It From Telegram</h2>
+
+          <p>I can add or remove interests, researchers, and topics without ever touching a config file. Just send casual messages to the bot:</p>
+
           <ul>
-            <li>Google Gemini API for AI recommendations</li>
-            <li>arXiv for science content</li>
-            <li>Telegram Bot for delivery and feedback</li>
-            <li>Python, serverless scripts, and GitHub Actions</li>
+            <li><code>/add_interest that crazy quantum bio stuff</code></li>
+            <li><code>/add_researcher that Italian prof at Stanford who made Spark</code></li>
+            <li><code>/remove_topic serverless</code></li>
+            <li><code>/config</code> to see everything at a glance</li>
           </ul>
-          <h3>Get Started</h3>
-          <p>Try <a href="https://landigf.github.io/Broletter/" target="_blank">Broletter</a> or check out the <a href="https://github.com/landigf/broletter" target="_blank">source code on GitHub</a>.</p>
-          <blockquote>Broletter is free, open, and adapts to you. Feedback and contributions are welcome!</blockquote>
+
+          <p>The system uses Gemini to clean up casual input into proper config entries. You don't need to know the exact arXiv category name or a researcher's full affiliation &mdash; just describe what you mean.</p>
+
+          <h2>Website &amp; Public Channel</h2>
+
+          <p>Every newsletter is automatically published to a <a href="https://landigf.github.io/Broletter/" target="_blank">static website</a> on GitHub Pages. Each issue gets its own page with search and a <strong>knowledge map</strong> &mdash; a growing log of every topic, paper, and theme the newsletter has ever covered. It's becoming genuinely useful; I can go back and find "that paper about serverless MoE serving" in seconds.</p>
+
+          <p>There's also a public Telegram channel &mdash; <a href="https://t.me/Broletter" target="_blank">@Broletter</a> &mdash; where anyone can subscribe to read along.</p>
+
+          <h2>How It Works</h2>
+
+          <p>The architecture is straightforward:</p>
+
+<pre><code>config.yaml &rarr; fetcher.py &rarr; generator.py &rarr; bot.py &rarr; Telegram
+                  &uarr;              &uarr;            &darr;
+              arXiv API     Gemini API    feedback.json
+                                              &darr;
+                                     next day's generation adapts</code></pre>
+
+          <ul>
+            <li><strong>Fetcher</strong> (<code>fetcher.py</code>) &mdash; queries the arXiv API for configured categories. Primary categories are always queried; two random secondary ones are added each day for variety. Free, no auth needed.</li>
+            <li><strong>Generator</strong> (<code>generator.py</code>) &mdash; builds prompts from templates with tone rotation, sends them to Gemini 2.5 Flash. Uses your feedback weights to adjust section depth. About 5 API calls per newsletter.</li>
+            <li><strong>Bot</strong> (<code>bot.py</code>) &mdash; sends each section as a separate Telegram message with inline reaction buttons. Also handles the config commands.</li>
+            <li><strong>Store</strong> (<code>store.py</code>) &mdash; persists history (papers seen, themes used), feedback (reactions + weights), and the knowledge map.</li>
+            <li><strong>Site builder</strong> (<code>site_builder.py</code>) &mdash; converts the markdown newsletters into a static HTML site with search and a knowledge map page.</li>
+            <li><strong>Scheduler</strong> (<code>scripts/install_schedule.py</code>) &mdash; installs three macOS LaunchAgents: nightly generation at 11 PM, command sync every 30 minutes, and a morning reminder at login/wake.</li>
+          </ul>
+
+          <p>No background processes. The LaunchAgents only run when the laptop is awake. If the Mac was asleep at 11 PM, it catches up at next wake with an idempotency guard &mdash; it skips if already delivered, retries send-only if generated but not sent (e.g. no WiFi last night). Zero battery impact.</p>
+
+          <h2>Cost</h2>
+
+          <table>
+            <thead>
+              <tr><th>Component</th><th>Cost</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Gemini 2.5 Flash</td><td>Free tier (1500 req/day, newsletter uses ~5)</td></tr>
+              <tr><td>arXiv API</td><td>Free, no authentication</td></tr>
+              <tr><td>Telegram Bot API</td><td>Free</td></tr>
+              <tr><td>macOS LaunchAgent</td><td>Built-in</td></tr>
+            </tbody>
+          </table>
+
+          <p>Total: <strong>$0/day</strong>.</p>
+
+          <h2>Make Your Own</h2>
+
+          <p>The whole project is <a href="https://github.com/landigf/Broletter" target="_blank">open source on GitHub</a>. Here's how to get your own running:</p>
+
+          <ol>
+            <li><strong>Clone and install</strong>
+<pre><code>git clone https://github.com/landigf/Broletter.git
+cd Broletter
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt</code></pre>
+            </li>
+            <li><strong>Get a free Gemini API key</strong> from <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a>.</li>
+            <li><strong>Create a Telegram bot</strong> via <a href="https://t.me/BotFather" target="_blank">@BotFather</a>.</li>
+            <li><strong>Edit <code>config.yaml</code></strong> &mdash; this is the most important step. Set your name, background, thesis area, curiosity themes, arXiv categories, and thesis keywords. The <code>config.example.yaml</code> shows a physics setup as reference. My advice: make the curiosity themes <em>wide</em>. Put your research in, but also things you'd never allocate time to read about. Half the value is the unexpected.</li>
+            <li><strong>Register your chat</strong>: run <code>python main.py listen</code>, send <code>/start</code> to your bot in Telegram.</li>
+            <li><strong>Generate your first newsletter</strong>: <code>python main.py generate</code></li>
+            <li><strong>Automate everything</strong>: <code>python scripts/install_schedule.py</code></li>
+          </ol>
+
+          <h2>What I Learned</h2>
+
+          <p>Building the feedback loop taught me that <strong>gentle adaptation beats aggressive optimization</strong>. Small deltas plus mean-reversion equals a system that respects your taste without becoming an echo chamber. The weights feel right at [0.85, 1.15] &mdash; enough range to notice, not enough to destabilize.</p>
+
+          <p>It replaced my morning Twitter scroll. Seven minutes of curated science beats an hour of algorithmic noise. And the knowledge map is becoming a genuine reference tool &mdash; months of papers searchable in one place.</p>
+
+          <p>Most importantly: it brought back the feeling of a friend excitedly telling me about something cool they read.</p>
+
+          <div class="callout-box" style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-secondary); border-left: 4px solid var(--accent-color); border-radius: 4px;">
+            <p><strong>Links:</strong></p>
+            <ul style="margin: 0.5rem 0 0 1.2rem;">
+              <li><a href="https://github.com/landigf/Broletter" target="_blank">Broletter on GitHub</a> &mdash; full source code (MIT license)</li>
+              <li><a href="https://landigf.github.io/Broletter/" target="_blank">Live site</a> &mdash; browse past issues + knowledge map</li>
+              <li><a href="https://t.me/Broletter" target="_blank">@Broletter on Telegram</a> &mdash; subscribe to the newsletter</li>
+              <li><a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a> &mdash; free Gemini API key</li>
+              <li><a href="https://info.arxiv.org/help/api/index.html" target="_blank">arXiv API docs</a></li>
+              <li><a href="https://arxiv.org/category_taxonomy" target="_blank">arXiv category taxonomy</a></li>
+            </ul>
+          </div>
+
         </div>
         <div class="post-navigation">
           <a href="blog.html" class="back-to-blog">
@@ -159,7 +263,27 @@
     document.addEventListener('DOMContentLoaded', function() {
       const themeToggle = document.getElementById('theme-toggle');
       const themeIcon = themeToggle.querySelector('i');
-      // ...existing script...
+
+      // Check for saved theme preference
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.body.classList.add(savedTheme);
+        if (savedTheme === 'dark-mode') {
+          themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+      }
+
+      themeToggle.addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+
+        if (document.body.classList.contains('dark-mode')) {
+          themeIcon.classList.replace('fa-moon', 'fa-sun');
+          localStorage.setItem('theme', 'dark-mode');
+        } else {
+          themeIcon.classList.replace('fa-sun', 'fa-moon');
+          localStorage.setItem('theme', 'light-mode');
+        }
+      });
     });
   </script>
 </body>
