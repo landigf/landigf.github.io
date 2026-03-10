@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Optiver Career Kickstarter — Tech Interview Prep</title>
+    <style>
+        :root {
+            --bg: #fafafa;
+            --surface: #fff;
+            --text: #1a1a2e;
+            --text2: #555;
+            --accent: #e94560;
+            --accent2: #1a1a2e;
+            --border: #eaeaea;
+            --code-bg: #0d1117;
+            --code-fg: #c9d1d9;
+            --radius: 8px;
+        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Header ── */
+        .hero {
+            background: var(--accent2);
+            color: #fff;
+            padding: 48px 32px 36px;
+        }
+        .hero-inner { max-width: 820px; margin: 0 auto; }
+        .hero-label {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .hero h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+        .hero-sub { color: #8b95b8; font-size: 14px; margin-top: 8px; }
+
+        /* ── Tabs ── */
+        .tabs {
+            display: flex;
+            gap: 6px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        .tab {
+            background: rgba(255,255,255,0.06);
+            color: #8b95b8;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 7px 18px;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all .15s;
+        }
+        .tab:hover { background: rgba(255,255,255,0.12); color: #c5cceb; }
+        .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+
+        /* ── Content ── */
+        .content { max-width: 820px; margin: 0 auto; padding: 36px 32px 80px; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--accent);
+        }
+        .section-intro { color: var(--text2); font-size: 14px; margin-bottom: 24px; }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px;
+            margin-bottom: 16px;
+        }
+        .card-colored {
+            border-left: 4px solid;
+            border-radius: var(--radius);
+            padding: 22px;
+            margin-bottom: 16px;
+        }
+        .card-colored.blue   { background: #eef4fb; border-color: #2196F3; }
+        .card-colored.orange { background: #fff8f0; border-color: #FF9800; }
+        .card-colored.green  { background: #eef8ef; border-color: #4CAF50; }
+        .card h3, .card-colored h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+        .card ul, .card-colored ul {
+            padding-left: 20px;
+            list-style: disc;
+        }
+        .card li, .card-colored li {
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        /* ── Grid ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 700px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .hero { padding: 32px 20px 28px; }
+            .content { padding: 24px 20px 60px; }
+        }
+
+        /* ── Checklist icon ── */
+        .card .icon { font-size: 18px; margin-right: 8px; vertical-align: middle; }
+
+        /* ── Code block ── */
+        .code-block {
+            background: var(--code-bg);
+            border-radius: var(--radius);
+            padding: 22px;
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        .code-block .label {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .code-block pre {
+            color: var(--code-fg);
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            margin: 0;
+        }
+        .code-block .bugs {
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 14px;
+            margin-top: 16px;
+        }
+        .code-block .bugs p {
+            color: #8b95b8;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 12.5px;
+            margin-bottom: 5px;
+        }
+
+        /* ── Tip banner ── */
+        .tip {
+            background: var(--accent);
+            color: #fff;
+            padding: 14px 20px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-style: italic;
+            margin-bottom: 22px;
+        }
+
+        /* ── Accordion (CS topics) ── */
+        .accordion { margin-bottom: 12px; }
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: background .15s;
+            user-select: none;
+        }
+        .accordion-header:hover { background: #f5f7ff; }
+        .accordion.open .accordion-header { border-radius: var(--radius) var(--radius) 0 0; background: #f0f4ff; }
+        .accordion-left { display: flex; align-items: center; gap: 12px; }
+        .accordion-left .icon { font-size: 20px; }
+        .accordion-left .name { font-weight: 700; font-size: 15px; }
+        .badge {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 10px;
+            padding: 2px 10px;
+            border-radius: 10px;
+            color: #fff;
+        }
+        .badge.high { background: var(--accent); }
+        .badge.medium { background: #FF9800; }
+        .chevron { color: #aaa; font-size: 14px; transition: transform .2s; }
+        .accordion.open .chevron { transform: rotate(180deg); }
+        .accordion-body {
+            display: none;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 var(--radius) var(--radius);
+            padding: 20px;
+        }
+        .accordion.open .accordion-body { display: block; }
+        .sample-qa {
+            background: var(--code-bg);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-top: 16px;
+        }
+        .sample-qa .tag {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 11px;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+        .sample-qa .q { color: #cdd6f4; font-weight: 600; font-size: 13px; margin-bottom: 6px; }
+        .sample-qa .a { color: #8b95b8; font-size: 13px; line-height: 1.6; }
+
+        /* ── STAR stories ── */
+        .star-label {
+            display: inline-block;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 11px;
+            background: var(--accent2);
+            color: var(--accent);
+            padding: 2px 10px;
+            border-radius: 4px;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        .star-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: baseline; }
+        .star-row p { font-size: 13.5px; line-height: 1.6; color: var(--text); }
+        .story-q {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 13px;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+        .hint-box {
+            background: #fff8f0;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-style: italic;
+            font-size: 13.5px;
+            color: var(--text2);
+        }
+        .tips-box {
+            background: #eef4fb;
+            border-left: 3px solid #2196F3;
+            padding: 18px;
+            border-radius: var(--radius);
+            margin-top: 20px;
+        }
+        .tips-box h3 { margin-bottom: 10px; }
+        .tips-box p {
+            font-size: 13.5px;
+            color: var(--text);
+            margin-bottom: 6px;
+            padding-left: 14px;
+            border-left: 3px solid #2196F3;
+        }
+
+        /* ── Questions to ask ── */
+        .q-card .question { font-weight: 600; font-size: 14.5px; margin-bottom: 8px; }
+        .q-card .why {
+            font-size: 13px;
+            color: var(--text2);
+            font-style: italic;
+            padding-left: 14px;
+            border-left: 3px solid var(--accent);
+        }
+
+        /* ── Step cards (deployment) ── */
+        .step-icon { font-size: 22px; margin-right: 10px; vertical-align: middle; }
+
+        /* ── Back link ── */
+        .back { display: inline-block; margin-bottom: 0; }
+        .back a {
+            color: #8b95b8;
+            text-decoration: none;
+            font-size: 13px;
+            transition: color .15s;
+        }
+        .back a:hover { color: #fff; }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header class="hero">
+    <div class="hero-inner">
+        <p class="back"><a href="index.html">&larr; Back to home</a></p>
+        <p class="hero-label" style="margin-top:16px">Optiver Career Kickstarter: Tech</p>
+        <h1>Technical Interview Prep Guide</h1>
+        <p class="hero-sub">75-min Zoom &middot; Code Review + Deployment + CS Fundamentals &middot; Personalised for Gennaro</p>
+
+        <div class="tabs" id="tabs">
+            <button class="tab active" data-section="overview">Interview Blueprint</button>
+            <button class="tab" data-section="codereview">Code Review</button>
+            <button class="tab" data-section="deployment">Deployment Plan</button>
+            <button class="tab" data-section="cs">CS Fundamentals</button>
+            <button class="tab" data-section="behavioral">Behavioral</button>
+            <button class="tab" data-section="questions">Questions to Ask</button>
+        </div>
+    </div>
+</header>
+
+<!-- ═══════════ CONTENT ═══════════ -->
+<main class="content">
+
+<!-- ─── OVERVIEW ─── -->
+<div class="section active" id="sec-overview">
+    <h2 class="section-title">What to Expect in 75 Minutes</h2>
+
+    <div class="card-colored blue">
+        <h3>The Format (confirmed from Optiver)</h3>
+        <ul>
+            <li>~10 min: Intro + warm-up (who you are, why Optiver, why tech in trading)</li>
+            <li>~25 min: Code snippet review — read code, find bugs/smells, suggest improvements</li>
+            <li>~15 min: Simple deployment plan for what you just reviewed</li>
+            <li>~15 min: CS fundamentals discussion — architecture, concurrency, networking, memory</li>
+            <li>~10 min: Behavioral + your questions</li>
+        </ul>
+    </div>
+
+    <div class="card-colored orange">
+        <h3>Optiver's Key Signal: HOW you think, not WHAT you know</h3>
+        <ul>
+            <li>Ask clarifying questions before diving in — show you understand constraints</li>
+            <li>Think out loud at all times — silence is penalized</li>
+            <li>Engage with hints — if interviewer nudges you, pick it up and run with it</li>
+            <li>Communicate trade-offs explicitly — "I chose X over Y because..."</li>
+            <li>It's collaborative, not adversarial — treat it like pair programming</li>
+        </ul>
+    </div>
+
+    <div class="card-colored green">
+        <h3>Your Strongest Angles (use these!)</h3>
+        <ul>
+            <li>V2X intern: TTL caching, data adapters, real-time dashboards &rarr; real production systems</li>
+            <li>ETH Big Data + Probabilistic AI &rarr; you understand performance and uncertainty</li>
+            <li>TORCS KD-Tree project &rarr; you reason about time complexity and algorithmic choices</li>
+            <li>Algorithms Lab at ETH &rarr; competitive-level DSA, you're current on this</li>
+            <li>Head of Engineering @ ETH Entrepreneur Club &rarr; ownership, architecture decisions</li>
+        </ul>
+    </div>
+</div>
+
+<!-- ─── CODE REVIEW ─── -->
+<div class="section" id="sec-codereview">
+    <h2 class="section-title">Code Review — What Optiver Is Testing</h2>
+    <p class="section-intro">They'll show you a short snippet (Python, Java, or C++ — pick your strongest). You need to do a structured review, not just spot typos.</p>
+
+    <div class="grid-2">
+        <div class="card">
+            <h3><span class="icon">&#x1F41B;</span>Correctness &amp; Edge Cases</h3>
+            <ul>
+                <li>Off-by-one errors in loops</li>
+                <li>Null/None pointer dereferences</li>
+                <li>Integer overflow (critical in trading: prices, quantities)</li>
+                <li>Empty collection handling</li>
+                <li>Concurrency bugs: race conditions, non-atomic operations</li>
+                <li>Exception handling — are errors swallowed silently?</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3><span class="icon">&#x26A1;</span>Performance &amp; Complexity</h3>
+            <ul>
+                <li>Unnecessary O(n&sup2;) where O(n log n) or O(n) is possible</li>
+                <li>Repeated work inside loops that could be cached</li>
+                <li>Wrong data structure choice (e.g. list.contains() vs set.contains())</li>
+                <li>Memory allocations in hot paths (critical for low-latency)</li>
+                <li>String concatenation in loops (use StringBuilder/join)</li>
+                <li>Locking granularity — too coarse = contention, too fine = complex</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3><span class="icon">&#x1F3D7;&#xFE0F;</span>Code Quality &amp; Design</h3>
+            <ul>
+                <li>Single Responsibility Principle — is the function doing too much?</li>
+                <li>Magic numbers/strings — should be named constants</li>
+                <li>Variable names — are they descriptive?</li>
+                <li>Dead code or unreachable branches</li>
+                <li>Testability — is this easily unit-testable?</li>
+                <li>Missing input validation</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3><span class="icon">&#x1F4AC;</span>How to Structure Your Answer</h3>
+            <ul>
+                <li><strong>Step 1:</strong> "Let me read through this first..." (take 30-60s, read fully)</li>
+                <li><strong>Step 2:</strong> "At a high level, this code is doing X..." (show you understood it)</li>
+                <li><strong>Step 3:</strong> "I see a few issues, let me go through them by severity..."</li>
+                <li><strong>Step 4:</strong> Prioritize — critical (correctness) &rarr; performance &rarr; style</li>
+                <li><strong>Step 5:</strong> "Here's how I'd fix the most important one..." (write the fix)</li>
+                <li><strong>Step 6:</strong> "Are there specific constraints I should consider?"</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="code-block">
+        <div class="label">&#x1F52C; Practice Example (Python)</div>
+        <pre>def get_prices(order_ids):
+    prices = []
+    for id in order_ids:
+        if id in prices:   # BUG 1
+            continue
+        price = db.query(f"SELECT price FROM orders WHERE id={id}")  # BUG 2, 3
+        prices.append(price)
+    return prices</pre>
+        <div class="bugs">
+            <p>&rarr; BUG 1: 'if id in prices' checks a list of prices, not ids — logic error</p>
+            <p>&rarr; BUG 2: SQL injection via f-string — use parameterized queries</p>
+            <p>&rarr; BUG 3: N queries to DB in a loop — should batch: WHERE id IN (...)</p>
+            <p>&rarr; IMPROVEMENT: No error handling if DB query fails</p>
+            <p>&rarr; IMPROVEMENT: No type hints, unclear what 'prices' returns</p>
+        </div>
+    </div>
+</div>
+
+<!-- ─── DEPLOYMENT ─── -->
+<div class="section" id="sec-deployment">
+    <h2 class="section-title">Simple Deployment Plan — Framework</h2>
+    <p class="section-intro">After code review, they'll ask: "How would you deploy this to production?" This is NOT a complex SRE question — it's testing whether you think beyond just writing code.</p>
+
+    <div class="tip">&#x1F4A1; Key phrase to use: "In a trading environment, I'd prioritize zero-downtime and fast rollback over complex features in the deploy pipeline."</div>
+
+    <div class="card">
+        <h3><span class="step-icon">&#x2705;</span>1. Pre-deployment</h3>
+        <ul>
+            <li>Code review + tests passing (unit, integration)</li>
+            <li>Feature flags / toggles to control rollout</li>
+            <li>Config management — no hardcoded secrets, use env vars or secrets manager</li>
+            <li>Build artifact versioned and stored (Docker image, JAR, wheel)</li>
+            <li>Staging environment validation — does it work in a prod-like setup?</li>
+        </ul>
+    </div>
+    <div class="card">
+        <h3><span class="step-icon">&#x1F504;</span>2. Deployment Strategy</h3>
+        <ul>
+            <li>Blue/green deploy: spin up new version, switch traffic, keep old as fallback</li>
+            <li>Canary release: route 5-10% of traffic to new version, watch metrics</li>
+            <li>Rolling update: replace instances one-by-one (good for stateless services)</li>
+            <li>Key question to ask: "Is this service stateful or stateless?"</li>
+            <li>For trading systems: zero-downtime is non-negotiable &rarr; prefer blue/green</li>
+        </ul>
+    </div>
+    <div class="card">
+        <h3><span class="step-icon">&#x1F4CA;</span>3. Observability</h3>
+        <ul>
+            <li>Logging: structured logs with request IDs for traceability</li>
+            <li>Metrics: latency (p50/p99), error rate, throughput — not just uptime</li>
+            <li>Alerts: define thresholds BEFORE deploying, not after</li>
+            <li>Health checks: readiness (is it ready for traffic?) vs liveness (is it alive?)</li>
+            <li>At Optiver scale: microsecond-level latency monitoring matters</li>
+        </ul>
+    </div>
+    <div class="card">
+        <h3><span class="step-icon">&#x21A9;&#xFE0F;</span>4. Rollback Plan</h3>
+        <ul>
+            <li>ALWAYS have a rollback plan — mention this proactively</li>
+            <li>Blue/green: flip traffic back in seconds</li>
+            <li>Database migrations: always write backward-compatible migrations first</li>
+            <li>Define rollback triggers: error rate > X%, latency > Y ms</li>
+            <li>Post-mortem process: what went wrong, how to prevent it</li>
+        </ul>
+    </div>
+</div>
+
+<!-- ─── CS FUNDAMENTALS ─── -->
+<div class="section" id="sec-cs">
+    <h2 class="section-title">CS Fundamentals — Optiver's Favourite Topics</h2>
+
+    <!-- Memory Management -->
+    <div class="accordion">
+        <div class="accordion-header">
+            <div class="accordion-left">
+                <span class="icon">&#x1F9E0;</span>
+                <span class="name">Memory Management</span>
+                <span class="badge high">HIGH</span>
+            </div>
+            <span class="chevron">&#x25BC;</span>
+        </div>
+        <div class="accordion-body">
+            <ul>
+                <li>Stack vs Heap: stack is fast (push/pop), heap is dynamic but slower (malloc/free)</li>
+                <li>Cache hierarchy: L1 (~4 cycles) &rarr; L2 (~12) &rarr; L3 (~40) &rarr; RAM (~200) &rarr; Disk</li>
+                <li>Cache locality: accessing contiguous memory is MUCH faster (array vs linked list)</li>
+                <li>Struct padding: compiler adds padding for alignment — know how to minimize it</li>
+                <li>Example: struct { char a; int b; char c; } = 12 bytes due to padding</li>
+                <li>Memory leak vs dangling pointer vs buffer overflow</li>
+                <li>GC languages (Java/Python) vs manual (C++) trade-offs for latency</li>
+            </ul>
+            <div class="sample-qa">
+                <div class="tag">SAMPLE Q&amp;A</div>
+                <div class="q">Q: Why is iterating an array faster than iterating a linked list?</div>
+                <div class="a">A: Cache locality — array elements are contiguous in memory, so the CPU prefetches them efficiently. Linked list nodes are scattered, causing cache misses each hop.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Concurrency -->
+    <div class="accordion">
+        <div class="accordion-header">
+            <div class="accordion-left">
+                <span class="icon">&#x1F500;</span>
+                <span class="name">Concurrency</span>
+                <span class="badge high">HIGH</span>
+            </div>
+            <span class="chevron">&#x25BC;</span>
+        </div>
+        <div class="accordion-body">
+            <ul>
+                <li>Thread vs process: threads share memory (fast comms, race risks), processes don't</li>
+                <li>Race condition: two threads read-modify-write shared state without sync</li>
+                <li>Mutex: mutual exclusion lock — only one thread at a time</li>
+                <li>Deadlock: Thread A holds lock X waiting for Y, Thread B holds Y waiting for X</li>
+                <li>Atomic operations: hardware-guaranteed read-modify-write (lock-free)</li>
+                <li>Memory ordering: volatile (Java), std::atomic, memory barriers</li>
+                <li>Producer-consumer: queue + condition variable pattern</li>
+                <li>At Optiver: lock-free data structures used extensively for low latency</li>
+            </ul>
+            <div class="sample-qa">
+                <div class="tag">SAMPLE Q&amp;A</div>
+                <div class="q">Q: What's the difference between a mutex and a spinlock?</div>
+                <div class="a">A: A mutex puts the thread to sleep when blocked (OS context switch, expensive). A spinlock busy-waits in a loop (wastes CPU but avoids context switch overhead — better when lock held very briefly, as in HFT).</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Computer Architecture -->
+    <div class="accordion">
+        <div class="accordion-header">
+            <div class="accordion-left">
+                <span class="icon">&#x1F4BB;</span>
+                <span class="name">Computer Architecture</span>
+                <span class="badge high">HIGH</span>
+            </div>
+            <span class="chevron">&#x25BC;</span>
+        </div>
+        <div class="accordion-body">
+            <ul>
+                <li>CPU pipeline: fetch &rarr; decode &rarr; execute &rarr; writeback — branch misprediction flushes it</li>
+                <li>Branch prediction: CPUs predict which branch is taken; misprediction = ~15 cycle penalty</li>
+                <li>SIMD: process multiple data with one instruction (vectorization)</li>
+                <li>False sharing: two threads modify different fields in the same cache line &rarr; cache invalidations</li>
+                <li>NUMA: Non-Uniform Memory Access — memory closer to some CPUs than others</li>
+                <li>Context switch: OS saves/restores thread state — expensive (~microseconds)</li>
+            </ul>
+            <div class="sample-qa">
+                <div class="tag">SAMPLE Q&amp;A</div>
+                <div class="q">Q: Why can reordering if/else branches improve performance?</div>
+                <div class="a">A: Branch predictors are biased toward "not taken" for forward branches. If the likely path is in the else, swapping them helps the predictor, reducing pipeline flushes.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Networking -->
+    <div class="accordion">
+        <div class="accordion-header">
+            <div class="accordion-left">
+                <span class="icon">&#x1F310;</span>
+                <span class="name">Networking</span>
+                <span class="badge medium">MEDIUM</span>
+            </div>
+            <span class="chevron">&#x25BC;</span>
+        </div>
+        <div class="accordion-body">
+            <ul>
+                <li>TCP vs UDP: TCP = reliable ordered, UDP = fast unreliable. Trading often uses UDP multicast for market data</li>
+                <li>Latency sources: propagation (~5&micro;s/km), serialization, queuing, OS kernel</li>
+                <li>Kernel bypass (DPDK, RDMA): skip OS stack entirely for sub-microsecond latency</li>
+                <li>TCP Nagle's algorithm: buffers small packets — disable with TCP_NODELAY in trading</li>
+                <li>Load balancing: round-robin, least connections, consistent hashing</li>
+                <li>Connection pooling: avoid reconnect overhead in hot paths</li>
+            </ul>
+            <div class="sample-qa">
+                <div class="tag">SAMPLE Q&amp;A</div>
+                <div class="q">Q: Why might a trading system use UDP instead of TCP?</div>
+                <div class="a">A: UDP is connectionless, no acknowledgement overhead, lower latency. Market data is broadcast — if you miss a packet, you retransmit by requesting a snapshot, not per-packet ACK.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Structures & Algorithms -->
+    <div class="accordion">
+        <div class="accordion-header">
+            <div class="accordion-left">
+                <span class="icon">&#x1F4D0;</span>
+                <span class="name">Data Structures &amp; Algorithms</span>
+                <span class="badge medium">MEDIUM</span>
+            </div>
+            <span class="chevron">&#x25BC;</span>
+        </div>
+        <div class="accordion-body">
+            <ul>
+                <li>Hash map: O(1) avg get/put, O(n) worst case with collisions — know open addressing vs chaining</li>
+                <li>Binary search tree: O(log n) but unbalanced degrades to O(n) &rarr; use Red-Black tree</li>
+                <li>Priority queue (heap): O(log n) insert, O(1) peek — used for order books</li>
+                <li>Order book: usually implemented as sorted map (price &rarr; queue of orders)</li>
+                <li>Bloom filter: probabilistic set membership, no false negatives, small false positive rate</li>
+                <li>Know when to use each and their space complexity too</li>
+            </ul>
+            <div class="sample-qa">
+                <div class="tag">SAMPLE Q&amp;A</div>
+                <div class="q">Q: How would you implement an order book efficiently?</div>
+                <div class="a">A: A sorted map (e.g. TreeMap/std::map) keyed by price, each mapping to a deque of orders at that price. This gives O(log n) insert/cancel, O(1) best bid/ask peek.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Operating Systems -->
+    <div class="accordion">
+        <div class="accordion-header">
+            <div class="accordion-left">
+                <span class="icon">&#x1F5A5;&#xFE0F;</span>
+                <span class="name">Operating Systems</span>
+                <span class="badge medium">MEDIUM</span>
+            </div>
+            <span class="chevron">&#x25BC;</span>
+        </div>
+        <div class="accordion-body">
+            <ul>
+                <li>Process scheduling: preemptive (OS interrupts) vs cooperative</li>
+                <li>Virtual memory + paging: address translation via page table, TLB caches it</li>
+                <li>System calls: crossing user/kernel boundary is expensive (~microseconds)</li>
+                <li>Signals: async notifications to processes (SIGTERM, SIGKILL)</li>
+                <li>File descriptors: abstract handle for I/O — sockets are file descriptors</li>
+                <li>mmap: map file/device into memory address space — faster than read/write for large files</li>
+            </ul>
+            <div class="sample-qa">
+                <div class="tag">SAMPLE Q&amp;A</div>
+                <div class="q">Q: Why avoid system calls in a hot loop?</div>
+                <div class="a">A: System calls cause a user&rarr;kernel mode transition, saving registers and potentially causing context switches. In &micro;s-sensitive systems, this overhead is too high.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ─── BEHAVIORAL ─── -->
+<div class="section" id="sec-behavioral">
+    <h2 class="section-title">Behavioral Prep — STAR Stories from YOUR Experience</h2>
+    <p class="section-intro">Optiver assesses: intellectual curiosity, ownership, collaboration, and resilience. Here are ready-made stories from your background.</p>
+
+    <div class="card">
+        <div class="story-q">Q: Tell me about a challenging technical problem you solved.</div>
+        <div class="star-row"><span class="star-label">SITUATION</span><p>During my thesis internship at MinervaS building the V2X co-pilot module</p></div>
+        <div class="star-row"><span class="star-label">TASK</span><p>I had to integrate heterogeneous traffic and weather data streams with different update frequencies and formats into a real-time advisory system</p></div>
+        <div class="star-row"><span class="star-label">ACTION</span><p>I designed a spatio-temporal filtering pipeline with TTL-based caching to normalize staleness across streams. I introduced a fuzzy logic layer to handle uncertainty in sensor data rather than hard thresholds</p></div>
+        <div class="star-row"><span class="star-label">RESULT</span><p>The system could provide explainable, real-time speed advice for heavy vehicles with latency under the operational requirement. It became the core of my Bachelor thesis (110/110 cum laude)</p></div>
+    </div>
+
+    <div class="card">
+        <div class="story-q">Q: Describe a time you had to learn something quickly.</div>
+        <div class="star-row"><span class="star-label">SITUATION</span><p>Starting at ETH Z&uuml;rich, my first semester included Big Data and Probabilistic AI simultaneously</p></div>
+        <div class="star-row"><span class="star-label">TASK</span><p>Both courses demanded graduate-level understanding of distributed systems and Bayesian inference — well beyond my BSc curriculum</p></div>
+        <div class="star-row"><span class="star-label">ACTION</span><p>I built a structured study schedule, connected concepts between courses (uncertainty in ML &harr; uncertainty in distributed systems), and focused on implementation to solidify theory</p></div>
+        <div class="star-row"><span class="star-label">RESULT</span><p>Scored 5.5/6 in both courses — top tier at ETH — while also starting as Head of Engineering at the Entrepreneur Club</p></div>
+    </div>
+
+    <div class="card">
+        <div class="story-q">Q: Tell me about a time you had to make a design decision with trade-offs.</div>
+        <div class="star-row"><span class="star-label">SITUATION</span><p>In the TORCS autonomous driving project, I had to choose a nearest-neighbor search approach for behavioral cloning</p></div>
+        <div class="star-row"><span class="star-label">TASK</span><p>Simple linear scan was too slow for real-time decisions during simulated driving</p></div>
+        <div class="star-row"><span class="star-label">ACTION</span><p>I implemented a KD-Tree structure, which reduced nearest-neighbor search from O(n) to O(log n). I also added dynamic-k selection and out-of-distribution detection so the system would fall back to rule-based safety mechanisms when the KD-Tree returned unreliable neighbors</p></div>
+        <div class="star-row"><span class="star-label">RESULT</span><p>The driver could navigate the track in real time with robust safety fallbacks — a deliberate design choice to prioritize reliability over raw speed</p></div>
+    </div>
+
+    <div class="card">
+        <div class="story-q">Q: Why Optiver, and why tech in trading specifically?</div>
+        <div class="hint-box">Be specific — mention their build-and-own culture, the direct feedback loop from code to market impact, and low-latency systems. Reference ETH courses (Big Data, Probabilistic AI) as showing your interest in performance-critical systems.</div>
+    </div>
+
+    <div class="tips-box">
+        <h3>Quick Tips</h3>
+        <p>&rarr; Keep each STAR story under 2 minutes when spoken aloud</p>
+        <p>&rarr; End with what you LEARNED, not just what happened</p>
+        <p>&rarr; Optiver values intellectual honesty — "it didn't fully work because X" is fine if you learned from it</p>
+        <p>&rarr; Prepare 2-3 questions about engineering culture, team structure, and what they're building</p>
+    </div>
+</div>
+
+<!-- ─── QUESTIONS TO ASK ─── -->
+<div class="section" id="sec-questions">
+    <h2 class="section-title">Questions to Ask — Show Intellectual Curiosity</h2>
+    <p class="section-intro">Asking good questions is evaluated. These show you've researched Optiver and are genuinely curious — not just going through the motions.</p>
+
+    <div class="card q-card">
+        <div class="question">"What does the day-to-day feedback loop look like between engineers and traders? How quickly does a software change show up in measurable trading outcomes?"</div>
+        <div class="why">Why this works: Shows you care about impact and Optiver's unique build-and-own culture</div>
+    </div>
+    <div class="card q-card">
+        <div class="question">"What's the biggest systems challenge the team is working on right now — is it latency, reliability, or scale?"</div>
+        <div class="why">Why this works: Shows technical curiosity and that you've internalized what Optiver's engineering actually does</div>
+    </div>
+    <div class="card q-card">
+        <div class="question">"How does the team handle the trade-off between moving fast on new features vs. the reliability requirements of mission-critical trading infrastructure?"</div>
+        <div class="why">Why this works: Directly relevant to Optiver's culture of "build-and-own" and post-mortems</div>
+    </div>
+    <div class="card q-card">
+        <div class="question">"For someone joining through Career Kickstarter, what would a great first week look like technically?"</div>
+        <div class="why">Why this works: Shows forward-thinking and genuine interest in the program, not just the interview</div>
+    </div>
+    <div class="card q-card">
+        <div class="question">"How much exposure do engineers get to the actual trading logic and strategies vs. pure infrastructure work?"</div>
+        <div class="why">Why this works: Optiver engineers often work close to the trading side — this shows you're excited by that</div>
+    </div>
+</div>
+
+</main>
+
+<!-- ═══════════ SCRIPT ═══════════ -->
+<script>
+(function() {
+    // Tab switching
+    const tabs = document.querySelectorAll('.tab');
+    const sections = document.querySelectorAll('.section');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const target = tab.dataset.section;
+            tabs.forEach(t => t.classList.remove('active'));
+            sections.forEach(s => s.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById('sec-' + target).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+
+    // Accordion toggle
+    document.querySelectorAll('.accordion-header').forEach(header => {
+        header.addEventListener('click', () => {
+            header.parentElement.classList.toggle('open');
+        });
+    });
+})();
+</script>
+
+</body>
+</html>
