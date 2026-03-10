@@ -292,6 +292,205 @@
             transition: color .15s;
         }
         .back a:hover { color: #fff; }
+
+        /* ── Practice exercises ── */
+        .practice-divider {
+            margin: 40px 0 28px;
+            padding-top: 28px;
+            border-top: 2px dashed var(--border);
+        }
+        .practice-divider h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 6px;
+        }
+        .practice-divider p {
+            font-size: 13px;
+            color: var(--text2);
+            margin-bottom: 20px;
+        }
+        .exercise {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .exercise-header {
+            padding: 16px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .exercise-num {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 11px;
+            color: var(--accent);
+            letter-spacing: 1px;
+        }
+        .exercise-diff {
+            font-size: 11px;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+        }
+        .exercise-diff.easy { background: #e8f5e9; color: #2e7d32; }
+        .exercise-diff.medium { background: #fff3e0; color: #e65100; }
+        .exercise-diff.hard { background: #fce4ec; color: #c62828; }
+        .exercise-prompt {
+            padding: 0 22px 16px;
+            font-size: 14px;
+            color: var(--text);
+            font-weight: 600;
+        }
+        .exercise-code {
+            background: var(--code-bg);
+            padding: 18px 22px;
+            overflow-x: auto;
+        }
+        .exercise-code pre {
+            color: var(--code-fg);
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            margin: 0;
+        }
+        .exercise-input {
+            padding: 16px 22px;
+        }
+        .exercise-input textarea {
+            width: 100%;
+            min-height: 100px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 13px;
+            line-height: 1.6;
+            resize: vertical;
+            background: #f8f9fa;
+        }
+        .exercise-input textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: #fff;
+        }
+        .exercise-actions {
+            padding: 0 22px 16px;
+            display: flex;
+            gap: 10px;
+        }
+        .btn-reveal {
+            background: var(--accent2);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 9px 20px;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background .15s;
+        }
+        .btn-reveal:hover { background: #2a2a4e; }
+        .btn-clear {
+            background: none;
+            color: var(--text2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 9px 20px;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all .15s;
+        }
+        .btn-clear:hover { border-color: var(--accent); color: var(--accent); }
+        .exercise-solution {
+            display: none;
+            background: #f0fdf4;
+            border-top: 2px solid #4CAF50;
+            padding: 18px 22px;
+        }
+        .exercise-solution.show { display: block; }
+        .exercise-solution h4 {
+            font-size: 12px;
+            color: #2e7d32;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            margin-bottom: 10px;
+        }
+        .exercise-solution ul {
+            padding-left: 18px;
+            list-style: disc;
+        }
+        .exercise-solution li {
+            font-size: 13.5px;
+            margin-bottom: 5px;
+            line-height: 1.6;
+        }
+        .exercise-solution p {
+            font-size: 13.5px;
+            line-height: 1.6;
+            margin-bottom: 6px;
+        }
+        .exercise-solution pre {
+            background: var(--code-bg);
+            color: var(--code-fg);
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 12.5px;
+            line-height: 1.6;
+            padding: 14px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            margin: 10px 0;
+        }
+        .flashcard {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 14px;
+            overflow: hidden;
+        }
+        .flashcard-q {
+            padding: 16px 22px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: background .15s;
+        }
+        .flashcard-q:hover { background: #f8f9fa; }
+        .flashcard-q .fc-badge {
+            font-size: 11px;
+            color: var(--text2);
+            font-weight: 400;
+        }
+        .flashcard-a {
+            display: none;
+            padding: 0 22px 18px;
+            font-size: 13.5px;
+            line-height: 1.7;
+            color: var(--text2);
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+        }
+        .flashcard.open .flashcard-a { display: block; }
+        .flashcard-a strong { color: var(--text); }
+        .scenario-box {
+            background: #f5f0ff;
+            border-left: 4px solid #7c4dff;
+            border-radius: var(--radius);
+            padding: 18px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .scenario-box strong { color: #5e35b1; }
     </style>
 </head>
 <body>
@@ -426,6 +625,187 @@
             <p>&rarr; IMPROVEMENT: No type hints, unclear what 'prices' returns</p>
         </div>
     </div>
+
+    <!-- ── PRACTICE: Code Review ── -->
+    <div class="practice-divider">
+        <h3>Practice — Review These Snippets</h3>
+        <p>Read each snippet as if the interviewer just showed it to you. Write your review in the box, then reveal the answer to compare.</p>
+    </div>
+
+    <!-- Exercise 1 -->
+    <div class="exercise">
+        <div class="exercise-header">
+            <span class="exercise-num">EXERCISE 1</span>
+            <span class="exercise-diff medium">MEDIUM</span>
+        </div>
+        <div class="exercise-prompt">Review this order processing function. Find all bugs, performance issues, and design problems.</div>
+        <div class="exercise-code"><pre>import threading
+
+class OrderBook:
+    def __init__(self):
+        self.orders = {}
+        self.total_volume = 0
+
+    def add_order(self, order_id, price, quantity):
+        self.orders[order_id] = {"price": price, "qty": quantity}
+        self.total_volume += price * quantity
+
+    def remove_order(self, order_id):
+        order = self.orders[order_id]
+        self.total_volume -= order["price"] * order["qty"]
+        del self.orders[order_id]
+
+    def get_best_bid(self):
+        best = 0
+        for oid in self.orders:
+            if self.orders[oid]["price"] > best:
+                best = self.orders[oid]["price"]
+        return best</pre></div>
+        <div class="exercise-input"><textarea placeholder="Write your code review here... What bugs, performance issues, and design problems do you see?"></textarea></div>
+        <div class="exercise-actions">
+            <button class="btn-reveal" onclick="toggleSolution(this)">Reveal Solution</button>
+            <button class="btn-clear" onclick="clearReview(this)">Clear</button>
+        </div>
+        <div class="exercise-solution">
+            <h4>Model Answer</h4>
+            <ul>
+                <li><strong>Thread safety:</strong> No locking on shared state — add_order/remove_order will race. With multiple threads (common in trading), self.orders and self.total_volume can get corrupted. Need a mutex or use lock-free structures.</li>
+                <li><strong>KeyError:</strong> remove_order doesn't check if order_id exists — will throw KeyError on unknown ID. Add a check or use .pop() with default.</li>
+                <li><strong>get_best_bid is O(n):</strong> Scanning all orders every call is too slow for a hot path. Use a sorted structure (heap or sorted map by price) for O(1) best bid.</li>
+                <li><strong>No side distinction:</strong> Orders have no buy/sell side — get_best_bid mixes bids and asks. An order book needs separate bid/ask sides.</li>
+                <li><strong>Float precision:</strong> price * quantity with floats will accumulate rounding errors. Use Decimal or integer cents.</li>
+                <li><strong>total_volume inconsistency:</strong> If remove_order throws (KeyError), total_volume won't be decremented but the operation is aborted — state stays consistent by accident, but fragile.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Exercise 2 -->
+    <div class="exercise">
+        <div class="exercise-header">
+            <span class="exercise-num">EXERCISE 2</span>
+            <span class="exercise-diff hard">HARD</span>
+        </div>
+        <div class="exercise-prompt">This C++ function processes market data ticks. Find the bugs and performance problems.</div>
+        <div class="exercise-code"><pre>struct Tick {
+    int instrument_id;
+    double price;
+    int volume;
+    char exchange[4];
+};
+
+void process_ticks(std::vector&lt;Tick&gt; ticks) {
+    std::map&lt;int, double&gt; vwap;
+    std::map&lt;int, int&gt; total_vol;
+
+    for (int i = 0; i &lt;= ticks.size(); i++) {
+        Tick t = ticks[i];
+        std::string ex(t.exchange);
+        if (ex == "XAMS" || ex == "XLON") {
+            vwap[t.instrument_id] += t.price * t.volume;
+            total_vol[t.instrument_id] += t.volume;
+        }
+    }
+    for (auto&amp; [id, sum] : vwap) {
+        vwap[id] = sum / total_vol[id];
+    }
+}</pre></div>
+        <div class="exercise-input"><textarea placeholder="Write your code review here..."></textarea></div>
+        <div class="exercise-actions">
+            <button class="btn-reveal" onclick="toggleSolution(this)">Reveal Solution</button>
+            <button class="btn-clear" onclick="clearReview(this)">Clear</button>
+        </div>
+        <div class="exercise-solution">
+            <h4>Model Answer</h4>
+            <ul>
+                <li><strong>Off-by-one (crash):</strong> <code>i &lt;= ticks.size()</code> should be <code>i &lt; ticks.size()</code> — accesses one past the end, undefined behaviour.</li>
+                <li><strong>Pass by value:</strong> <code>std::vector&lt;Tick&gt; ticks</code> copies the entire vector on call. Must be <code>const std::vector&lt;Tick&gt;&amp;</code>.</li>
+                <li><strong>String allocation in hot loop:</strong> <code>std::string ex(t.exchange)</code> allocates on the heap each iteration. Use <code>strncmp</code> or <code>std::string_view</code>.</li>
+                <li><strong>Tick copied per iteration:</strong> <code>Tick t = ticks[i]</code> copies the struct. Use <code>const Tick&amp; t</code>.</li>
+                <li><strong>Division by zero:</strong> If total_vol[id] is 0 (can happen if volume is 0 on all ticks for an instrument), division crashes.</li>
+                <li><strong>Struct padding:</strong> exchange is char[4] after an int — likely no padding issue, but worth noting the layout. If exchange were char[3], padding would waste a byte.</li>
+                <li><strong>Double precision:</strong> Accumulating price*volume in doubles will lose precision for large volumes. Consider fixed-point.</li>
+                <li><strong>No return value:</strong> Computes VWAP but doesn't return or store it anywhere — dead computation.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Exercise 3 -->
+    <div class="exercise">
+        <div class="exercise-header">
+            <span class="exercise-num">EXERCISE 3</span>
+            <span class="exercise-diff medium">MEDIUM</span>
+        </div>
+        <div class="exercise-prompt">This Java class caches instrument prices. Find threading issues and design problems.</div>
+        <div class="exercise-code"><pre>public class PriceCache {
+    private HashMap&lt;String, Double&gt; cache = new HashMap&lt;&gt;();
+    private long lastUpdate = System.currentTimeMillis();
+
+    public Double getPrice(String instrument) {
+        if (System.currentTimeMillis() - lastUpdate > 5000) {
+            refreshAll();
+        }
+        return cache.get(instrument);
+    }
+
+    public void updatePrice(String instrument, double price) {
+        cache.put(instrument, price);
+        lastUpdate = System.currentTimeMillis();
+    }
+
+    private void refreshAll() {
+        cache.clear();
+        // ... reload from source
+        lastUpdate = System.currentTimeMillis();
+    }
+}</pre></div>
+        <div class="exercise-input"><textarea placeholder="Write your code review here..."></textarea></div>
+        <div class="exercise-actions">
+            <button class="btn-reveal" onclick="toggleSolution(this)">Reveal Solution</button>
+            <button class="btn-clear" onclick="clearReview(this)">Clear</button>
+        </div>
+        <div class="exercise-solution">
+            <h4>Model Answer</h4>
+            <ul>
+                <li><strong>Not thread-safe:</strong> HashMap is not synchronized. Concurrent getPrice + updatePrice causes ConcurrentModificationException or corrupted state. Use ConcurrentHashMap or synchronize.</li>
+                <li><strong>Race on lastUpdate:</strong> long reads/writes are NOT atomic on 32-bit JVMs. Use AtomicLong or volatile.</li>
+                <li><strong>TOCTOU in getPrice:</strong> Between checking the timestamp and reading cache, another thread could call refreshAll() which calls cache.clear() — getPrice returns null for a valid instrument.</li>
+                <li><strong>refreshAll() is destructive:</strong> cache.clear() wipes everything before reload. During the reload window, all gets return null. Use swap pattern: build new map, then atomically replace reference.</li>
+                <li><strong>Every read can trigger refresh:</strong> If the source is slow, every reader thread that sees an expired cache will trigger refreshAll() simultaneously. Need a "refreshing" flag or scheduled refresh.</li>
+                <li><strong>Returning Double (boxed):</strong> Autoboxing/unboxing overhead on every call. In a hot path, matters. Also, cache.get() returns null for missing keys — no distinction between "no data" and "price is unknown".</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Exercise 4 -->
+    <div class="exercise">
+        <div class="exercise-header">
+            <span class="exercise-num">EXERCISE 4</span>
+            <span class="exercise-diff easy">EASY</span>
+        </div>
+        <div class="exercise-prompt">This Python function finds matching trades. What's wrong?</div>
+        <div class="exercise-code"><pre>def find_matching_trades(trades, target_value):
+    results = []
+    for i in range(len(trades)):
+        for j in range(len(trades)):
+            if trades[i]["value"] + trades[j]["value"] == target_value:
+                results.append((trades[i], trades[j]))
+    return results</pre></div>
+        <div class="exercise-input"><textarea placeholder="Write your code review here..."></textarea></div>
+        <div class="exercise-actions">
+            <button class="btn-reveal" onclick="toggleSolution(this)">Reveal Solution</button>
+            <button class="btn-clear" onclick="clearReview(this)">Clear</button>
+        </div>
+        <div class="exercise-solution">
+            <h4>Model Answer</h4>
+            <ul>
+                <li><strong>Pairs with itself:</strong> j starts from 0, so a trade can be paired with itself when i == j. Should start j from i+1.</li>
+                <li><strong>Duplicate pairs:</strong> Will find (A,B) and (B,A) — returns duplicates. Use j = i+1 to fix both issues.</li>
+                <li><strong>O(n&sup2;) complexity:</strong> Classic two-sum problem. Use a hash set: for each trade, check if (target - trade.value) is in the set. O(n) time.</li>
+                <li><strong>Float comparison:</strong> Using == on trade values (likely floats) is dangerous. Use abs(a + b - target) &lt; epsilon.</li>
+                <li><strong>No input validation:</strong> If trades is empty or items don't have "value" key, this crashes.</li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 <!-- ─── DEPLOYMENT ─── -->
@@ -474,6 +854,130 @@
             <li>Define rollback triggers: error rate > X%, latency > Y ms</li>
             <li>Post-mortem process: what went wrong, how to prevent it</li>
         </ul>
+    </div>
+
+    <!-- ── PRACTICE: Deployment ── -->
+    <div class="practice-divider">
+        <h3>Practice — Deployment Scenarios</h3>
+        <p>The interviewer describes a system and asks "How would you deploy this?" Think through your answer, then reveal the model response.</p>
+    </div>
+
+    <!-- Scenario 1 -->
+    <div class="exercise">
+        <div class="exercise-header">
+            <span class="exercise-num">SCENARIO 1</span>
+            <span class="exercise-diff medium">MEDIUM</span>
+        </div>
+        <div class="exercise-prompt">
+            <div class="scenario-box">
+                <strong>Scenario:</strong> You've written a new pricing service that calculates fair value for options. It reads market data from a message queue, computes Greeks, and writes results to a shared database that traders' dashboards read from. How would you deploy this to production?
+            </div>
+        </div>
+        <div class="exercise-input"><textarea placeholder="Write your deployment plan here... Think about: pre-deployment checks, deployment strategy, observability, rollback..."></textarea></div>
+        <div class="exercise-actions">
+            <button class="btn-reveal" onclick="toggleSolution(this)">Reveal Solution</button>
+            <button class="btn-clear" onclick="clearReview(this)">Clear</button>
+        </div>
+        <div class="exercise-solution">
+            <h4>Model Answer</h4>
+            <p><strong>Pre-deployment:</strong></p>
+            <ul>
+                <li>Unit tests on pricing formulas + integration tests with sample market data</li>
+                <li>Validate outputs against existing pricing engine in staging (shadow mode)</li>
+                <li>Feature flag to switch between old and new engine per-instrument</li>
+            </ul>
+            <p style="margin-top:12px"><strong>Deployment strategy:</strong></p>
+            <ul>
+                <li>Blue/green — critical for trading: can't have stale prices reaching dashboards</li>
+                <li>Run new engine in shadow mode first: consume same market data, compute prices, compare to old engine output but don't write to DB</li>
+                <li>Once shadow results match within tolerance, switch writes to new engine</li>
+            </ul>
+            <p style="margin-top:12px"><strong>Observability:</strong></p>
+            <ul>
+                <li>Latency of computation (p50/p99) — traders need fresh prices</li>
+                <li>Compare new prices to old prices — alert if delta exceeds threshold</li>
+                <li>Queue consumer lag — if falling behind, market data is stale</li>
+                <li>DB write latency and error rate</li>
+            </ul>
+            <p style="margin-top:12px"><strong>Rollback:</strong></p>
+            <ul>
+                <li>Feature flag: flip back to old engine instantly</li>
+                <li>Blue/green: keep old instance running for 24h after switch</li>
+                <li>Trigger: if price deviation > X bps or latency > Y ms, auto-rollback</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Scenario 2 -->
+    <div class="exercise">
+        <div class="exercise-header">
+            <span class="exercise-num">SCENARIO 2</span>
+            <span class="exercise-diff hard">HARD</span>
+        </div>
+        <div class="exercise-prompt">
+            <div class="scenario-box">
+                <strong>Scenario:</strong> You need to deploy a schema change to the production database that adds a new column "risk_score" (NOT NULL with default) to the "positions" table, which has 50 million rows and is queried by 12 different services in real-time. How do you handle this?
+            </div>
+        </div>
+        <div class="exercise-input"><textarea placeholder="Write your deployment plan here..."></textarea></div>
+        <div class="exercise-actions">
+            <button class="btn-reveal" onclick="toggleSolution(this)">Reveal Solution</button>
+            <button class="btn-clear" onclick="clearReview(this)">Clear</button>
+        </div>
+        <div class="exercise-solution">
+            <h4>Model Answer</h4>
+            <p><strong>Key insight: Never deploy schema changes and code changes together.</strong></p>
+            <p style="margin-top:12px"><strong>Phase 1 — Expand:</strong></p>
+            <ul>
+                <li>Add column as NULLABLE (not NOT NULL) with DEFAULT — this avoids locking the table</li>
+                <li>On Postgres, adding a column with a default is instant (metadata-only since PG11)</li>
+                <li>All 12 services still work — they ignore the new column</li>
+            </ul>
+            <p style="margin-top:12px"><strong>Phase 2 — Migrate:</strong></p>
+            <ul>
+                <li>Backfill risk_score values in batches (not one UPDATE for 50M rows — that locks the table)</li>
+                <li>Deploy services one-by-one to start writing risk_score on new inserts</li>
+            </ul>
+            <p style="margin-top:12px"><strong>Phase 3 — Contract:</strong></p>
+            <ul>
+                <li>Once all rows have risk_score and all services write it, add NOT NULL constraint</li>
+                <li>This is the "expand-and-contract" migration pattern</li>
+            </ul>
+            <p style="margin-top:12px"><strong>Rollback:</strong></p>
+            <ul>
+                <li>At any phase, rolling back is safe — old services don't read the column</li>
+                <li>Mention: "I'd never alter a column type in-place on a table this hot — always add new, migrate, drop old"</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Scenario 3 -->
+    <div class="exercise">
+        <div class="exercise-header">
+            <span class="exercise-num">SCENARIO 3</span>
+            <span class="exercise-diff easy">EASY</span>
+        </div>
+        <div class="exercise-prompt">
+            <div class="scenario-box">
+                <strong>Scenario:</strong> You've built a simple REST API that returns historical trade data. It's a read-only, stateless service. How do you deploy it?
+            </div>
+        </div>
+        <div class="exercise-input"><textarea placeholder="Write your deployment plan here..."></textarea></div>
+        <div class="exercise-actions">
+            <button class="btn-reveal" onclick="toggleSolution(this)">Reveal Solution</button>
+            <button class="btn-clear" onclick="clearReview(this)">Clear</button>
+        </div>
+        <div class="exercise-solution">
+            <h4>Model Answer</h4>
+            <ul>
+                <li><strong>Strategy:</strong> Rolling update — stateless service, so instances can be replaced one-by-one with zero downtime. Simplest approach that works.</li>
+                <li><strong>Pre-deploy:</strong> Run API tests against staging, load test to confirm latency SLAs, Docker image tagged and pushed to registry.</li>
+                <li><strong>Health checks:</strong> Readiness probe (can serve requests?) and liveness probe (process alive?). Load balancer stops sending traffic to unready instances.</li>
+                <li><strong>Observability:</strong> Request latency, error rate (4xx/5xx), and throughput. Set alerts before deploy.</li>
+                <li><strong>Rollback:</strong> Kubernetes-style: if new pods fail readiness check, rollout stops automatically. Manual rollback = redeploy previous image tag.</li>
+                <li><strong>Bonus:</strong> Since it's read-only, you could also use canary (route 10% of traffic first) at almost no risk.</li>
+            </ul>
+        </div>
     </div>
 </div>
 
@@ -645,6 +1149,112 @@
             </div>
         </div>
     </div>
+
+    <!-- ── PRACTICE: CS Flashcards ── -->
+    <div class="practice-divider">
+        <h3>Practice — Rapid-Fire Flashcards</h3>
+        <p>The interviewer asks short CS questions. Think of your answer, then click to reveal. Practice explaining out loud.</p>
+    </div>
+
+    <div class="flashcard">
+        <div class="flashcard-q" onclick="this.parentElement.classList.toggle('open')">
+            What is false sharing and why does it matter in multi-threaded systems?
+            <span class="fc-badge">click to reveal</span>
+        </div>
+        <div class="flashcard-a">
+            <strong>False sharing</strong> occurs when two threads modify different variables that happen to live on the same cache line (typically 64 bytes). The CPU's cache coherency protocol forces the line to bounce between cores on every write, even though the threads aren't logically sharing data. Fix: pad structs so each thread's hot data is on its own cache line (<code>alignas(64)</code> in C++).
+        </div>
+    </div>
+
+    <div class="flashcard">
+        <div class="flashcard-q" onclick="this.parentElement.classList.toggle('open')">
+            Explain the difference between virtual memory and physical memory.
+            <span class="fc-badge">click to reveal</span>
+        </div>
+        <div class="flashcard-a">
+            Each process gets its own <strong>virtual address space</strong> — a contiguous illusion. The OS + MMU translate virtual addresses to physical RAM addresses via <strong>page tables</strong> (cached in the TLB). This gives isolation (process A can't read process B's memory), lets you allocate more memory than physically available (paging to disk), and simplifies memory management. TLB misses on hot paths matter for latency — use huge pages (2MB) to reduce page table entries.
+        </div>
+    </div>
+
+    <div class="flashcard">
+        <div class="flashcard-q" onclick="this.parentElement.classList.toggle('open')">
+            Why would you choose UDP over TCP for market data distribution?
+            <span class="fc-badge">click to reveal</span>
+        </div>
+        <div class="flashcard-a">
+            <strong>UDP multicast</strong> lets one sender broadcast to many receivers simultaneously without maintaining per-receiver state. TCP requires a separate connection per receiver (doesn't scale) and adds overhead: 3-way handshake, ACKs, retransmission, congestion control. For market data, if you miss a packet, you request a <strong>snapshot</strong> (full state reset) rather than waiting for per-packet retransmission — this is faster recovery. Also: disable Nagle's algorithm (TCP_NODELAY) if you do use TCP.
+        </div>
+    </div>
+
+    <div class="flashcard">
+        <div class="flashcard-q" onclick="this.parentElement.classList.toggle('open')">
+            What is a deadlock? What are the four conditions and how do you prevent it?
+            <span class="fc-badge">click to reveal</span>
+        </div>
+        <div class="flashcard-a">
+            A <strong>deadlock</strong> is when two or more threads are forever blocked waiting for each other. Four necessary conditions (Coffman conditions): <strong>1)</strong> Mutual exclusion — resource held exclusively. <strong>2)</strong> Hold and wait — thread holds one lock while waiting for another. <strong>3)</strong> No preemption — locks can't be forcibly taken. <strong>4)</strong> Circular wait — A waits for B, B waits for A. Break <em>any one</em> to prevent deadlock. Most common fix: <strong>lock ordering</strong> — always acquire locks in the same global order. Alternative: use try-lock with timeout.
+        </div>
+    </div>
+
+    <div class="flashcard">
+        <div class="flashcard-q" onclick="this.parentElement.classList.toggle('open')">
+            What's the difference between stack and heap allocation? When does it matter?
+            <span class="fc-badge">click to reveal</span>
+        </div>
+        <div class="flashcard-a">
+            <strong>Stack:</strong> Automatic, LIFO. Allocation is just a pointer bump (~1 cycle). Deallocation is automatic when function returns. Fixed size. <strong>Heap:</strong> Dynamic (malloc/new). Allocator must find a free block, may need OS syscall (sbrk/mmap). Deallocation is manual (or GC). It matters in <strong>hot paths</strong>: heap allocation in a tight loop creates GC pressure (Java/Python) or fragmentation (C++). In HFT, preallocate everything and use object pools. Stack variables also have better <strong>cache locality</strong> — they're nearby in memory.
+        </div>
+    </div>
+
+    <div class="flashcard">
+        <div class="flashcard-q" onclick="this.parentElement.classList.toggle('open')">
+            How does a CPU branch predictor work, and why does it matter for performance?
+            <span class="fc-badge">click to reveal</span>
+        </div>
+        <div class="flashcard-a">
+            Modern CPUs are <strong>pipelined</strong> — they start executing the next instruction before the current one finishes. At a branch (if/else), the CPU must <strong>predict</strong> which path to take before it knows the condition result. If it guesses right, no penalty. If wrong (<strong>misprediction</strong>), the pipeline is flushed — ~15 cycle penalty. Branch predictors use history tables to learn patterns. For performance: make the common case predictable, sort data before branching on it (see: sorted vs unsorted array benchmark), or use branchless code (conditional moves, arithmetic).
+        </div>
+    </div>
+
+    <div class="flashcard">
+        <div class="flashcard-q" onclick="this.parentElement.classList.toggle('open')">
+            What is kernel bypass and why is it used in trading?
+            <span class="fc-badge">click to reveal</span>
+        </div>
+        <div class="flashcard-a">
+            Normal network I/O goes through the <strong>OS kernel</strong>: syscall → kernel network stack → interrupt → copy to user space. Each step adds microseconds. <strong>Kernel bypass</strong> (DPDK, Solarflare OpenOnload, RDMA) maps the NIC directly into user-space memory, so packets go directly from NIC to application buffer — no syscalls, no copies, no interrupts. This achieves <strong>sub-microsecond</strong> latency. Trade-off: you lose OS protections, need dedicated NICs, and must handle protocol parsing yourself. Standard in HFT.
+        </div>
+    </div>
+
+    <div class="flashcard">
+        <div class="flashcard-q" onclick="this.parentElement.classList.toggle('open')">
+            What's the difference between a process and a thread? When would you use each?
+            <span class="fc-badge">click to reveal</span>
+        </div>
+        <div class="flashcard-a">
+            A <strong>process</strong> has its own virtual address space, file descriptors, and OS resources — processes are isolated. A <strong>thread</strong> shares the parent process's memory and resources — cheaper to create, faster to context-switch, but requires explicit synchronization (mutexes, atomics). Use processes for <strong>isolation</strong> (crash in one doesn't kill others, security boundaries). Use threads when you need <strong>shared memory communication</strong> and low overhead. In trading: often one process per strategy/component for fault isolation, with threads inside for parallelism.
+        </div>
+    </div>
+
+    <div class="flashcard">
+        <div class="flashcard-q" onclick="this.parentElement.classList.toggle('open')">
+            How does a hash map work internally? What happens with collisions?
+            <span class="fc-badge">click to reveal</span>
+        </div>
+        <div class="flashcard-a">
+            A hash map stores key-value pairs in an array of <strong>buckets</strong>. The key is hashed to an index: <code>bucket = hash(key) % capacity</code>. <strong>Collision handling:</strong> <strong>Chaining</strong> — each bucket is a linked list of entries (simple but cache-unfriendly). <strong>Open addressing</strong> — on collision, probe the next slot (linear/quadratic/double hashing). Open addressing has better cache locality. Average O(1) get/put, but worst case O(n) if all keys hash to the same bucket. Load factor matters: rehash when >0.75 full. Java's HashMap switches from chaining to a red-black tree at 8 collisions per bucket.
+        </div>
+    </div>
+
+    <div class="flashcard">
+        <div class="flashcard-q" onclick="this.parentElement.classList.toggle('open')">
+            Explain the L1/L2/L3 cache hierarchy. Why does cache locality matter so much?
+            <span class="fc-badge">click to reveal</span>
+        </div>
+        <div class="flashcard-a">
+            CPUs have multiple cache levels: <strong>L1</strong> (~32KB, ~4 cycles) → <strong>L2</strong> (~256KB, ~12 cycles) → <strong>L3</strong> (~8-30MB, ~40 cycles, shared across cores) → <strong>RAM</strong> (~200 cycles). Each miss cascades to the next level. Data is loaded in <strong>cache lines</strong> (64 bytes) — so accessing array[i] also loads array[i+1] through array[i+15] (for ints). This is why arrays are faster than linked lists: sequential access gets <strong>prefetched</strong>. In trading: keeping hot data in L1/L2 is critical. Profile with <code>perf stat</code> to count cache misses.
+        </div>
+    </div>
 </div>
 
 <!-- ─── BEHAVIORAL ─── -->
@@ -744,6 +1354,19 @@
         });
     });
 })();
+
+function toggleSolution(btn) {
+    const sol = btn.closest('.exercise').querySelector('.exercise-solution');
+    sol.classList.toggle('show');
+    btn.textContent = sol.classList.contains('show') ? 'Hide Solution' : 'Reveal Solution';
+}
+function clearReview(btn) {
+    const ta = btn.closest('.exercise').querySelector('textarea');
+    if (ta) ta.value = '';
+    const sol = btn.closest('.exercise').querySelector('.exercise-solution');
+    sol.classList.remove('show');
+    btn.closest('.exercise').querySelector('.btn-reveal').textContent = 'Reveal Solution';
+}
 </script>
 
 </body>
