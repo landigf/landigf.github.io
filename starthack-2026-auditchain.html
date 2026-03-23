@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <!-- begin SEO -->
+  <title>We Won START Hack 2026 with AuditChain: Fuzzy Logic, Metaflow, and an Audit-Ready Procurement Agent</title>
+  <meta property="og:locale" content="en-US">
+  <meta property="og:site_name" content="Gennaro Francesco Landi">
+  <meta property="og:title" content="We Won START Hack 2026 with AuditChain: Fuzzy Logic, Metaflow, and an Audit-Ready Procurement Agent">
+  <meta property="og:description" content="How our team won START Hack 2026 by building AuditChain, an audit-ready procurement agent combining deterministic decision logic, fuzzy reasoning, Metaflow observability, and Azure deployment.">
+  <meta property="og:url" content="https://landigf.github.io/starthack-2026-auditchain.html">
+  <meta property="og:type" content="article">
+  <meta property="article:author" content="Gennaro Francesco Landi">
+  <meta property="article:published_time" content="2026-03-23T00:00:00+00:00">
+  <meta name="description" content="How our team won START Hack 2026 by building AuditChain, an audit-ready procurement agent combining deterministic decision logic, fuzzy reasoning, Metaflow observability, and Azure deployment.">
+  <script type="application/ld+json">
+  {
+    "@context" : "http://schema.org",
+    "@type" : "Person",
+    "name" : "Gennaro Francesco Landi",
+    "url" : "https://landigf.github.io",
+    "sameAs" : ["https://www.linkedin.com/in/landigf", "https://github.com/landigf"],
+    "jobTitle" : "Master's Student in Computer Science",
+    "affiliation" : "ETH Zurich"
+  }
+  </script>
+  <!-- end SEO -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon-32x32.png" type="image/png">
+  <meta http-equiv="cleartype" content="on">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <!--[if lt IE 9]>
+  <div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+  <![endif]-->
+  <nav class="top-nav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">Master's Student</a>
+      <div class="nav-links">
+        <a href="blog.html">Blog Posts</a>
+        <a href="eth-materials.html">ETH Materials</a>
+        <a href="https://drive.google.com/file/d/1I1sEeulfPVFbF_8xYnmB6Xys3JaatR5r/view?usp=sharing" target="_blank">CV</a>
+        <button id="theme-toggle" class="theme-toggle" title="Toggle dark mode">
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main-container">
+    <aside class="sidebar">
+      <div class="profile-section">
+        <div class="profile-image">
+          <img src="profile_pic.png" alt="Gennaro Francesco Landi">
+        </div>
+        <div class="profile-info">
+          <h2>Gennaro Francesco</h2>
+          <div class="contact-info">
+            <div class="contact-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Zurich, Switzerland</span>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <a href="mailto:landigf.work@gmail.com">Email</a>
+            </div>
+            <div class="contact-item">
+              <i class="fab fa-linkedin"></i>
+              <a href="https://www.linkedin.com/in/landigf" target="_blank">LinkedIn</a>
+            </div>
+            <div class="contact-item">
+              <i class="fab fa-github"></i>
+              <a href="https://github.com/landigf" target="_blank">GitHub</a>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-envelope-open-text"></i>
+              <a href="https://landigf.github.io/Broletter/" target="_blank">Broletter</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <article class="post-content">
+        <header class="post-header">
+          <div class="breadcrumb">
+            <a href="index.html">Home</a> / <a href="blog.html">Blog</a> / START Hack 2026
+          </div>
+          <h1>We Won START Hack 2026 with AuditChain: Fuzzy Logic, Metaflow, and an Audit-Ready Procurement Agent</h1>
+          <div class="post-meta">
+            <span class="post-date">
+              <i class="fas fa-calendar"></i> 23 March 2026
+            </span>
+            <span class="post-category">
+              <i class="fas fa-folder"></i> Projects
+            </span>
+          </div>
+          <div class="post-tags">
+            <span class="tag">Hackathon</span>
+            <span class="tag">Procurement</span>
+            <span class="tag">Fuzzy Logic</span>
+            <span class="tag">Azure</span>
+            <span class="tag">Metaflow</span>
+          </div>
+        </header>
+
+        <div class="post-body">
+          <p>At START Hack 2026, <strong>Casimir R&ouml;nnl&ouml;f, Debmalya Chatterjee, Maria Francisca Ramos and I</strong> had 36 hours to build something that could survive both a live demo and an uncomfortable amount of scrutiny from people who actually understand enterprise procurement. We somehow managed to do both, which was already a win before we learned we had actually won.</p>
+
+          <p>The challenge came from <strong>Chain IQ Group AG</strong>: take a procurement request written in plain text, help the customer place the order, simplify the workflow, and still keep the process auditable and defensible. That sounds easy until you remember procurement is really a machine for turning ambiguity into accountability. "30 chairs in Zurich, budget around 20k, soon please" is not a clean input. It is a future argument waiting to happen.</p>
+
+          <p>Our answer was <strong>AuditChain</strong>, an autonomous procurement decision engine designed around one very stubborn rule: <strong>the LLM can parse and explain, but it does not decide</strong>. The decision path itself stays deterministic, logged, replayable, and intentionally annoying to bypass.</p>
+
+          <div class="post-gallery post-gallery-two">
+            <figure class="post-figure">
+              <img src="assets/starthack-2026/team-shot.jpg" alt="PushToMain team at START Hack 2026">
+              <figcaption><strong>PushToMain</strong> after 36 hours of controlled chaos. The important thing is that everyone still looked like they could debug a failing container at 4 AM.</figcaption>
+            </figure>
+            <figure class="post-figure">
+              <img src="assets/starthack-2026/nonchalant.jpg" alt="Gennaro Francesco Landi at START Hack 2026">
+              <figcaption>The officially sanctioned <strong>nonchalant</strong> photo. Very relaxed posture for someone who had spent the previous night worrying about decision traceability.</figcaption>
+            </figure>
+          </div>
+
+          <h2>The Problem We Actually Solved</h2>
+
+          <p>Most "AI for business workflow" demos quietly smuggle the hard part under the carpet. They show a polished chatbot, maybe a pretty explanation, and then hand-wave the moment where the system is supposed to apply actual policy. Procurement is where that approach dies immediately.</p>
+
+          <p>We needed a system that could:</p>
+
+          <ul>
+            <li>accept messy free-text procurement requests,</li>
+            <li>extract structured fields without hallucinating authority,</li>
+            <li>apply real procurement rules deterministically,</li>
+            <li>rank suppliers transparently,</li>
+            <li>escalate when uncertainty becomes dangerous,</li>
+            <li>and leave behind an audit trail a regulator or internal reviewer could reconstruct months later.</li>
+          </ul>
+
+          <p>That last part was the differentiator. Plenty of systems can say "approve." Much fewer can show exactly <em>why</em>, with the same answer tomorrow, and defend it when the stakes are not just technical but financial and regulatory.</p>
+
+          <h2>What We Built</h2>
+
+          <p>The product was a sourcing agent with a clean separation of responsibilities:</p>
+
+<pre><code>free-text request
+   -> parse with LLM
+   -> validate missing fields
+   -> apply deterministic policy rules
+   -> filter eligible suppliers
+   -> score and rank suppliers
+   -> run fuzzy reasoning on borderline cases
+   -> decide approve / escalate / reject
+   -> generate narrative explanation
+   -> persist full audit trail</code></pre>
+
+          <p>The architecture from the solution repo is deliberate. The frontend is <strong>React 18 + TypeScript + Tailwind + Vite</strong>. The API layer is <strong>FastAPI</strong>. The data layer is append-oriented <strong>SQLite/PostgreSQL</strong>. The observability layer uses <strong>Metaflow</strong> for visual pipeline tracking and card-based DAG inspection. The interesting point is that the flashy part is not the model call; the flashy part is that almost everything important happens outside it.</p>
+
+          <div class="comparison-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Layer</th>
+                  <th>What it does</th>
+                  <th>Why it mattered</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>LLM parse + narrative</td>
+                  <td>Turns messy text into structured fields, then writes a human-readable explanation after the decision is locked.</td>
+                  <td>We got flexibility without letting the model become the legal brain of the system.</td>
+                </tr>
+                <tr>
+                  <td>Deterministic policy engine</td>
+                  <td>Checks spending authority, supplier restrictions, geography, compliance and threshold rules.</td>
+                  <td>Reproducibility and auditability were non-negotiable.</td>
+                </tr>
+                <tr>
+                  <td>Fuzzy reasoning layer</td>
+                  <td>Handles borderline thresholds, unstable rankings and uncertainty signals.</td>
+                  <td>Real procurement is full of near-boundary cases that hard thresholds handle badly.</td>
+                </tr>
+                <tr>
+                  <td>Metaflow observability</td>
+                  <td>Tracks steps, artifacts and visual DAG runs.</td>
+                  <td>Debugging under hackathon time pressure becomes much easier when the pipeline is inspectable.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2>Why Fuzzy Logic Ended Up Being the Right Call</h2>
+
+          <p>This was the most personally satisfying part for me. I had already explored fuzzy logic in my bachelor-thesis context because I liked one property of it very much: it refuses to pretend the world is cleaner than it is. A budget of <code>99,999</code> and a budget of <code>100,001</code> do not suddenly belong to different universes just because a threshold says so.</p>
+
+          <p>In AuditChain, fuzzy reasoning helped in three places:</p>
+
+          <ul>
+            <li><strong>threshold classification</strong> for borderline approval tiers,</li>
+            <li><strong>supplier scoring</strong> when multiple dimensions interact non-linearly,</li>
+            <li><strong>confidence gating</strong> when a result looks technically valid but still too fragile to auto-approve.</li>
+          </ul>
+
+          <p>The nice thing is that this was not just hackathon theatre. The 2025 <a href="https://www.nature.com/articles/s41598-025-25042-z" target="_blank">Scientific Reports paper on procurement evaluation using FAHP and TOPSIS</a> reinforces the same underlying intuition: procurement decisions often contain <strong>linguistic uncertainty, conflicting criteria, and subjective expert judgments</strong> that are poorly served by brittle crisp thresholds alone. Their setting is power-enterprise procurement, not our exact hackathon pipeline, and we did <strong>not</strong> implement their FAHP-TOPSIS framework one-to-one. But the methodological direction is the same and, honestly, it was reassuring to see that instinct validated in a procurement-specific paper a few months later.</p>
+
+          <p>What we implemented was more pragmatic and product-shaped: deterministic rules first, then fuzzy overlays for borderline budgets, ranking instability, missing information, narrow score gaps, and escalation logic. In other words: keep the system strict where it must be strict, and nuanced where reality is actually nuanced.</p>
+
+          <h2>Architecture Details From the Real Solution</h2>
+
+          <p>The local solution repo already tells the story well, so we kept the public explanation grounded in that actual implementation rather than rewriting history after the prize ceremony.</p>
+
+          <p>The backend pipeline covered thirteen steps, with only two LLM-assisted stages: parsing and the final narrative explanation. The remaining stages were deterministic: validation, policy checks, supplier filtering, weighted scoring, fuzzy scoring, confidence gating, risk scoring, AIS computation, and persistence. That split was crucial. If you remove the model, the system becomes less friendly, but it does not become less principled.</p>
+
+          <p>On the observability side, Metaflow gave us a visual DAG plus artifact tracking, which is exactly the kind of thing you want when different people in the team are simultaneously touching logic, data, prompts and UX. Instead of asking "what happened?", we could inspect the run.</p>
+
+          <div class="post-gallery post-gallery-two">
+            <figure class="post-figure">
+              <img src="assets/starthack-2026/on-stage.jpg" alt="AuditChain on stage at START Hack 2026">
+              <figcaption>On stage, where every questionable shortcut from the night before becomes a public design decision.</figcaption>
+            </figure>
+            <figure class="post-figure">
+              <img src="assets/starthack-2026/awar-cerimony.jpg" alt="START Hack 2026 award ceremony">
+              <figcaption>Award ceremony proof that the procurement pipeline did, in fact, survive contact with reality.</figcaption>
+            </figure>
+          </div>
+
+          <h2>Azure, Metaflow, and the Multi-Connection Story</h2>
+
+          <p>One thing I liked about our setup is that it was not a toy localhost-only architecture dressed up as production. The repo contains both a <code>docker-compose.yml</code> for local orchestration and Azure-facing proxy configs that make the deployment shape very explicit.</p>
+
+          <p>The frontend Nginx config proxies <code>/api/</code> to an Azure Container Apps endpoint, while the Metaflow UI frontend proxies to a separate Azure-hosted Metaflow UI backend. The Metaflow proxy config also handles upgraded connections and longer read timeouts, which matters when the UI is talking to pipeline state and artifact views instead of just serving static files. In practice, this meant we could reason about the system as multiple live connections held together intentionally, not accidentally: browser to frontend, frontend to API, frontend to Metaflow UI backend, API to data and flow state.</p>
+
+          <p>That separation paid off twice. First, during development, because local Docker Compose let us spin the whole stack and inspect failures fast. Second, in the Azure-oriented setup, because the service boundaries were already clean enough to map onto distinct endpoints without rewriting the product architecture under pressure.</p>
+
+          <h2>What I Think Won It</h2>
+
+          <p>Not the buzzwords. Everyone at a good hackathon can say "LLM", "agent", "copilot", "multi-agent", "enterprise". Those words have become decorative.</p>
+
+          <p>I think what helped us was this combination:</p>
+
+          <ul>
+            <li>we kept the decision loop legible,</li>
+            <li>we treated auditability as a product feature rather than an afterthought,</li>
+            <li>we used fuzzy logic where hard thresholds become silly,</li>
+            <li>and we built enough observability that we could actually debug the thing under time pressure.</li>
+          </ul>
+
+          <p>Also, the team was genuinely fun to work with. That matters more than people admit. Hackathons are short enough that morale is basically a system dependency.</p>
+
+          <h2>What I Took Away Personally</h2>
+
+          <p>This project confirmed a belief I already had: the future of applied AI in serious workflows is not "let the model freestyle." It is <strong>structured systems that know exactly where model flexibility helps and where it becomes liability</strong>.</p>
+
+          <p>It also reminded me that some ideas only become convincing after you put them under pressure. Fuzzy logic had been one of those ideas for me. I liked it intellectually before. I trust it much more after seeing how naturally it fits the ugly edges of procurement-style decisions.</p>
+
+          <p>And yes, winning was great. But the deeper satisfaction was looking at the system afterward and thinking: this is not just a demo that passed. This is a design direction I would happily keep building.</p>
+
+          <div class="callout-box" style="margin-top: 2rem; padding: 1.5rem; background: var(--bg-secondary); border-left: 4px solid var(--accent-color); border-radius: 4px;">
+            <p><strong>Links:</strong></p>
+            <ul style="margin: 0.5rem 0 0 1.2rem;">
+              <li><a href="https://www.linkedin.com/feed/update/urn:li:activity:7440900200212267008/" target="_blank">My LinkedIn post about the win</a></li>
+              <li><a href="https://www.nature.com/articles/s41598-025-25042-z" target="_blank">Scientific Reports (2025): FAHP + TOPSIS for procurement evaluation</a></li>
+              <li><a href="https://startglobal.org/start-hack/" target="_blank">START Hack</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="post-navigation">
+          <a href="blog.html" class="back-to-blog">
+            <i class="fas fa-arrow-left"></i> Back to Blog
+          </a>
+        </div>
+      </article>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>&copy; 2026 Gennaro Francesco Landi. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="https://github.com/landigf" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/landigf" target="_blank"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = themeToggle.querySelector('i');
+
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.body.classList.add(savedTheme);
+        if (savedTheme === 'dark-mode') {
+          themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+      }
+
+      themeToggle.addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+
+        if (document.body.classList.contains('dark-mode')) {
+          themeIcon.classList.replace('fa-moon', 'fa-sun');
+          localStorage.setItem('theme', 'dark-mode');
+        } else {
+          themeIcon.classList.replace('fa-sun', 'fa-moon');
+          localStorage.setItem('theme', 'light-mode');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
