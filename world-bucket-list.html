@@ -1,0 +1,999 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- begin SEO -->
+  <title>The Ultimate World Bucket List — Gennaro Francesco Landi</title>
+  <meta name="description" content="Every iconic place and experience on Earth, mapped as a travel-planning dashboard: ~150 destinations, ~200 'weekend-units', an interactive world map, progress tracker, and local know-how for each spot.">
+  <meta property="og:locale" content="en-US">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Gennaro Francesco Landi">
+  <meta property="og:title" content="The Ultimate World Bucket List">
+  <meta property="og:description" content="~150 iconic places, ~200 weekends, one interactive map. Track what you've done, plan what's next, and learn the local know-how for every spot.">
+  <link rel="canonical" href="https://landigf.github.io/world-bucket-list.html">
+  <meta property="og:url" content="https://landigf.github.io/world-bucket-list.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Ultimate World Bucket List">
+  <meta name="twitter:description" content="~150 iconic places, ~200 weekends, one interactive map.">
+  <!-- end SEO -->
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0a0e1a">
+  <link rel="icon" href="favicon-32x32.png" type="image/png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Leaflet + MarkerCluster (map) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+
+  <style>
+    /* ============================ DESIGN TOKENS ============================ */
+    :root{
+      --bg:#0a0e1a; --bg2:#0c1124; --panel:#121a32; --panel2:#172040;
+      --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.16);
+      --txt:#eef1f8; --txt2:#aab3c8; --txt3:#727d96;
+      --accent:#e94560; --accent2:#ff5470; --gold:#ffd166; --good:#2ecc71;
+      /* region accents */
+      --eu:#4d8bf0; --as:#ff7849; --na:#a877ff; --sa:#2ecc71;
+      --af:#f5b50a; --oc:#1fc8c8; --an:#8fd3ff;
+      --radius:18px; --radius-sm:11px;
+      --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+      --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+      --shadow:0 16px 50px rgba(0,0,0,.5);
+      --maxw:1180px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; font-family:var(--sans); color:var(--txt); background:var(--bg);
+      -webkit-font-smoothing:antialiased; line-height:1.55; overflow-x:hidden;
+    }
+    a{color:var(--accent2); text-decoration:none}
+    a:hover{text-decoration:underline}
+    h1,h2,h3{line-height:1.15; margin:0}
+    .wrap{max-width:var(--maxw); margin:0 auto; padding:0 clamp(16px,4vw,32px)}
+    .mono{font-family:var(--mono)}
+    .muted{color:var(--txt2)}
+    .center{text-align:center}
+    ::selection{background:var(--accent);color:#fff}
+
+    /* ============================ TOP BAR ============================ */
+    .topbar{
+      position:sticky; top:0; z-index:1200; backdrop-filter:blur(14px);
+      background:rgba(10,14,26,.72); border-bottom:1px solid var(--line);
+    }
+    .topbar .wrap{display:flex; align-items:center; justify-content:space-between; height:58px; gap:14px}
+    .brand{display:flex; align-items:center; gap:9px; font-weight:800; letter-spacing:-.01em; color:var(--txt)}
+    .brand:hover{text-decoration:none}
+    .brand .globe{font-size:1.25rem; animation:spin 18s linear infinite; display:inline-block}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .topbar nav{display:flex; gap:18px; align-items:center; font-size:.92rem}
+    .topbar nav a{color:var(--txt2); font-weight:500}
+    .topbar nav a:hover{color:var(--txt); text-decoration:none}
+    .badge-dark{font-size:.72rem; color:var(--txt3); border:1px solid var(--line); padding:3px 9px; border-radius:999px}
+
+    /* ============================ HERO ============================ */
+    .hero{position:relative; overflow:hidden; padding:clamp(48px,9vw,108px) 0 clamp(34px,5vw,60px); isolation:isolate}
+    #starfield{position:absolute; inset:0; width:100%; height:100%; z-index:-2; display:block}
+    .hero::before{
+      content:""; position:absolute; inset:0; z-index:-1;
+      background:
+        radial-gradient(1100px 520px at 18% -10%, rgba(233,69,96,.20), transparent 60%),
+        radial-gradient(900px 480px at 92% 4%, rgba(77,139,240,.22), transparent 60%),
+        linear-gradient(180deg, rgba(10,14,26,.1) 0%, var(--bg) 96%);
+    }
+    .hero h1{
+      font-size:clamp(2.1rem,6vw,4.4rem); font-weight:900; letter-spacing:-.03em;
+      max-width:16ch; margin:0 auto;
+      background:linear-gradient(120deg,#fff 25%,#ffd9e0 50%,#bcd4ff 75%);
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    .hero .kicker{
+      display:inline-block; font-family:var(--mono); font-size:.8rem; letter-spacing:.22em;
+      text-transform:uppercase; color:var(--accent2); margin-bottom:18px;
+      border:1px solid var(--line2); padding:6px 14px; border-radius:999px; background:rgba(255,255,255,.03)
+    }
+    .hero .sub{max-width:60ch; margin:18px auto 0; color:var(--txt2); font-size:clamp(1rem,2.2vw,1.2rem)}
+    .hero .sub em{color:var(--txt); font-style:normal; font-weight:600}
+
+    /* counters */
+    .counters{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:38px auto 0; max-width:780px}
+    .counter{
+      background:linear-gradient(180deg,var(--panel),rgba(18,26,50,.5)); border:1px solid var(--line);
+      border-radius:var(--radius); padding:22px 14px; text-align:center; position:relative; overflow:hidden;
+    }
+    .counter .num{font-family:var(--mono); font-weight:700; font-size:clamp(1.6rem,5vw,2.7rem); color:#fff; line-height:1}
+    .counter .lbl{font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; color:var(--txt3); margin-top:9px}
+    .counter .sup{font-size:.9rem; color:var(--accent2); font-weight:600}
+    .cur-switch{display:inline-flex; gap:4px; margin-top:8px; background:rgba(0,0,0,.25); padding:3px; border-radius:999px}
+    .cur-switch button{
+      font-family:var(--mono); font-size:.72rem; color:var(--txt2); background:none; border:0;
+      padding:3px 9px; border-radius:999px; cursor:pointer;
+    }
+    .cur-switch button.on{background:var(--accent); color:#fff}
+    .hero-note{margin-top:22px; font-size:.82rem; color:var(--txt3)}
+
+    /* ============================ SECTION CHROME ============================ */
+    section.block{padding:clamp(34px,6vw,64px) 0}
+    .sec-head{margin-bottom:26px}
+    .sec-head h2{font-size:clamp(1.5rem,4vw,2.3rem); font-weight:800; letter-spacing:-.02em}
+    .sec-head p{color:var(--txt2); margin:8px 0 0; max-width:65ch}
+    .eyebrow{font-family:var(--mono); font-size:.74rem; letter-spacing:.2em; text-transform:uppercase; color:var(--accent2)}
+
+    /* ============================ PROGRESS ============================ */
+    .progress-card{
+      display:grid; grid-template-columns:auto 1fr; gap:clamp(20px,4vw,42px); align-items:center;
+      background:linear-gradient(135deg,var(--panel),var(--bg2)); border:1px solid var(--line);
+      border-radius:var(--radius); padding:clamp(20px,4vw,34px); box-shadow:var(--shadow);
+    }
+    .ring-wrap{position:relative; width:150px; height:150px; flex:0 0 auto}
+    .ring-wrap svg{transform:rotate(-90deg)}
+    .ring-bg{fill:none; stroke:rgba(255,255,255,.08); stroke-width:13}
+    .ring-fg{fill:none; stroke:url(#ringgrad); stroke-width:13; stroke-linecap:round; transition:stroke-dashoffset .9s cubic-bezier(.2,.8,.2,1)}
+    .ring-label{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center}
+    .ring-label .pct{font-family:var(--mono); font-size:1.9rem; font-weight:700; color:#fff}
+    .ring-label .pl{font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--txt3)}
+    .progress-meta h3{font-size:clamp(1.15rem,3vw,1.5rem); font-weight:700}
+    .bar{height:13px; background:rgba(255,255,255,.07); border-radius:999px; overflow:hidden; margin:14px 0 10px}
+    .bar > i{display:block; height:100%; width:0; border-radius:999px; background:linear-gradient(90deg,var(--accent),var(--gold)); transition:width .9s cubic-bezier(.2,.8,.2,1)}
+    .pstats{display:flex; flex-wrap:wrap; gap:18px; color:var(--txt2); font-size:.92rem; margin-top:4px}
+    .pstats b{color:#fff; font-family:var(--mono)}
+    .pbtns{display:flex; flex-wrap:wrap; gap:10px; margin-top:18px}
+    .btn{
+      font-family:var(--sans); font-size:.88rem; font-weight:600; cursor:pointer; border-radius:999px;
+      padding:9px 16px; border:1px solid var(--line2); background:rgba(255,255,255,.04); color:var(--txt);
+      transition:transform .15s ease, background .2s ease, border-color .2s ease; display:inline-flex; gap:7px; align-items:center;
+    }
+    .btn:hover{background:rgba(255,255,255,.1); transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(120deg,var(--accent),var(--accent2)); border-color:transparent; color:#fff}
+    .btn.ghost{background:none}
+    .btn.danger:hover{border-color:var(--accent); color:var(--accent2)}
+
+    /* ============================ MAP ============================ */
+    .map-shell{position:relative; border-radius:var(--radius); overflow:hidden; border:1px solid var(--line); box-shadow:var(--shadow)}
+    #map{height:clamp(380px,62vh,620px); background:#0b1020; z-index:1}
+    .legend{
+      position:absolute; right:12px; bottom:12px; z-index:500; background:rgba(10,14,26,.82);
+      backdrop-filter:blur(8px); border:1px solid var(--line); border-radius:12px; padding:11px 13px; font-size:.78rem;
+      max-width:46vw;
+    }
+    .legend h4{font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--txt3); margin:0 0 8px}
+    .legend ul{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:3px 14px}
+    .legend li{display:flex; align-items:center; gap:7px; color:var(--txt2)}
+    .legend .dot{width:10px; height:10px; border-radius:50%; flex:0 0 auto}
+    .leaflet-popup-content-wrapper{background:var(--panel2); color:var(--txt); border-radius:14px; box-shadow:var(--shadow)}
+    .leaflet-popup-tip{background:var(--panel2)}
+    .leaflet-popup-content{margin:14px 16px; font-family:var(--sans)}
+    .pop h4{font-size:1.02rem; margin:0 0 4px; color:#fff}
+    .pop .pmeta{font-size:.8rem; color:var(--txt2); margin-bottom:8px}
+    .pop .ptip{font-size:.8rem; color:var(--txt2); margin:6px 0; border-left:2px solid var(--line2); padding-left:8px}
+    .pop .plinks{display:flex; gap:10px; flex-wrap:wrap; margin-top:9px; font-size:.8rem}
+    .pop .pbtn{cursor:pointer; color:var(--accent2); font-weight:600}
+    .marker-done{filter:drop-shadow(0 0 5px rgba(46,204,113,.7))}
+    .cluster-pin{
+      background:rgba(233,69,96,.85); color:#fff; border:2px solid rgba(255,255,255,.5); border-radius:50%;
+      display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-weight:700; box-shadow:0 4px 14px rgba(0,0,0,.5)
+    }
+
+    /* ============================ CONTROLS ============================ */
+    .controls{
+      position:sticky; top:58px; z-index:900; background:rgba(10,14,26,.86); backdrop-filter:blur(12px);
+      border:1px solid var(--line); border-radius:var(--radius); padding:14px; margin-bottom:8px;
+      display:grid; grid-template-columns:1.6fr repeat(3,1fr) 1fr; gap:10px; align-items:center;
+    }
+    .controls .search{position:relative}
+    .controls .search input{
+      width:100%; padding:11px 14px 11px 38px; border-radius:var(--radius-sm); border:1px solid var(--line2);
+      background:rgba(0,0,0,.25); color:var(--txt); font-family:var(--sans); font-size:.92rem;
+    }
+    .controls .search::before{content:"🔍"; position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:.6; font-size:.85rem}
+    .controls select{
+      width:100%; padding:11px 12px; border-radius:var(--radius-sm); border:1px solid var(--line2);
+      background:rgba(0,0,0,.25); color:var(--txt); font-family:var(--sans); font-size:.88rem; cursor:pointer;
+    }
+    .controls select option{background:#101630; color:var(--txt)}
+    .results-line{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin:10px 2px 26px; color:var(--txt2); font-size:.88rem}
+    .chiprow{display:flex; gap:7px; flex-wrap:wrap}
+    .chip{font-size:.76rem; padding:4px 10px; border-radius:999px; border:1px solid var(--line2); color:var(--txt2); background:rgba(255,255,255,.03)}
+
+    /* ============================ REGION + CARDS ============================ */
+    .region{margin-bottom:42px; scroll-margin-top:140px}
+    .region-head{display:flex; align-items:center; gap:13px; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--line)}
+    .region-head .rico{font-size:1.7rem; filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
+    .region-head h3{font-size:clamp(1.3rem,3.4vw,1.9rem); font-weight:800; letter-spacing:-.02em}
+    .region-head .rsub{margin-left:auto; font-family:var(--mono); font-size:.82rem; color:var(--txt2); text-align:right}
+    .region-head .rsub b{color:#fff}
+    .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:16px}
+
+    .card{
+      position:relative; background:linear-gradient(180deg,var(--panel),rgba(16,22,42,.65));
+      border:1px solid var(--line); border-left:4px solid var(--rc,var(--accent)); border-radius:var(--radius-sm);
+      padding:16px 16px 14px; transition:transform .18s ease, box-shadow .25s ease, border-color .2s ease;
+      content-visibility:auto; contain-intrinsic-size:320px;
+    }
+    .card:hover{transform:translateY(-3px); box-shadow:0 14px 34px rgba(0,0,0,.45)}
+    .card.done{background:linear-gradient(180deg,rgba(46,204,113,.12),rgba(16,22,42,.6)); border-left-color:var(--good)}
+    .card.flash{animation:flash 1.6s ease}
+    @keyframes flash{0%,100%{box-shadow:0 0 0 0 rgba(255,209,102,0)}30%{box-shadow:0 0 0 4px rgba(255,209,102,.7)}}
+    .card .ctop{display:flex; align-items:flex-start; gap:9px}
+    .card .tico{font-size:1.15rem; flex:0 0 auto; margin-top:1px}
+    .card h4{font-size:1.04rem; font-weight:700; flex:1; letter-spacing:-.01em}
+    .card .badge{font-size:.66rem; font-weight:700; padding:3px 8px; border-radius:999px; white-space:nowrap; margin-top:2px}
+    .badge.new7{background:rgba(255,209,102,.16); color:var(--gold); border:1px solid rgba(255,209,102,.4)}
+    .badge.natural7{background:rgba(46,204,113,.16); color:#7ef0a6; border:1px solid rgba(46,204,113,.4)}
+    .badge.ancient{background:rgba(200,160,255,.16); color:#d6b8ff; border:1px solid rgba(200,160,255,.4)}
+    .card .blurb{color:var(--txt2); font-size:.9rem; margin:9px 0 12px}
+    .card .meta{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px}
+    .pill{font-family:var(--mono); font-size:.74rem; padding:4px 9px; border-radius:8px; background:rgba(255,255,255,.05); border:1px solid var(--line); color:var(--txt2)}
+    .pill b{color:#fff}
+    .card .crow{display:flex; align-items:center; justify-content:space-between; gap:10px; border-top:1px solid var(--line); padding-top:11px}
+    .links{display:flex; gap:13px; font-size:.82rem; align-items:center}
+    .links a,.links button{color:var(--txt2); background:none; border:0; cursor:pointer; font-size:.92rem; padding:0; transition:color .15s}
+    .links a:hover,.links button:hover{color:var(--accent2); text-decoration:none}
+    /* done checkbox */
+    .done-toggle{display:inline-flex; align-items:center; gap:8px; cursor:pointer; user-select:none; font-size:.82rem; color:var(--txt2)}
+    .done-toggle input{position:absolute; opacity:0; width:0; height:0}
+    .box{width:22px; height:22px; border-radius:7px; border:2px solid var(--line2); display:inline-flex; align-items:center; justify-content:center; transition:all .2s; flex:0 0 auto}
+    .done-toggle input:checked + .box{background:var(--good); border-color:var(--good)}
+    .box::after{content:"✓"; color:#06210f; font-weight:900; font-size:.85rem; opacity:0; transform:scale(.4); transition:all .2s}
+    .done-toggle input:checked + .box::after{opacity:1; transform:scale(1)}
+    .done-toggle input:focus-visible + .box{outline:2px solid var(--accent2); outline-offset:2px}
+
+    /* know-how */
+    .know{margin-top:12px; border-top:1px solid var(--line); padding-top:6px}
+    .know>summary{cursor:pointer; list-style:none; font-size:.8rem; font-weight:600; color:var(--accent2); padding:5px 0; display:flex; align-items:center; gap:6px}
+    .know>summary::-webkit-details-marker{display:none}
+    .know>summary .arr{transition:transform .2s; font-size:.7rem}
+    .know[open]>summary .arr{transform:rotate(90deg)}
+    .know .kgrid{display:grid; gap:9px; margin-top:8px}
+    .know .k{display:grid; grid-template-columns:24px 1fr; gap:9px; font-size:.84rem; color:var(--txt2)}
+    .know .k .ki{font-size:1rem; text-align:center}
+    .know .k b{color:var(--txt); font-weight:600}
+
+    .is-hidden{display:none !important}
+    .region.is-empty{display:none}
+
+    /* ============================ SPLURGE CHART ============================ */
+    .chart-card{background:linear-gradient(135deg,var(--panel),var(--bg2)); border:1px solid var(--line); border-radius:var(--radius); padding:clamp(16px,3vw,26px); box-shadow:var(--shadow)}
+    .chart-holder{position:relative; height:clamp(320px,48vw,460px)}
+
+    /* ============================ METHODOLOGY ============================ */
+    details.method{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:6px 20px; margin-top:14px}
+    details.method summary{cursor:pointer; font-weight:700; padding:14px 0; font-size:1.05rem}
+    details.method[open] summary{border-bottom:1px solid var(--line); margin-bottom:12px}
+    details.method p,details.method li{color:var(--txt2); font-size:.92rem}
+    .note-card{background:rgba(255,209,102,.08); border:1px solid rgba(255,209,102,.3); border-radius:var(--radius-sm); padding:14px 16px; color:#ffe3a6; font-size:.88rem; margin:14px 0}
+
+    /* ============================ FOOTER ============================ */
+    footer.site{border-top:1px solid var(--line); padding:34px 0 50px; color:var(--txt3); font-size:.86rem; text-align:center}
+    footer.site a{color:var(--txt2)}
+
+    /* reveal-on-scroll */
+    .reveal{opacity:0; transform:translateY(26px); transition:opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1)}
+    .reveal.in{opacity:1; transform:none}
+
+    /* toast */
+    #toast{position:fixed; left:50%; bottom:26px; transform:translate(-50%,40px); z-index:2000; background:var(--panel2); border:1px solid var(--line2); color:var(--txt); padding:12px 18px; border-radius:999px; box-shadow:var(--shadow); opacity:0; transition:all .3s; pointer-events:none; font-size:.9rem}
+    #toast.show{opacity:1; transform:translate(-50%,0)}
+
+    /* ============================ RESPONSIVE ============================ */
+    @media (max-width:880px){
+      .controls{grid-template-columns:1fr 1fr; }
+      .controls .search{grid-column:1 / -1}
+      .progress-card{grid-template-columns:1fr; justify-items:center; text-align:center}
+      .pstats{justify-content:center}
+      .region-head .rsub{display:none}
+    }
+    @media (max-width:560px){
+      .counters{grid-template-columns:1fr; max-width:320px}
+      .controls{grid-template-columns:1fr 1fr}
+      .topbar nav a.hide-sm{display:none}
+      .legend ul{grid-template-columns:1fr}
+    }
+    @media (prefers-reduced-motion:reduce){
+      *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important}
+    }
+  </style>
+</head>
+<body>
+  <!-- ============================ TOP BAR ============================ -->
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="index.html"><span class="globe">🌍</span> World Bucket List</a>
+      <nav>
+        <a class="hide-sm" href="index.html">← landigf.github.io</a>
+        <a class="hide-sm" href="blog.html">Blog</a>
+        <span class="badge-dark">night-sky mode</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============================ HERO ============================ -->
+  <section class="hero">
+    <canvas id="starfield" aria-hidden="true"></canvas>
+    <div class="wrap center">
+      <span class="kicker">tutte le cose da fare almeno una volta nella vita</span>
+      <h1>The Ultimate World Bucket List</h1>
+      <p class="sub">Every iconic place and experience on Earth, mapped as one travel-planning dashboard.
+        Counted in <em>weekend-units</em> — bite-sized 2–3 day chunks — so the whole planet becomes a checklist you can actually plan.</p>
+
+      <div class="counters" id="counters">
+        <div class="counter"><div class="num" data-count="places">0</div><div class="lbl">Destinations</div></div>
+        <div class="counter"><div class="num" data-count="weekends">0</div><div class="lbl">Weekend-units</div><div class="sup" id="years-sup">&nbsp;</div></div>
+        <div class="counter">
+          <div class="num" data-count="cost">0</div><div class="lbl">Est. cost / person</div>
+          <div class="cur-switch" id="curSwitch" role="group" aria-label="Currency">
+            <button data-cur="USD" class="on">USD</button><button data-cur="EUR">EUR</button><button data-cur="CHF">CHF</button>
+          </div>
+        </div>
+      </div>
+      <p class="hero-note" id="paceNote">&nbsp;</p>
+    </div>
+  </section>
+
+  <!-- ============================ PROGRESS ============================ -->
+  <section class="block" id="progress">
+    <div class="wrap reveal">
+      <div class="progress-card">
+        <div class="ring-wrap">
+          <svg width="150" height="150" viewBox="0 0 150 150" aria-hidden="true">
+            <defs><linearGradient id="ringgrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#e94560"/><stop offset="100%" stop-color="#ffd166"/>
+            </linearGradient></defs>
+            <circle class="ring-bg" cx="75" cy="75" r="63"/>
+            <circle class="ring-fg" id="ring" cx="75" cy="75" r="63" stroke-dasharray="395.8" stroke-dashoffset="395.8"/>
+          </svg>
+          <div class="ring-label"><span class="pct" id="ringPct">0%</span><span class="pl">complete</span></div>
+        </div>
+        <div class="progress-meta" style="width:100%">
+          <h3>Your journey so far</h3>
+          <div class="bar"><i id="bar"></i></div>
+          <div class="pstats">
+            <span><b id="placesDone">0</b> / <span id="placesTotal">0</span> places</span>
+            <span><b id="weeksDone">0</b> / <span id="weeksTotal">0</span> weekend-units</span>
+            <span><b id="costDone">$0</b> invested</span>
+          </div>
+          <div class="pbtns">
+            <button class="btn primary" id="surpriseBtn">🎲 Surprise me</button>
+            <button class="btn" id="shareBtn">📋 Copy my progress</button>
+            <button class="btn ghost danger" id="resetBtn">↺ Reset</button>
+          </div>
+          <p class="muted" style="font-size:.78rem;margin:12px 0 0">Progress is saved in your browser only (localStorage) — nothing leaves your device.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ MAP ============================ -->
+  <section class="block" id="map-section">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">the whole planet, one view</span>
+        <h2>The map</h2>
+        <p>Every destination plotted by region. Filled markers are done; hollow ones await. Click a pin for the lowdown, or hit a card's 📍 to fly here.</p>
+      </div>
+      <div class="map-shell reveal">
+        <div id="map"></div>
+        <div class="legend" id="legend"><h4>Regions</h4><ul></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ LIST + CONTROLS ============================ -->
+  <section class="block" id="list-section">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">search · filter · sort · check off</span>
+        <h2>The list</h2>
+        <p>Tap a checkbox when you've been. Open “Local know-how” on any card for what to eat, what to know, and the faux-pas to avoid.</p>
+      </div>
+
+      <div class="controls reveal" role="region" aria-label="Filters">
+        <div class="search"><input id="q" type="search" placeholder="Search a place, country, dish…" aria-label="Search"></div>
+        <select id="fRegion" aria-label="Region"><option value="all">All regions</option></select>
+        <select id="fType" aria-label="Type"><option value="all">All types</option></select>
+        <select id="fStatus" aria-label="Status"><option value="all">Done & not</option><option value="todo">Not done</option><option value="done">Done</option></select>
+        <select id="fSort" aria-label="Sort">
+          <option value="region">Sort: by region</option>
+          <option value="alpha">Sort: A–Z</option>
+          <option value="costDesc">Sort: cost ↓</option>
+          <option value="costAsc">Sort: cost ↑</option>
+          <option value="weekDesc">Sort: weekends ↓</option>
+        </select>
+      </div>
+      <div class="results-line">
+        <div id="resultCount" class="mono">—</div>
+        <div class="chiprow">
+          <span class="chip">🏆 New 7 Wonders</span><span class="chip">🌟 Natural Wonders</span><span class="chip">🏺 Ancient Wonder</span>
+        </div>
+      </div>
+
+      <div id="regions"></div>
+      <p id="noResults" class="center muted is-hidden" style="padding:40px 0">No matches — try clearing a filter.</p>
+    </div>
+  </section>
+
+  <!-- ============================ SPLURGE CHART ============================ -->
+  <section class="block" id="splurge-section">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">where the money really goes</span>
+        <h2>The splurge meter</h2>
+        <p>A handful of big-ticket experiences eat a huge slice of the budget. Here are the priciest add-ons, ranked.</p>
+      </div>
+      <div class="chart-card reveal"><div class="chart-holder"><canvas id="splurgeChart"></canvas></div></div>
+    </div>
+  </section>
+
+  <!-- ============================ METHODOLOGY ============================ -->
+  <section class="block" id="method-section">
+    <div class="wrap">
+      <div class="sec-head reveal"><span class="eyebrow">read the small print</span><h2>How the numbers work</h2></div>
+      <div class="note-card reveal">
+        ⚠️ <b>These are rough planning estimates, not quotes.</b> Every “weekend-unit” and every cost figure is a
+        back-of-the-envelope budgeting device — per person, economy / mid-range — meant to compare destinations and
+        sketch a lifetime plan. They are <b>not</b> measured prices or guarantees. Treat them as orders of magnitude.
+      </div>
+      <details class="method reveal">
+        <summary>The cost & weekend model</summary>
+        <p><b>Weekend-units (WE)</b> are bite-sized 2–3 day chunks used as a common yardstick. A long trip is converted into
+          several WE — e.g. Everest Base Camp ≈ 4, Route 66 ≈ 4, Tour du Mont Blanc ≈ 3, Antarctica ≈ 4. It’s a counting
+          device, not a claim you can do them in a literal weekend.</p>
+        <p><b>Costs</b> are per person, economy / mid-range: hostels solo or split mid-range stays with a partner, economy
+          flights, mostly self-guided. Base travel per WE is roughly €500 Europe · $750 Asia · $700 N. America ·
+          $900 S. America & Africa · $1,000 Oceania, <i>plus</i> big-ticket activity surcharges (safaris, dives, treks,
+          polar cruises). Currency: 1 USD ≈ €0.86 ≈ CHF 0.784 (approx., late May 2026).</p>
+        <p>Totals shown at the top are summed live from the dataset, so they always match the cards. Coordinates on the map
+          are approximate. The list merges a curated icon set with extra clusters from a deep-research pass — it’s
+          deliberately over-inclusive, not an official or exhaustive catalogue of Earth.</p>
+      </details>
+    </div>
+  </section>
+
+  <footer class="site">
+    <div class="wrap">
+      <p>Built for the love of maps by <a href="index.html">Gennaro Francesco Landi</a> · Zürich 🇨🇭 ·
+        <a href="https://github.com/landigf" target="_blank" rel="noopener">GitHub</a></p>
+      <p class="muted" style="margin-top:6px">Map © OpenStreetMap contributors © CARTO · Built with ❤️ and ☕ · all figures are rough estimates</p>
+    </div>
+  </footer>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <!-- ============================ SCRIPTS ============================ -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+  <!-- dataset: per-continent files, then the combiner -->
+  <script src="wbl-data/europe.js"></script>
+  <script src="wbl-data/asia.js"></script>
+  <script src="wbl-data/north-america.js"></script>
+  <script src="wbl-data/south-america.js"></script>
+  <script src="wbl-data/africa.js"></script>
+  <script src="wbl-data/oceania.js"></script>
+  <script src="wbl-data/antarctica.js"></script>
+  <script src="world-bucket-list-data.js"></script>
+
+  <script>
+  /* ====================================================================
+     World Bucket List — app logic (single IIFE, no globals leaked)
+     ==================================================================== */
+  (function () {
+    "use strict";
+    var ALL = (window.BUCKET_LIST || []).slice();
+    var META = window.BUCKET_META || { ratesFromUSD:{USD:1,EUR:0.86,CHF:0.784}, currencySymbols:{USD:"$",EUR:"€",CHF:"CHF "}, regionOrder:[] };
+    var REDUCE = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var $ = function (s, r) { return (r || document).querySelector(s); };
+    var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+    /* ---- region + type + badge metadata ---- */
+    var REGION = {
+      "Europe":        { color:"var(--eu)", hex:"#4d8bf0", icon:"🏰" },
+      "Asia":          { color:"var(--as)", hex:"#ff7849", icon:"⛩️" },
+      "North America": { color:"var(--na)", hex:"#a877ff", icon:"🗽" },
+      "South America": { color:"var(--sa)", hex:"#2ecc71", icon:"🗿" },
+      "Africa":        { color:"var(--af)", hex:"#f5b50a", icon:"🦁" },
+      "Oceania":       { color:"var(--oc)", hex:"#1fc8c8", icon:"🏝️" },
+      "Antarctica":    { color:"var(--an)", hex:"#8fd3ff", icon:"🐧" }
+    };
+    var ORDER = (META.regionOrder && META.regionOrder.length) ? META.regionOrder : Object.keys(REGION);
+    var TYPE = { Wonder:"🏛️", Natural:"🏔️", City:"🌆", Town:"🏘️", Trek:"🥾", Experience:"✨", Island:"🏝️", RoadTrip:"🚗", Rail:"🚆" };
+    var BADGE = { new7:{l:"New 7 Wonder",c:"new7",i:"🏆"}, natural7:{l:"Natural Wonder",c:"natural7",i:"🌟"}, ancient:{l:"Ancient Wonder",c:"ancient",i:"🏺"} };
+
+    /* ---- state ---- */
+    var LS_KEY = "wbl.done.v1";
+    var doneIds = loadDone();
+    var currency = "USD";
+    var filter = { q:"", region:"all", type:"all", status:"all", sort:"region" };
+    var cardEls = {};      // id -> card element
+    var markers = {};      // id -> leaflet marker
+    var map = null, cluster = null;
+
+    /* ---- storage ---- */
+    function loadDone(){ try { var a = JSON.parse(localStorage.getItem(LS_KEY) || "[]"); return new Set(Array.isArray(a) ? a : []); } catch(e){ return new Set(); } }
+    function saveDone(){ try { localStorage.setItem(LS_KEY, JSON.stringify(Array.from(doneIds))); } catch(e){} }
+
+    /* ---- money ---- */
+    function rate(cur){ return (META.ratesFromUSD && META.ratesFromUSD[cur]) || 1; }
+    function sym(cur){ return (META.currencySymbols && META.currencySymbols[cur]) || ""; }
+    function money(usd, cur){
+      cur = cur || currency; var v = usd * rate(cur);
+      var s = Math.round(v).toLocaleString("en-US");
+      return sym(cur) + s;
+    }
+
+    /* ---- totals ---- */
+    function totals(list){
+      var t = { count:0, weekends:0, cost:0 };
+      list.forEach(function(d){ t.count++; t.weekends += (+d.weekends||0); t.cost += (+d.costUSD||0); });
+      return t;
+    }
+    var GT = totals(ALL);
+
+    /* ====================== RENDER CARDS ====================== */
+    function el(tag, cls, html){ var e = document.createElement(tag); if(cls) e.className = cls; if(html != null) e.innerHTML = html; return e; }
+    function esc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+    function ytLink(d){ return "https://www.youtube.com/results?search_query=" + encodeURIComponent(d.name + " travel 4k"); }
+    function mapsLink(d){ return "https://www.google.com/maps/search/?api=1&query=" + d.lat + "," + d.lng; }
+
+    function makeCard(d){
+      var card = el("div", "card");
+      card.style.setProperty("--rc", (REGION[d.region]||{}).color || "var(--accent)");
+      card.dataset.id = d.id; card.dataset.region = d.region; card.dataset.type = d.type;
+      if (doneIds.has(d.id)) card.classList.add("done");
+
+      var badge = BADGE[d.badge] ? '<span class="badge '+BADGE[d.badge].c+'">'+BADGE[d.badge].i+' '+BADGE[d.badge].l+'</span>' : "";
+      var top = el("div", "ctop",
+        '<span class="tico" title="'+esc(d.type)+'">'+(TYPE[d.type]||"📍")+'</span>'+
+        '<h4>'+esc(d.name)+'</h4>'+badge);
+      card.appendChild(top);
+
+      card.appendChild(el("p", "blurb", esc(d.blurb)));
+
+      var meta = el("div", "meta",
+        '<span class="pill" title="weekend-units">🗓️ <b>'+(+d.weekends)+'</b> WE</span>'+
+        '<span class="pill cost" title="estimated cost">💰 <b>'+money(d.costUSD)+'</b></span>'+
+        '<span class="pill">'+esc(d.country)+'</span>'+
+        (d.splurge ? '<span class="pill" style="color:var(--gold)">★ splurge</span>' : ""));
+      card.appendChild(meta);
+
+      // links + done row
+      var row = el("div", "crow");
+      var links = el("div", "links",
+        '<a href="'+esc(d.wiki)+'" target="_blank" rel="noopener" title="Wikipedia / info">ℹ️</a>'+
+        '<a href="'+ytLink(d)+'" target="_blank" rel="noopener" title="YouTube">▶️</a>'+
+        '<a href="'+mapsLink(d)+'" target="_blank" rel="noopener" title="Google Maps">🧭</a>'+
+        '<button class="focusmap" title="Show on map">📍</button>');
+      row.appendChild(links);
+
+      var lab = el("label", "done-toggle");
+      lab.innerHTML = '<input type="checkbox"'+(doneIds.has(d.id)?" checked":"")+' aria-label="Mark '+esc(d.name)+' as done"><span class="box"></span><span class="dl">'+(doneIds.has(d.id)?"Done":"Mark done")+'</span>';
+      row.appendChild(lab);
+      card.appendChild(row);
+
+      // know-how
+      var know = el("details", "know");
+      var kg = '<div class="kgrid">'+
+        krow("🍽️","Eat",d.eat)+ krow("💡","Know",d.tip)+ krow("🚫","Don't",d.dont)+
+        krow("📅","Best time",d.bestTime)+ krow("🗣️","Say",d.phrase)+
+        krow("⏱️","Give it",d.pacing)+ krow("🎒","Heads-up",d.headsup)+ '</div>';
+      know.innerHTML = '<summary><span class="arr">▶</span> Local know-how</summary>'+kg;
+      card.appendChild(know);
+
+      // wire events
+      var cb = lab.querySelector("input");
+      cb.addEventListener("change", function(){ toggleDone(d.id, cb.checked); });
+      links.querySelector(".focusmap").addEventListener("click", function(){ focusMarker(d.id); });
+
+      cardEls[d.id] = card;
+      return card;
+    }
+    function krow(icon,label,val){ return val ? '<div class="k"><span class="ki">'+icon+'</span><span><b>'+esc(label)+':</b> '+esc(val)+'</span></div>' : ""; }
+
+    function renderRegions(){
+      var host = $("#regions");
+      host.innerHTML = "";
+      ORDER.forEach(function(rname){
+        var items = ALL.filter(function(d){ return d.region === rname; });
+        if (!items.length) return;
+        var rt = totals(items);
+        var sec = el("section", "region reveal");
+        sec.dataset.region = rname;
+        sec.id = "region-" + rname.toLowerCase().replace(/\s+/g,"-");
+        var rm = REGION[rname] || {};
+        var head = el("div", "region-head",
+          '<span class="rico">'+(rm.icon||"📍")+'</span>'+
+          '<h3 style="color:'+(rm.hex||"#fff")+'">'+esc(rname)+'</h3>'+
+          '<span class="rsub" data-rsub><b>'+items.length+'</b> places · <b>'+rt.weekends+'</b> WE · <b>'+money(rt.cost)+'</b></span>');
+        sec.appendChild(head);
+        var grid = el("div", "grid");
+        items.forEach(function(d){ grid.appendChild(makeCard(d)); });
+        sec.appendChild(grid);
+        host.appendChild(sec);
+      });
+    }
+
+    /* ====================== MAP ====================== */
+    function initMap(){
+      if (!window.L) return;
+      map = L.map("map", { worldCopyJump:true, minZoom:2, scrollWheelZoom:false, attributionControl:true }).setView([26,12], 2);
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+        subdomains:"abcd", maxZoom:19,
+        attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+      }).addTo(map);
+      map.on("click", function(){ if (map.scrollWheelZoom && !map.scrollWheelZoom.enabled()) map.scrollWheelZoom.enable(); });
+
+      cluster = L.markerClusterGroup({
+        maxClusterRadius:42, showCoverageOnHover:false,
+        iconCreateFunction:function(c){
+          var n = c.getChildCount();
+          var size = n < 10 ? 34 : n < 30 ? 42 : 50;
+          return L.divIcon({ html:'<div class="cluster-pin" style="width:'+size+'px;height:'+size+'px">'+n+'</div>', className:"", iconSize:[size,size] });
+        }
+      });
+      ALL.forEach(function(d){ if (isFinite(d.lat) && isFinite(d.lng)) cluster.addLayer(makeMarker(d)); });
+      map.addLayer(cluster);
+      buildLegend();
+    }
+    function markerStyle(d){
+      var hex = (REGION[d.region]||{}).hex || "#e94560";
+      var done = doneIds.has(d.id);
+      return { radius: done ? 8 : 6, color:"#fff", weight: done ? 2 : 1, opacity:.9,
+               fillColor: hex, fillOpacity: done ? 1 : 0.32 };
+    }
+    function makeMarker(d){
+      var m = L.circleMarker([d.lat, d.lng], markerStyle(d));
+      m.bindPopup(popupHTML(d), { maxWidth:280 });
+      m.on("popupopen", function(){
+        var node = m.getPopup().getElement();
+        var b = node && node.querySelector(".pbtn");
+        if (b) b.addEventListener("click", function(){ focusCard(d.id); });
+      });
+      markers[d.id] = m;
+      return m;
+    }
+    function popupHTML(d){
+      var badge = BADGE[d.badge] ? " · "+BADGE[d.badge].i+" "+BADGE[d.badge].l : "";
+      return '<div class="pop"><h4>'+(TYPE[d.type]||"")+' '+esc(d.name)+'</h4>'+
+        '<div class="pmeta">'+esc(d.region)+badge+' · <b>'+(+d.weekends)+' WE</b> · '+money(d.costUSD)+'</div>'+
+        '<div class="ptip">'+esc(d.blurb)+'</div>'+
+        (d.eat ? '<div class="ptip">🍽️ '+esc(d.eat)+'</div>' : "")+
+        '<div class="plinks"><a href="'+esc(d.wiki)+'" target="_blank" rel="noopener">Info</a>'+
+        '<a href="'+ytLink(d)+'" target="_blank" rel="noopener">Video</a>'+
+        '<a href="'+mapsLink(d)+'" target="_blank" rel="noopener">Maps</a>'+
+        '<span class="pbtn">Jump to card →</span></div></div>';
+    }
+    function refreshMarker(id){
+      var m = markers[id]; if (!m) return;
+      var d = byId(id); if (!d) return;
+      m.setStyle(markerStyle(d));
+      var elm = m._path; if (elm){ if (doneIds.has(id)) elm.classList.add("marker-done"); else elm.classList.remove("marker-done"); }
+      m.setPopupContent(popupHTML(d));
+    }
+    function focusMarker(id){
+      if (!map){ return; }
+      var m = markers[id]; if (!m) return;
+      $("#map-section").scrollIntoView({ behavior: REDUCE ? "auto":"smooth", block:"start" });
+      var ll = m.getLatLng();
+      setTimeout(function(){
+        if (cluster && cluster.zoomToShowLayer) { cluster.zoomToShowLayer(m, function(){ m.openPopup(); }); }
+        if (REDUCE) map.setView(ll, 5); else map.flyTo(ll, 5, { duration:1.1 });
+        setTimeout(function(){ m.openPopup(); }, REDUCE?0:700);
+        if (map.invalidateSize) map.invalidateSize();
+      }, REDUCE?0:420);
+    }
+    function focusCard(id){
+      var c = cardEls[id]; if (!c) return;
+      if (map) map.closePopup();
+      c.scrollIntoView({ behavior: REDUCE?"auto":"smooth", block:"center" });
+      c.classList.remove("flash"); void c.offsetWidth; c.classList.add("flash");
+    }
+    function buildLegend(){
+      var ul = $("#legend ul"); ul.innerHTML = "";
+      ORDER.forEach(function(r){
+        if (!ALL.some(function(d){ return d.region===r; })) return;
+        var li = el("li", null, '<span class="dot" style="background:'+((REGION[r]||{}).hex||"#fff")+'"></span>'+esc(r));
+        ul.appendChild(li);
+      });
+    }
+
+    /* ====================== FILTER / SORT ====================== */
+    function byId(id){ for (var i=0;i<ALL.length;i++) if (ALL[i].id===id) return ALL[i]; return null; }
+    function matches(d){
+      if (filter.region!=="all" && d.region!==filter.region) return false;
+      if (filter.type!=="all" && d.type!==filter.type) return false;
+      var done = doneIds.has(d.id);
+      if (filter.status==="done" && !done) return false;
+      if (filter.status==="todo" && done) return false;
+      if (filter.q){
+        var hay = (d.name+" "+d.country+" "+d.region+" "+d.type+" "+d.blurb+" "+(d.eat||"")).toLowerCase();
+        if (hay.indexOf(filter.q) === -1) return false;
+      }
+      return true;
+    }
+    function sortComparator(){
+      switch(filter.sort){
+        case "alpha":    return function(a,b){ return a.name.localeCompare(b.name); };
+        case "costDesc": return function(a,b){ return b.costUSD - a.costUSD; };
+        case "costAsc":  return function(a,b){ return a.costUSD - b.costUSD; };
+        case "weekDesc": return function(a,b){ return b.weekends - a.weekends || a.name.localeCompare(b.name); };
+        default:         return null; // region order (DOM stays grouped)
+      }
+    }
+    function applyFilter(){
+      var visible = 0;
+      var cmp = sortComparator();
+      $$(".region").forEach(function(sec){
+        var grid = sec.querySelector(".grid");
+        var cards = $$(".card", grid);
+        var shownInRegion = 0;
+        cards.forEach(function(c){
+          var d = byId(c.dataset.id);
+          var ok = d && matches(d);
+          c.classList.toggle("is-hidden", !ok);
+          if (ok){ shownInRegion++; visible++; }
+        });
+        // reorder within region if a non-region sort is active
+        if (cmp){
+          cards.slice().sort(function(a,b){ return cmp(byId(a.dataset.id), byId(b.dataset.id)); })
+               .forEach(function(c){ grid.appendChild(c); });
+        }
+        sec.classList.toggle("is-empty", shownInRegion===0);
+      });
+      // map sync
+      if (cluster){
+        cluster.clearLayers();
+        ALL.forEach(function(d){ if (matches(d) && isFinite(d.lat)) cluster.addLayer(markers[d.id]); });
+      }
+      $("#noResults").classList.toggle("is-hidden", visible>0);
+      $("#resultCount").textContent = visible + " of " + ALL.length + " shown";
+    }
+
+    /* ====================== PROGRESS ====================== */
+    var RING_C = 2 * Math.PI * 63;
+    function updateProgress(){
+      var done = ALL.filter(function(d){ return doneIds.has(d.id); });
+      var dt = totals(done);
+      var pctPlaces = GT.count ? done.length / GT.count : 0;
+      var pctWeeks  = GT.weekends ? dt.weekends / GT.weekends : 0;
+      $("#ring").style.strokeDashoffset = RING_C * (1 - pctWeeks);
+      $("#ringPct").textContent = Math.round(pctWeeks*100) + "%";
+      $("#bar").style.width = (pctPlaces*100) + "%";
+      $("#placesDone").textContent = done.length;
+      $("#weeksDone").textContent = dt.weekends;
+      $("#costDone").textContent = money(dt.cost);
+      $("#placesTotal").textContent = GT.count;
+      $("#weeksTotal").textContent = GT.weekends;
+    }
+
+    /* ---- toggle done ---- */
+    function toggleDone(id, on){
+      if (on) doneIds.add(id); else doneIds.delete(id);
+      saveDone();
+      var c = cardEls[id];
+      if (c){ c.classList.toggle("done", on); var dl=c.querySelector(".dl"); if(dl) dl.textContent = on?"Done":"Mark done"; }
+      refreshMarker(id);
+      updateProgress();
+      // re-sync region subtotal
+      var d = byId(id);
+      if (filter.status!=="all") applyFilter();
+      if (on && !REDUCE) celebrate();
+    }
+
+    /* ---- confetti (lazy) ---- */
+    var scriptCache = {};
+    function loadScript(src){
+      if (scriptCache[src]) return scriptCache[src];
+      scriptCache[src] = new Promise(function(res,rej){
+        var s = document.createElement("script"); s.src = src; s.async = true;
+        s.onload = res; s.onerror = rej; document.head.appendChild(s);
+      });
+      return scriptCache[src];
+    }
+    function celebrate(){
+      loadScript("https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js").then(function(){
+        if (!window.confetti) return;
+        window.confetti({ particleCount:90, spread:72, origin:{ y:0.7 }, colors:["#e94560","#ffd166","#4d8bf0","#2ecc71"] });
+      }).catch(function(){});
+    }
+
+    /* ====================== COUNTERS ====================== */
+    function countUp(node, target, fmt){
+      if (REDUCE){ node.textContent = fmt(target); return; }
+      var start = 0, dur = 1300, t0 = null;
+      function step(ts){
+        if (!t0) t0 = ts; var p = Math.min(1, (ts - t0)/dur);
+        var eased = 1 - Math.pow(1-p, 3);
+        node.textContent = fmt(Math.round(start + (target-start)*eased));
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+    function runCounters(){
+      countUp($('[data-count="places"]'), GT.count, function(v){ return v.toLocaleString("en-US"); });
+      countUp($('[data-count="weekends"]'), GT.weekends, function(v){ return v.toLocaleString("en-US"); });
+      countUp($('[data-count="cost"]'), Math.round(GT.cost*rate(currency)), function(v){ return sym(currency)+v.toLocaleString("en-US"); });
+      var y1 = Math.round(GT.weekends/12), y2 = Math.round(GT.weekends/24), yw = Math.round(GT.weekends/52);
+      $("#years-sup").textContent = "≈ " + (GT.weekends/52).toFixed(0) + " yrs weekly";
+      $("#paceNote").innerHTML = "That’s roughly <b>"+y1+" years</b> at one trip a month · <b>"+y2+" years</b> at two a month · <b>"+yw+" years</b> going every weekend.";
+    }
+    function refreshCostUI(){
+      // cost counter + all cost pills + region subtotals + progress, on currency change
+      $('[data-count="cost"]').textContent = sym(currency) + Math.round(GT.cost*rate(currency)).toLocaleString("en-US");
+      $$(".card").forEach(function(c){
+        var d = byId(c.dataset.id); if(!d) return;
+        var pill = c.querySelector(".cost b"); if (pill) pill.textContent = money(d.costUSD);
+      });
+      $$(".region").forEach(function(sec){
+        var rname = sec.dataset.region;
+        var rt = totals(ALL.filter(function(d){return d.region===rname;}));
+        var sub = sec.querySelector("[data-rsub]");
+        if (sub) sub.innerHTML = '<b>'+rt.count+'</b> places · <b>'+rt.weekends+'</b> WE · <b>'+money(rt.cost)+'</b>';
+      });
+      updateProgress();
+    }
+
+    /* ====================== EXTRAS ====================== */
+    function surprise(){
+      var pool = ALL.filter(function(d){ return !doneIds.has(d.id); });
+      if (!pool.length){ toast("You've done it all. Legend. 🌍"); return; }
+      var d = pool[Math.floor(Math.random()*pool.length)];
+      // make sure it's visible: clear filters that would hide it
+      $("#fStatus").value = "all"; $("#fRegion").value="all"; $("#fType").value="all"; $("#q").value="";
+      filter = { q:"", region:"all", type:"all", status:"all", sort:filter.sort };
+      applyFilter();
+      toast("✈️ How about: " + d.name);
+      focusMarker(d.id);
+      setTimeout(function(){ focusCard(d.id); }, REDUCE?0:1700);
+    }
+    function shareProgress(){
+      var done = ALL.filter(function(d){ return doneIds.has(d.id); });
+      var dt = totals(done);
+      var txt = "🌍 My World Bucket List progress\n" +
+        done.length + " / " + GT.count + " places · " + dt.weekends + " / " + GT.weekends + " weekend-units · " +
+        money(dt.cost) + " of " + money(GT.cost) + " invested\n" +
+        (done.length ? "Done: " + done.map(function(d){return d.name;}).slice(0,40).join(", ") + (done.length>40?"…":"") + "\n" : "") +
+        "Plan yours → https://landigf.github.io/world-bucket-list.html";
+      copy(txt);
+    }
+    function copy(txt){
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){ toast("Copied to clipboard 📋"); }, function(){ fallbackCopy(txt); });
+      } else fallbackCopy(txt);
+    }
+    function fallbackCopy(txt){
+      var ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); toast("Copied to clipboard 📋"); } catch(e){ toast("Copy failed — select & copy manually"); }
+      document.body.removeChild(ta);
+    }
+    function resetAll(){
+      if (!doneIds.size){ toast("Nothing to reset yet."); return; }
+      if (!confirm("Reset all progress? This clears every checked place on this device.")) return;
+      doneIds = new Set(); saveDone();
+      $$(".card").forEach(function(c){ c.classList.remove("done"); var cb=c.querySelector('input[type=checkbox]'); if(cb)cb.checked=false; var dl=c.querySelector(".dl"); if(dl)dl.textContent="Mark done"; });
+      Object.keys(markers).forEach(refreshMarker);
+      updateProgress(); if (filter.status!=="all") applyFilter();
+      toast("Progress reset.");
+    }
+    var toastT;
+    function toast(msg){ var t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(function(){ t.classList.remove("show"); }, 2600); }
+
+    /* ====================== SPLURGE CHART (lazy) ====================== */
+    var chartDone = false;
+    function buildChart(){
+      if (chartDone) return; chartDone = true;
+      loadScript("https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js").then(function(){
+        if (!window.Chart) return;
+        var top = ALL.filter(function(d){ return d.splurge; }).sort(function(a,b){ return b.costUSD-a.costUSD; }).slice(0,14);
+        var labels = top.map(function(d){ return d.name.split(/[—-]/)[0].trim().slice(0,22); });
+        var data = top.map(function(d){ return Math.round(d.costUSD*rate(currency)); });
+        var colors = top.map(function(d){ return (REGION[d.region]||{}).hex || "#e94560"; });
+        new window.Chart($("#splurgeChart").getContext("2d"), {
+          type:"bar",
+          data:{ labels:labels, datasets:[{ label:"Est. cost ("+currency+")", data:data, backgroundColor:colors, borderRadius:6, borderSkipped:false }] },
+          options:{
+            indexAxis:"y", responsive:true, maintainAspectRatio:false,
+            plugins:{ legend:{ display:false },
+              tooltip:{ callbacks:{ label:function(ctx){ return sym(currency)+ctx.parsed.x.toLocaleString("en-US"); } } } },
+            scales:{
+              x:{ ticks:{ color:"#aab3c8", callback:function(v){ return sym(currency)+(v/1000)+"k"; } }, grid:{ color:"rgba(255,255,255,.06)" } },
+              y:{ ticks:{ color:"#eef1f8", font:{ size:11 } }, grid:{ display:false } }
+            }
+          }
+        });
+      }).catch(function(){});
+    }
+
+    /* ====================== INIT ====================== */
+    function populateFilters(){
+      var rsel = $("#fRegion");
+      ORDER.forEach(function(r){ if (ALL.some(function(d){return d.region===r;})){ var o=el("option"); o.value=r; o.textContent=r; rsel.appendChild(o); } });
+      var tsel = $("#fType");
+      Object.keys(TYPE).forEach(function(t){ if (ALL.some(function(d){return d.type===t;})){ var o=el("option"); o.value=t; o.textContent=(TYPE[t]+" "+t); tsel.appendChild(o); } });
+    }
+    function wireControls(){
+      var deb;
+      $("#q").addEventListener("input", function(e){ clearTimeout(deb); var v=e.target.value.toLowerCase().trim(); deb=setTimeout(function(){ filter.q=v; applyFilter(); }, 140); });
+      $("#fRegion").addEventListener("change", function(e){ filter.region=e.target.value; applyFilter(); });
+      $("#fType").addEventListener("change", function(e){ filter.type=e.target.value; applyFilter(); });
+      $("#fStatus").addEventListener("change", function(e){ filter.status=e.target.value; applyFilter(); });
+      $("#fSort").addEventListener("change", function(e){ filter.sort=e.target.value; applyFilter(); });
+      $("#surpriseBtn").addEventListener("click", surprise);
+      $("#shareBtn").addEventListener("click", shareProgress);
+      $("#resetBtn").addEventListener("click", resetAll);
+      $$("#curSwitch button").forEach(function(b){ b.addEventListener("click", function(){
+        $$("#curSwitch button").forEach(function(x){ x.classList.remove("on"); }); b.classList.add("on");
+        currency = b.dataset.cur; refreshCostUI(); chartDone=false; var holder=$("#splurgeChart"); // rebuild chart in new currency if already shown
+        if (holder && holder.__seen) { var c = window.Chart && window.Chart.getChart && window.Chart.getChart(holder); if (c) c.destroy(); buildChart(); }
+      }); });
+    }
+    function setupObservers(){
+      if (!("IntersectionObserver" in window)) { $$(".reveal").forEach(function(n){ n.classList.add("in"); }); return; }
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); } });
+      }, { threshold:0.08, rootMargin:"0px 0px -40px 0px" });
+      $$(".reveal").forEach(function(n){ io.observe(n); });
+
+      // counters when hero counters enter
+      var cio = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ runCounters(); cio.disconnect(); } }); }, { threshold:0.3 });
+      cio.observe($("#counters"));
+
+      // map invalidate + chart lazy
+      var mio = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && map){ map.invalidateSize(); } }); }, { threshold:0.05 });
+      mio.observe($("#map-section"));
+      var sio = new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ var h=$("#splurgeChart"); if(h)h.__seen=true; buildChart(); sio.disconnect(); } }); }, { threshold:0.15 });
+      sio.observe($("#splurge-section"));
+    }
+
+    /* ====================== STARFIELD ====================== */
+    function starfield(){
+      var c = $("#starfield"); if (!c) return; var ctx = c.getContext("2d");
+      var stars = [], W, H, raf;
+      function resize(){ W=c.width=c.offsetWidth; H=c.height=c.offsetHeight; var n=Math.min(160, Math.round(W*H/9000)); stars=[]; for(var i=0;i<n;i++) stars.push({ x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.4+0.2, a:Math.random(), s:Math.random()*0.02+0.003, vx:(Math.random()-0.5)*0.08 }); }
+      function draw(){
+        ctx.clearRect(0,0,W,H);
+        for (var i=0;i<stars.length;i++){ var st=stars[i]; st.a += st.s; var alpha = 0.4 + 0.6*Math.abs(Math.sin(st.a));
+          st.x += st.vx; if (st.x<0) st.x=W; if (st.x>W) st.x=0;
+          ctx.globalAlpha = alpha; ctx.fillStyle = i%9===0 ? "#ffd9e0" : "#cfe0ff"; ctx.beginPath(); ctx.arc(st.x,st.y,st.r,0,6.283); ctx.fill();
+        }
+        ctx.globalAlpha = 1; raf = requestAnimationFrame(draw);
+      }
+      resize();
+      if (REDUCE){ // static field
+        for (var i=0;i<stars.length;i++){ var st=stars[i]; ctx.globalAlpha=0.6; ctx.fillStyle="#cfe0ff"; ctx.beginPath(); ctx.arc(st.x,st.y,st.r,0,6.283); ctx.fill(); }
+        ctx.globalAlpha=1;
+      } else { draw(); }
+      window.addEventListener("resize", function(){ cancelAnimationFrame(raf); resize(); if(!REDUCE) draw(); });
+      document.addEventListener("visibilitychange", function(){ if (document.hidden) cancelAnimationFrame(raf); else if(!REDUCE) draw(); });
+    }
+
+    /* ====================== GO ====================== */
+    function init(){
+      if (!ALL.length){
+        $("#regions").innerHTML = '<p class="center muted" style="padding:40px">Dataset is still loading… if this persists, the data files may not have been built yet.</p>';
+      }
+      starfield();
+      populateFilters();
+      renderRegions();
+      try { initMap(); } catch(e){ console.warn("Map init failed:", e); }
+      wireControls();
+      updateProgress();
+      applyFilter();
+      setupObservers();
+      // fallback: if counters never observed (already in view on tiny screens)
+      setTimeout(function(){ if ($('[data-count="places"]').textContent === "0") runCounters(); }, 1500);
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
+  })();
+  </script>
+</body>
+</html>
