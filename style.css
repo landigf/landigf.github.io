@@ -195,6 +195,17 @@ a:hover {
   margin-bottom: 0;
 }
 
+.post-excerpt a {
+  color: #2980b9;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.post-excerpt a:hover {
+  color: #3498db;
+  text-decoration: underline;
+}
+
 .post-footer {
   display: flex;
   justify-content: space-between;
@@ -1236,6 +1247,14 @@ body.dark-mode .post-excerpt {
 
 body.dark-mode .post-excerpt p {
   color: #b0b0b0 !important;
+}
+
+body.dark-mode .post-excerpt a {
+  color: #64b5f6 !important;
+}
+
+body.dark-mode .post-excerpt a:hover {
+  color: #90caf9 !important;
 }
 
 body.dark-mode .read-more {
