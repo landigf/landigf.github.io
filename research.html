@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research &amp; projects | Gennaro Francesco Landi</title>
+<meta name="description" content="Systems research and engineering by Gennaro Francesco Landi: cache-policy selection, browser-agent traces and typed AI workflows.">
+<link rel="canonical" href="https://landigf.github.io/research.html">
+<meta property="og:title" content="Research &amp; projects">
+<meta property="og:description" content="Systems research and engineering by Gennaro Francesco Landi: cache-policy selection, browser-agent traces and typed AI workflows.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://landigf.github.io/research.html">
+<link rel="stylesheet" href="assets/research/research.css">
+<link rel="icon" href="favicon-32x32.png">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-nav">
+<a class="wordmark" href="index.html">Gennaro F. Landi</a>
+<a href="research.html">Research &amp; Projects</a>
+<a href="blog.html">Writing</a>
+<a href="https://github.com/landigf">GitHub ↗</a>
+</header>
+<main id="main" class="project-page">
+<div class="hero">
+<p class="eyebrow">Gennaro Francesco Landi / Selected work</p>
+<h1>Systems you can inspect.<br>Results you can rerun.</h1>
+<p class="lead">I work on the boundary between AI applications and the infrastructure beneath them. These projects focus on measurable behavior, inspectable decisions and tools that make experiments easier to reproduce.</p>
+<p class="byline">MSc Computer Science, ETH Zürich · Data Management Systems / Machine Learning</p>
+<div class="actions">
+<a class="button primary" href="https://github.com/landigf">GitHub ↗</a>
+<a class="button" href="blog.html">All writing</a>
+<a class="button" href="index.html">About me</a>
+</div>
+</div>
+<section>
+<div class="grid">
+<article class="project-card">
+<span class="tag">SYSTEMS RESEARCH</span>
+<h3>
+<a href="cache-regime.html">CacheRegime</a>
+</h3>
+<p>Can a short request prefix choose a cache policy? A held-out evaluation over seven public traces, with synthetic overlays and explicit fixed-policy baselines.</p>
+<p>
+<strong>59/63</strong> family predictions correct. <strong>+0.141 pp</strong> mean hit-rate gain over the best fixed baseline.</p>
+<a href="cache-regime.html">Results, methods &amp; technical note →</a>
+</article>
+<article class="project-card">
+<span class="tag">MEASUREMENT INFRASTRUCTURE</span>
+<h3>
+<a href="browsetrace.html">BrowseTrace</a>
+</h3>
+<p>Request-level browser workload traces and a reproducible cache replay. Measure the requests behind an agent run and inspect what the cache can reuse.</p>
+<p>On the scripted trace, GDSF improves request hits but reduces byte hits at 5 MiB. Both metrics are reported.</p>
+<a href="browsetrace.html">Explore the cache tradeoff →</a>
+</article>
+<article class="project-card">
+<span class="tag">TYPESCRIPT / DEVELOPER TOOLS</span>
+<h3>
+<a href="claudeflow.html">ClaudeFlow</a>
+</h3>
+<p>Typed, composable AI workflows with loops, branches, maps and Zod validation. A deterministic mock runtime makes orchestration testable without inference calls.</p>
+<p>Local benchmark samples and schema-validation regression tests accompany the implementation.</p>
+<a href="claudeflow.html">Read the engineering case study →</a>
+</article>
+<article class="project-card">
+<span class="tag">HACKATHON / TEAM PROJECT</span>
+<h3>
+<a href="starthack-2026-auditchain.html">AuditChain</a>
+</h3>
+<p>First place in the Chain IQ case challenge at START Hack 2026. A procurement prototype built around deterministic decisions and an auditable execution path.</p>
+<p>Public hackathon code and an architecture write-up.</p>
+<a href="starthack-2026-auditchain.html">Architecture &amp; project story →</a>
+</article>
+</div>
+</section>
+<section>
+<h2>Earlier engineering work</h2>
+<div class="article-body">
+<p>
+<a href="https://github.com/landigf/minervas-v2x-copilot-thesis">V2X co-pilot</a>: traffic/weather adapters, spatio-temporal filtering, TTL caching and fuzzy risk scoring. <a href="https://github.com/landigf/TORCS">TORCS</a>: behavioral cloning with nearest-neighbor search. <a href="Broletter-post.html">Broletter</a>: personalized science delivery from arXiv to Telegram.</p>
+<p>The research pages distinguish measured findings from open questions. They link to the exact reproduction code and describe where the released data limits the conclusion.</p>
+</div>
+</section>
+<footer>Gennaro Francesco Landi · <a href="index.html">About</a> · <a href="blog.html">More writing</a> · <a href="https://github.com/landigf">GitHub</a>
+</footer>
+</main>
+</body>
+</html>

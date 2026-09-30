@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What browser agents leave in the cache | Gennaro Francesco Landi</title>
+<meta name="description" content="BrowseTrace: reproducible request-level measurements, an offline cache replay, and why request hits and byte hits tell different stories.">
+<link rel="canonical" href="https://landigf.github.io/browsetrace.html">
+<meta property="og:title" content="What browser agents leave in the cache">
+<meta property="og:description" content="BrowseTrace: reproducible request-level measurements, an offline cache replay, and why request hits and byte hits tell different stories.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://landigf.github.io/browsetrace.html">
+<link rel="stylesheet" href="assets/research/research.css">
+<link rel="icon" href="favicon-32x32.png">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-nav">
+<a class="wordmark" href="index.html">Gennaro F. Landi</a>
+<a href="research.html">Research &amp; Projects</a>
+<a href="blog.html">Writing</a>
+<a href="https://github.com/landigf">GitHub ↗</a>
+</header>
+<main id="main" class="project-page">
+<div class="hero">
+<p class="eyebrow">BrowseTrace / Measurement &amp; systems</p>
+<h1>What browser agents<br>leave in the cache.</h1>
+<p class="lead">An agent’s final answer hides the requests it took to get there. BrowseTrace makes that traffic inspectable, then lets us replay it under different cache policies.</p>
+<p class="byline">Gennaro Francesco Landi · 30 September 2026 · Research artifact</p>
+<div class="actions">
+<a class="button primary" href="https://github.com/landigf/BrowseTrace">Code &amp; released traces ↗</a>
+<a class="button" href="https://github.com/landigf/BrowseTrace/blob/main/reports/public-cache-replay.json">Results JSON</a>
+<a class="button" href="assets/research/browsetrace-benchmark.svg" download>Download figure</a>
+</div>
+<div class="metrics">
+<div class="metric">
+<strong>82,455</strong>
+<span>request rows in the scripted-control CSV</span>
+</div>
+<div class="metric">
+<strong>357,782</strong>
+<span>request rows in the LLM-labelled CSV</span>
+</div>
+<div class="metric">
+<strong>6 × 5</strong>
+<span>cache policies × capacities replayed per trace</span>
+</div>
+</div>
+</div>
+<section>
+<h2>The engineering question</h2>
+<div class="article-body">
+<p>Browser agents consume infrastructure while they navigate: documents, scripts, images and repeated fetches. A task-success score does not tell us which objects a cache could reuse. I built BrowseTrace to expose that request-level workload and make cache experiments replayable.</p>
+<p>The collector records typed request metadata, response sizes and timing, with a separate projection for cache simulation. The release includes sanitization tools, a dataset card and validation scripts. This page focuses on what can be checked directly from the public replay CSVs.</p>
+</div>
+<div class="flow" aria-label="Measurement pipeline">
+<span>Browser execution</span>
+<span class="arrow" aria-hidden="true">→</span>
+<span>Typed request trace</span>
+<span class="arrow" aria-hidden="true">→</span>
+<span>Sanitized release</span>
+<span class="arrow" aria-hidden="true">→</span>
+<span>Cache replay</span>
+</div>
+</section>
+<section>
+<p class="eyebrow">Measured result</p>
+<h2>More request hits can mean fewer byte hits.</h2>
+<p>At 5 MiB, GDSF serves a larger fraction of requests from cache than LRU on both released traces. On the scripted control, it serves a smaller fraction of bytes. The metric changes the conclusion.</p>
+<figure class="chart">
+<img src="assets/research/browsetrace-benchmark.svg" width="1200" height="450" alt="At 5 MiB, scripted request hits: LRU 37.4%, GDSF 59.5%; byte hits: LRU 24.9%, GDSF 15.8%. LLM-labelled request hits: LRU 43.5%, GDSF 76.2%; byte hits: LRU 20.2%, GDSF 24.7%.">
+<figcaption>Fresh offline replay of the public CSVs using libCacheSim 0.3.3.post4. Cold cache for every policy and capacity; stored row order. Higher is better on each axis. No network latency was measured.</figcaption>
+</figure>
+<div class="table-wrap">
+<table>
+<caption>At 5 MiB; percentages rounded to one decimal. Differences are percentage points.</caption>
+<thead>
+<tr>
+<th scope="col">Trace</th>
+<th scope="col">Metric</th>
+<th scope="col">LRU</th>
+<th scope="col">GDSF</th>
+<th scope="col">Difference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th scope="row">Scripted</th>
+<td>Request hit rate</td>
+<td>37.4%</td>
+<td>59.5%</td>
+<td>+22.1 pp</td>
+</tr>
+<tr>
+<th scope="row">Scripted</th>
+<td>Byte hit rate</td>
+<td>24.9%</td>
+<td>15.8%</td>
+<td>−9.1 pp</td>
+</tr>
+<tr>
+<th scope="row">LLM-labelled</th>
+<td>Request hit rate</td>
+<td>43.5%</td>
+<td>76.2%</td>
+<td>+32.7 pp</td>
+</tr>
+<tr>
+<th scope="row">LLM-labelled</th>
+<td>Byte hit rate</td>
+<td>20.2%</td>
+<td>24.7%</td>
+<td>+4.5 pp</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>LRU evicts the least recently used object. GDSF combines size and frequency in its priority calculation. That gives a plausible reason to inspect object sizes when request and byte metrics diverge. This replay measures the divergence; it does not isolate a causal mechanism.</p>
+<p>
+<a href="https://github.com/landigf/BrowseTrace/blob/main/reports/public-cache-replay.json">The complete sweep</a> includes LRU, LFU, ARC, S3-FIFO, W-TinyLFU and GDSF at 1, 5, 10, 25 and 50 MiB. The figure above is a readable slice, not the whole experiment.</p>
+</section>
+<section>
+<h2>A release filename is not a session count.</h2>
+<div class="article-body">
+<p>During this recheck, I counted the rows and distinct session labels rather than inheriting the README’s totals. The scripted CSV has 400 distinct nonempty session IDs. The file called <code>llm_full_901.csv</code> has 100. Neither the filename nor those repeated labels are sufficient to reconstruct the number of collection sessions.</p>
+<p>The raw LLM session bundles are absent from this public snapshot. I therefore report measured CSV rows and session labels, and keep broader collection counts out of this result. The repository documentation now makes that boundary explicit.</p>
+<div class="note">
+<strong>The control is scripted, not human.</strong> These two aggregate workloads support a descriptive cache comparison. They do not establish that LLM agents behave like, or unlike, a representative population of human web users.</div>
+</div>
+</section>
+<section>
+<h2>Reproduce the result</h2>
+<p>The replay reads existing files and makes no model or browser calls. Input SHA-256 hashes, software version and every result are recorded in the JSON output.</p>
+<pre>
+<code>git clone https://github.com/landigf/BrowseTrace.git
+cd BrowseTrace
+python3 -m venv .venv
+. .venv/bin/activate
+pip install libcachesim==0.3.3.post4 matplotlib==3.11.2
+python tools/replay_public.py
+python tools/plot_public_replay.py</code>
+</pre>
+<p class="small">libCacheSim needs a compatible Python environment; its package dependencies can vary by platform. The reference replay used Python 3.12.2 on macOS arm64. The chart script reads the committed aggregate JSON, so plotting alone does not need the simulator.</p>
+</section>
+<section>
+<h2>What this experiment leaves open</h2>
+<div class="article-body">
+<p>This is an object-cache simulation. It does not enforce HTTP freshness, <code>Vary</code> or origin cache-control rules, and it does not measure serving latency or throughput. The cache policies see the released keys and object sizes, in the same stored sequence.</p>
+<p>Production deployment needs those HTTP constraints and a representative workload. A human comparison needs a human dataset. The useful contribution here is the inspectable measurement path: a request becomes a trace row, a trace becomes a replay, and a reported result can be checked against both.</p>
+<p>
+<a href="https://github.com/landigf/BrowseTrace/blob/main/DATASET_CARD.md">Dataset card</a> · <a href="https://github.com/landigf/BrowseTrace/blob/main/tools/replay_public.py">Replay implementation</a> · <a href="https://github.com/landigf/BrowseTrace/blob/main/paper/BrowseTrace.pdf">Historical manuscript</a> (not a peer-reviewed publication)</p>
+</div>
+</section>
+<footer>Gennaro Francesco Landi · <a href="index.html">About</a> · <a href="blog.html">More writing</a> · <a href="https://github.com/landigf">GitHub</a>
+</footer>
+</main>
+</body>
+</html>

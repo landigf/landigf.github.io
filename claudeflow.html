@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ClaudeFlow: typed LLM pipelines in TypeScript, a fix for runtime schema enforcement, and a reproducible benchmark of local orchestration overhead.">
+  <meta name="author" content="Gennaro Francesco Landi">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="ClaudeFlow: contracts around model calls">
+  <meta property="og:description" content="Typed steps, explicit control flow, and a measured look at the local cost of orchestration.">
+  <meta property="og:url" content="https://landigf.github.io/claudeflow.html">
+  <link rel="canonical" href="https://landigf.github.io/claudeflow.html">
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="assets/research/research.css">
+  <title>ClaudeFlow: contracts around model calls | Gennaro Landi</title>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-nav">
+    <a class="wordmark" href="index.html">Gennaro Landi</a>
+    <a href="research.html">Research &amp; projects</a>
+    <a href="blog.html">Writing</a>
+    <a href="https://github.com/landigf/claudeflow">GitHub</a>
+  </header>
+  <main id="main" class="project-page">
+    <div class="hero">
+      <p class="eyebrow">Open-source engineering · TypeScript</p>
+      <h1>ClaudeFlow: contracts around model calls</h1>
+      <p class="lead">A TypeScript library for LLM workflows with typed step boundaries and explicit control flow. A closer look at schema validation, backed by a reproducible local benchmark.</p>
+      <p class="byline">Gennaro Francesco Landi · September 30, 2026 · MIT-licensed software</p>
+      <div class="actions">
+        <a class="button primary" href="https://github.com/landigf/claudeflow">Explore the code</a>
+        <a class="button" href="#benchmark">See the benchmark</a>
+        <a class="button" href="#reproduce">Reproduce locally</a>
+      </div>
+      <div class="metrics" aria-label="Local mock benchmark results">
+        <div class="metric"><strong>4,000</strong><span>Timed mock pipeline runs across four sizes</span></div>
+        <div class="metric"><strong>48.08 μs</strong><span>Median local time for 25 sequential typed steps</span></div>
+        <div class="metric"><strong>0</strong><span>Model or network calls in this benchmark</span></div>
+      </div>
+    </div>
+
+    <section aria-labelledby="why">
+      <h2 id="why">Make the workflow part of the program</h2>
+      <p>A repeated task often starts as a long prompt: inspect something, produce a result, check it, then decide what happens next. As that task becomes part of an application, those transitions deserve explicit code. A retry should have a limit. A downstream step should receive the shape it expects.</p>
+      <p>ClaudeFlow is a small TypeScript library for expressing that structure. A step declares a prompt and optional Zod input and output schemas. A pipeline composes steps with loops, branches or maps; a runtime supplies the model response. The same pipeline interface supports Claude CLI, the Claude API and deterministic mock responses.</p>
+      <div class="flow" aria-label="Step execution order">
+        <span>Validate input</span><span class="arrow" aria-hidden="true">→</span>
+        <span>Call runtime</span><span class="arrow" aria-hidden="true">→</span>
+        <span>Validate output</span><span class="arrow" aria-hidden="true">→</span>
+        <span>Advance context</span>
+      </div>
+      <p>Outputs are stored by step ID, so a later prompt can refer to an earlier result. The execution result includes a trace with step status and timing. The code also supports YAML definitions, deterministic tool adapters and checkpoints. <a href="https://github.com/landigf/claudeflow/tree/master/src">Read the implementation.</a></p>
+    </section>
+
+    <section id="benchmark" aria-labelledby="benchmark-title">
+      <h2 id="benchmark-title">Measure the work the library actually does</h2>
+      <p>The benchmark below measures local pipeline orchestration with <code>MockRuntime</code>. It runs sequential typed steps with fixed responses and times the complete pipeline invocation. That includes schema validation, context updates and trace construction.</p>
+      <figure class="chart">
+        <img src="assets/research/claudeflow-benchmark.svg" alt="Median and 95th-percentile local execution time for pipelines with different numbers of sequential typed steps, using deterministic mock responses." loading="lazy">
+        <figcaption>Local orchestration timing on an Apple M3 Pro, macOS arm64, Node v23.11.0. Each pipeline size has 100 warm-up runs followed by 1,000 timed runs. No model inference or network request is included.</figcaption>
+      </figure>
+      <div class="table-wrap">
+        <table>
+          <caption>Complete pipeline invocation, in microseconds; lower means less local execution time</caption>
+          <thead><tr><th scope="col">Sequential steps</th><th scope="col">Median</th><th scope="col">95th percentile</th><th scope="col">Timed runs</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">1</th><td>3.167 μs</td><td>5.458 μs</td><td>1,000</td></tr>
+            <tr><th scope="row">3</th><td>5.792 μs</td><td>8.584 μs</td><td>1,000</td></tr>
+            <tr><th scope="row">10</th><td>16.333 μs</td><td>21.000 μs</td><td>1,000</td></tr>
+            <tr><th scope="row">25</th><td>48.083 μs</td><td>109.750 μs</td><td>1,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The timer is <code>process.hrtime.bigint()</code>. Pipeline construction and fresh mock construction happen outside the timed region. Percentiles use nearest rank over the recorded samples. These are repeated observations from one process on one machine, with a fixed order of pipeline sizes; JIT compilation, garbage collection and system load can affect another run.</p>
+      <p><a href="https://github.com/landigf/claudeflow/blob/master/benchmarks/results/local-orchestration.json">Inspect the recorded results</a> and <a href="https://github.com/landigf/claudeflow/blob/master/benchmarks/orchestration.mjs">the benchmark script</a>. This measurement describes the tested pipeline shapes on the recorded machine; it does not measure model quality, end-to-end API latency or a performance advantage over another framework.</p>
+      <h3>Keep a case study separate from a comparison</h3>
+      <p>The repository also preserves an earlier Claude CLI exercise. Each task was run once, and the multi-step task used different timeout budgets. Those runs illustrate execution behavior, but cannot establish a general speed, cost or quality advantage. The <a href="https://github.com/landigf/claudeflow/blob/master/docs/BENCHMARK.md">case-study notes</a> explain those limits.</p>
+    </section>
+
+    <section aria-labelledby="schema">
+      <h2 id="schema">A contract belongs at the shared boundary</h2>
+      <p>Reviewing the implementation exposed a gap between the intended contract and the runtime path. An adapter could return a pre-parsed <code>structured</code> value, and the pipeline accepted that value without applying the output schema. The mock runtime and a custom adapter could therefore bypass a check that callers expected the pipeline to enforce. LLM step inputs also lacked the validation already used for deterministic steps.</p>
+      <p>The fix puts validation in the pipeline itself. It parses inputs before calling a runtime, then applies the output schema to the response regardless of which adapter produced it. Adapters extract JSON; the pipeline owns validation and schema transforms. This keeps transforms from being applied twice.</p>
+      <div class="table-wrap">
+        <table>
+          <caption>What the schema fix changes</caption>
+          <thead><tr><th scope="col">Case</th><th scope="col">Enforced behavior</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Invalid step input</th><td>Fail validation before invoking the runtime.</td></tr>
+            <tr><th scope="row">Wrong structured output</th><td>Use the configured retry and fallback path.</td></tr>
+            <tr><th scope="row">Schema defaults or transforms</th><td>Use the parsed value; apply output transforms once.</td></tr>
+            <tr><th scope="row">A valid falsy or nullable output</th><td>Check whether a value is present, then validate its schema.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>A regression test for this boundary must exercise a runtime that returns an invalid structured object. Testing only malformed text misses the bypass. <a href="https://github.com/landigf/claudeflow/blob/master/test/core/schema-boundaries.test.ts">Read the regression tests</a> alongside <a href="https://github.com/landigf/claudeflow/blob/master/src/core/pipeline.ts">the execution path</a>.</p>
+      <aside class="note">A schema can check that a category is allowed or a value is in range. It cannot establish that a model chose the correct category. Semantic quality still needs task-specific evaluation.</aside>
+    </section>
+
+    <section aria-labelledby="example-title">
+      <h2 id="example-title">Start with a fixture you can inspect</h2>
+      <p>Run this example from a built source checkout to exercise a classification step without contacting a model. The fixture is deliberately simple: the purpose is to test the contract and the execution path before substituting a live runtime.</p>
+      <pre><code>import { step, pipeline, z, MockRuntime } from "claudeflow";
+
+const classify = step("classify")
+  .input(z.object({ text: z.string().min(1) }))
+  .output(z.object({
+    category: z.enum(["bug", "question"]),
+  }))
+  .prompt("classify this issue: {text}")
+  .retry({ maxAttempts: 2 });
+
+const runtime = new MockRuntime({
+  classify: { category: "bug" },
+});
+
+const result = await pipeline("issue-triage")
+  .step(classify)
+  .run({ text: "The save button does nothing." }, { runtime });
+
+console.log(result.output);       // { category: "bug" }
+console.log(result.trace.status); // "completed"</code></pre>
+      <p>Changing the fixture to <code>{ category: "unexpected" }</code> exercises output validation. Changing the input to an empty string exercises input validation. Neither test says whether a live model will classify a real issue correctly; that is a separate evaluation with labelled examples.</p>
+    </section>
+
+    <section id="reproduce" aria-labelledby="reproduce-title">
+      <h2 id="reproduce-title">Run the checks and benchmark</h2>
+      <p>The repository contains the test suite, TypeScript checks and benchmark source. From a checkout, run:</p>
+<pre><code>git clone https://github.com/landigf/claudeflow.git
+cd claudeflow
+npm ci
+npm test
+npm run check
+npm run build
+node benchmarks/orchestration.mjs \
+  benchmarks/results/my-machine.json</code></pre>
+      <p>The benchmark uses a local mock and requires no API credentials. Running a real Claude CLI or API adapter depends on your account and its applicable usage charges. Keep the saved result alongside its code revision when comparing later runs.</p>
+      <div class="actions">
+        <a class="button primary" href="https://github.com/landigf/claudeflow">Source repository</a>
+        <a class="button" href="https://github.com/landigf/claudeflow/blob/master/docs/COOKBOOK.md">Pipeline cookbook</a>
+        <a class="button" href="research.html">More projects</a>
+      </div>
+    </section>
+    <footer>Written by <a href="index.html">Gennaro Francesco Landi</a>. Code and measurement artifacts are linked at the point of use.</footer>
+  </main>
+</body>
+</html>

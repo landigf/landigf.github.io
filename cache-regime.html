@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>When should a cache change policy? | Gennaro Francesco Landi</title>
+<meta name="description" content="CacheRegime: 59/63 held-out policy-family predictions, a modest hit-rate gain, and an explicit test of the limits of synthetic workloads.">
+<link rel="canonical" href="https://landigf.github.io/cache-regime.html">
+<meta property="og:title" content="When should a cache change policy?">
+<meta property="og:description" content="CacheRegime: 59/63 held-out policy-family predictions, a modest hit-rate gain, and an explicit test of the limits of synthetic workloads.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://landigf.github.io/cache-regime.html">
+<link rel="stylesheet" href="assets/research/research.css">
+<link rel="icon" href="favicon-32x32.png">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-nav">
+<a class="wordmark" href="index.html">Gennaro F. Landi</a>
+<a href="research.html">Research &amp; Projects</a>
+<a href="blog.html">Writing</a>
+<a href="https://github.com/landigf">GitHub ↗</a>
+</header>
+<main id="main" class="project-page">
+<div class="hero">
+<p class="eyebrow">CacheRegime / Systems research</p>
+<h1>When should a cache<br>change policy?</h1>
+<p class="lead">Use a short request prefix to choose a cache-policy family. Then measure whether choosing the right family actually improves cache effectiveness.</p>
+<p class="byline">Gennaro Francesco Landi · 30 September 2026 · Research artifact</p>
+<div class="actions">
+<a class="button primary" href="https://github.com/landigf/cache-regime-benchmark">Code &amp; aggregate data ↗</a>
+<a class="button" href="assets/research/cache-regime-report.pdf">Technical note</a>
+<a class="button" href="assets/research/cache-regime-presentation.pdf">Slides</a>
+<a class="button" href="assets/research/cache-regime-benchmark.svg" download>Download figure</a>
+</div>
+<div class="metrics">
+<div class="metric">
+<strong>59 / 63</strong>
+<span>correct held-out policy-family predictions</span>
+</div>
+<div class="metric">
+<strong>7 traces</strong>
+<span>one trace held out for each evaluation fold</span>
+</div>
+<div class="metric">
+<strong>+0.141 pp</strong>
+<span>mean hit-rate gain over the best fixed baseline</span>
+</div>
+</div>
+</div>
+<section>
+<h2>A selector is useful only if the cache benefits.</h2>
+<div class="article-body">
+<p>Different workloads reward different eviction policies. I studied whether a short warm-up prefix contains enough information to choose a useful policy family before replaying the rest of a mixed workload.</p>
+<p>The experiment combines seven public cache traces with a WebLINX-derived synthetic agent overlay. Each trace is evaluated under three overlay behaviors and three target agent fractions, giving 63 settings at a 64 MiB cache size. The selector profiles the first 1,000 mixed requests. It chooses a rate-guarded representative from WTinyLFU, S3FIFO or GDSF.</p>
+<p>The evaluation holds out an entire trace, including all its settings. A small threshold tree is fitted on the other six traces. This asks whether the rule transfers to a different trace within the panel.</p>
+</div>
+<div class="flow" aria-label="Selection pipeline">
+<span>1,000-request prefix</span>
+<span class="arrow" aria-hidden="true">→</span>
+<span>Workload statistics</span>
+<span class="arrow" aria-hidden="true">→</span>
+<span>Fitted threshold tree</span>
+<span class="arrow" aria-hidden="true">→</span>
+<span>Guarded cache policy</span>
+</div>
+</section>
+<section>
+<p class="eyebrow">Measured result</p>
+<h2>Good family prediction. A modest hit-rate gain.</h2>
+<figure class="chart">
+<img src="assets/research/cache-regime-benchmark.svg" alt="CacheRegime: selector mean human hit rate 13.09%, best fixed WTinyLFU baseline 12.94%, oracle 13.22%. Held-out family predictions correct in 59 of 63 settings.">
+<figcaption>Recomputed from 513 archived policy measurements and frozen prefix features. Rates are unweighted means over the 63 settings. Agent traffic is a synthetic overlay; the cache budget is 64 MiB.</figcaption>
+</figure>
+<div class="table-wrap">
+<table>
+<caption>Mean human-request hit rate. “Human” denotes the original public-trace component in the mixed workload.</caption>
+<thead>
+<tr>
+<th scope="col">Approach</th>
+<th scope="col">Hit rate</th>
+<th scope="col">How the policy is chosen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th scope="row">Per-setting oracle</th>
+<td>13.22%</td>
+<td>Best measured policy after seeing the outcome</td>
+</tr>
+<tr>
+<th scope="row">Held-out selector</th>
+<td>13.09%</td>
+<td>Tree trained on the other six traces</td>
+</tr>
+<tr>
+<th scope="row">Fixed WTinyLFU + rate guard</th>
+<td>12.94%</td>
+<td>Same policy in every setting</td>
+</tr>
+<tr>
+<th scope="row">Fixed S3FIFO + rate guard</th>
+<td>11.77%</td>
+<td>Same policy in every setting</td>
+</tr>
+<tr>
+<th scope="row">Fixed GDSF + rate guard</th>
+<td>10.67%</td>
+<td>Same policy in every setting</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The selector matches the winning family in 59 of 63 settings, or 93.7%. That accuracy does not translate into a 93.7% cache hit rate. The practical gain over the strongest fixed baseline is 0.141 percentage points; the gap to the oracle is 0.140 points.</p>
+<p>The oracle is a hindsight upper bound and has access to measured unguarded or frontier-guarded variants as well. The deployable selector chooses a rate-guarded representative. This distinction matters when interpreting the remaining gap.</p>
+</section>
+<section>
+<h2>Where the rule fails is part of the result.</h2>
+<div class="article-body">
+<p>All four family-selection errors occur on the Tencent traces: 8/9 and 6/9 settings correct. Each of the other traces has 9/9. Those related settings should not be presented as independent deployments; there are seven trace-level holdouts.</p>
+<p>A follow-up using collected browser-agent traffic changes both the workload construction and the winning policy families. Some settings favor ARC, which is outside the original selector’s action space. That is a reason to revisit the method’s coverage.</p>
+<div class="note">
+<strong>Synthetic-to-real transfer remains unproven.</strong> The follow-up also changes feature extraction and policy coverage. Its results are not a controlled before/after score for this exact experiment. The original 93.7% applies to this synthetic-overlay panel.</div>
+<p>The design lesson is to track the objective directly. Family accuracy diagnoses the selector, while hit rate measures the effect we wanted from it. A useful research artifact should make both visible, including the settings that break the rule.</p>
+</div>
+</section>
+<section>
+<h2>Reproduce the evaluation</h2>
+<p>The standalone release contains aggregate policy measurements, frozen prefix features and the selector implementation. No private research-workspace history or raw request logs are included.</p>
+<pre>
+<code>git clone https://github.com/landigf/cache-regime-benchmark.git
+cd cache-regime-benchmark
+python3 scripts/reproduce.py</code>
+</pre>
+<p>This checks input hashes, reconstructs winners from the archived policy cells, refits every held-out fold and compares the predictions against the archived record. It requires Python 3.10+ and the standard library. It does not rerun raw-trace collection or simulation.</p>
+<p>
+<a href="https://github.com/landigf/cache-regime-benchmark/blob/main/METHODS.md">Methods &amp; limitations</a> · <a href="https://github.com/landigf/cache-regime-benchmark/blob/main/results/summary.json">Recomputed JSON</a> · <a href="https://github.com/landigf/cache-regime-benchmark/blob/main/DATA_SOURCES.md">Data sources &amp; terms</a>
+</p>
+</section>
+<footer>Gennaro Francesco Landi · <a href="index.html">About</a> · <a href="blog.html">More writing</a> · <a href="https://github.com/landigf">GitHub</a>
+</footer>
+</main>
+</body>
+</html>

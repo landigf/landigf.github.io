@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <!-- begin SEO -->
-  <title>landigf</title>
+  <title>Gennaro Francesco Landi | Systems &amp; ML Engineering</title>
   <meta property="og:locale" content="en-US">
   <meta property="og:site_name" content="Gennaro Francesco Landi">
   <meta property="og:title" content="Gennaro Francesco Landi">
   <link rel="canonical" href="https://landigf.github.io/">
   <meta property="og:url" content="https://landigf.github.io/">
-  <meta property="og:description" content="Master's student in Computer Science at ETH Zurich, majoring in Data Management Systems with a minor in Machine Learning">
+  <meta property="og:description" content="MSc Computer Science at ETH Zürich. Systems, ML infrastructure and backend engineering, with reproducible research artifacts and open-source projects.">
   
   <script type="application/ld+json">
   {
@@ -33,6 +33,7 @@
   </script>
   
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="assets/research/home.css">
   <link rel="icon" href="favicon-32x32.png" type="image/png">
   <meta http-equiv="cleartype" content="on">
   
@@ -47,8 +48,9 @@
   <!-- Top Navigation Bar -->
   <nav class="top-nav">
     <div class="nav-container">
-      <a href="#" class="nav-brand">Master's Student</a>
+      <a href="index.html" class="nav-brand">Gennaro F. Landi</a>
       <div class="nav-links">
+        <a href="research.html">Research &amp; Projects</a>
         <a href="blog.html">Blog Posts</a>
         <a href="eth-materials.html">ETH Materials</a>
         <a href="https://drive.google.com/file/d/1SqoCi60hV7gf-GeaV87EiFkhrIuaHhna/view?usp=sharing" target="_blank">CV</a>
@@ -98,21 +100,21 @@
       </div>
       
       <section class="about-section">
-        <h2>About Me</h2>
-        <p>I am a Master's student in Computer Science at ETH Zurich, majoring in Data Management Systems with a minor in Machine Learning.</p>
-        
-        <p>I hold a Bachelor's degree in Computer Engineering from the University of Salerno, where I graduated with top marks and developed a strong foundation in algorithms, networks, operating systems, and software engineering. Simultaneously, I pursued a second Bachelor's degree in Statistics for Big Data, which enhances my ability to analyze and interpret large-scale data systems, equipping me with complementary skills crucial for addressing modern computational challenges.</p>
-        
-        <p>My curiosity drives me to uncover the "why" behind every problem, while my proactive nature ensures that I seek out challenges and opportunities for growth.</p>
-        
-        <h2>Research Interests</h2>
-        <p>I'm interested in large-scale systems, cloud architectures, and intelligent data processing. At ETH Zurich, I aspire to collaborate with leading research groups that share my vision and contribute to advancing the state-of-the-art in these fields:</p>
-
-        <h3>Efficient Architectures and Systems Lab (EASL)</h3>
-        <p><strong>Led by Prof. Ana Klimović.</strong> <a href="https://systems.ethz.ch/research/easl.html" target="_blank">EASL</a> designs and builds computer systems for large-scale applications, spanning operating systems, cloud computing, and the use of machine learning for system optimization. Their focus on serverless computing and resource-efficient system design resonates strongly with my goal of making large-scale data platforms more robust and accessible.</p>
-
-        <h3>Data Processing on Modern Hardware Group</h3>
-        <p><strong>Led by Prof. Gustavo Alonso.</strong> This <a href="https://systems.ethz.ch/research/data-processing-on-modern-hardware.html" target="_blank">group</a> explores the implications of rapidly evolving hardware and heterogeneous architectures on data systems, from databases on GPUs and FPGAs to cloud-native processing engines. I am particularly drawn to their long-term vision of building innovative systems that exploit new hardware capabilities while ensuring scalability and efficiency in cloud deployments.</p>
+        <p class="home-kicker">Systems · ML infrastructure · Backend engineering</p>
+        <h2>I build systems I can measure and explain.</h2>
+        <p>I’m an MSc Computer Science student at ETH Zürich, majoring in Data Management Systems with a minor in Machine Learning. My work spans cache evaluation, browser-agent measurement and typed AI workflows.</p>
+        <p>I work as a Core AI Engineering Intern at Chain IQ and as an independent engineering consultant on search and ranking. I hold a BSc in Computer Engineering from the University of Salerno, where I graduated <em>cum laude</em>, and completed concurrent studies in Statistics for Big Data.</p>
+        <p class="availability">Available full-time from summer 2027, with flexibility on start date and duration.</p>
+        <h2>Selected research &amp; engineering</h2>
+        <div class="home-projects">
+          <article class="home-project"><span class="project-type">Systems research</span><h3><a href="cache-regime.html">When should a cache change policy?</a></h3><p>A warm-up selector evaluated across public traces and synthetic traffic overlays. Recomputed results, fixed-policy baselines and the limits of transfer.</p><a href="https://github.com/landigf/cache-regime-benchmark">Reproducible artifact ↗</a></article>
+          <article class="home-project"><span class="project-type">Measurement infrastructure</span><h3><a href="browsetrace.html">BrowseTrace</a></h3><p>Request-level traces of browser-mediated AI traffic. An open dataset and a cache replay that separates scripted controls from LLM-driven workloads.</p><a href="https://github.com/landigf/BrowseTrace">Code &amp; data ↗</a></article>
+          <article class="home-project"><span class="project-type">Developer tooling</span><h3><a href="claudeflow.html">ClaudeFlow</a></h3><p>Typed AI pipelines with loops, branching and maps. Zod schemas, execution traces and a deterministic mock runtime for testing orchestration.</p><a href="https://github.com/landigf/claudeflow">Source &amp; benchmarks ↗</a></article>
+          <article class="home-project"><span class="project-type">START Hack 2026 · Chain IQ challenge winner</span><h3><a href="starthack-2026-auditchain.html">AuditChain</a></h3><p>A team-built procurement prototype that combines language-model parsing with deterministic decision rules and an auditable execution path.</p><a href="https://github.com/landigf/auditchain-submission">Public hackathon submission ↗</a></article>
+        </div>
+        <p><a href="research.html">Explore the results and project pages →</a></p>
+        <h2>Earlier projects</h2>
+        <p><a href="https://github.com/landigf/minervas-v2x-copilot-thesis">V2X co-pilot data platform</a>: traffic and weather adapters, TTL caching and fuzzy risk scoring for my bachelor’s thesis. <a href="https://github.com/landigf/TORCS">TORCS</a>: behavioral cloning with nearest-neighbor search. <a href="Broletter-post.html">Broletter</a>: an adaptive science newsletter.</p>
       </section>
     </main>
   </div>
@@ -145,6 +147,5 @@
       });
     });
   </script>
-  <script src="script.js"></script>
 </body>
 </html>
